@@ -7,27 +7,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0F111A;
-            --text-primary: #FFFFFF;
-            --text-secondary: #A0A3B1;
-            --accent-green: #00FFB2;
-            --accent-pink: #FF005C; /* For error messages */
-            --accent-blue: #5A8DEE;
-            --border-radius-soft: 16px;
-            --shadow-light-x: 6px;
-            --shadow-light-y: 6px;
-            --shadow-dark-x: -6px;
-            --shadow-dark-y: -6px;
-            --shadow-blur: 10px;
-            --shadow-spread: 0px;
-            --shadow-color-light: rgba(255, 255, 255, 0.05);
-            --shadow-color-dark: rgba(0, 0, 0, 0.4);
+            /* New Color Palette */
+            --bg-light: #F0F4F8; /* Light blueish white background */
+            --surface-white: #FFFFFF; /* Pure white for cards/elements */
+            --text-dark: #2C3E50; /* Dark blueish black for primary text */
+            --text-secondary: #607D8B; /* Medium blueish gray for secondary text */
+            --accent-blue: #03A9F4; /* Light Blue for primary actions/highlights */
+            --error-red: #FF5252; /* Red for errors/warnings */
+            --success-green: #4CAF50; /* Green for success */
+
+            --border-radius-soft: 12px;
+
+            /* Light Shadows */
+            --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for elements */
+            --shadow-elevation-2: 0 8px 20px rgba(0, 0, 0, 0.12); /* Slightly stronger for hover/active */
+            --shadow-input-focus: 0 0 0 3px rgba(3, 169, 244, 0.3); /* Blue ring for focus */
         }
 
         body {
-            font-family: 'Cairo', sans-serif; /* Changed to Cairo */
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-light); /* Changed background */
+            color: var(--text-dark); /* Changed text color */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -40,76 +40,74 @@
         }
 
         .login-container {
-            background-color: var(--bg-dark);
+            background-color: var(--surface-white); /* Changed background */
             padding: 40px;
             border-radius: var(--border-radius-soft);
-            box-shadow: 
-                var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
-                var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light);
+            box-shadow: var(--shadow-elevation-1); /* New shadow */
             width: 100%;
-            max-width: 400px;
+            max-width: 420px; /* Slightly wider */
             text-align: center;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .login-container:hover {
+            box-shadow: var(--shadow-elevation-2); /* Slightly stronger shadow on hover */
         }
 
         .login-container h1 {
-            color: var(--text-primary);
-            font-size: 2.2em;
-            margin-bottom: 30px;
+            color: var(--text-dark); /* Changed color */
+            font-size: 2.5em; /* Slightly larger */
+            margin-bottom: 35px; /* More space */
             font-weight: 700;
         }
 
         .input-group {
             margin-bottom: 25px;
             text-align: right;
-            position: relative; /* Needed for absolute positioning of error */
+            position: relative;
         }
 
         .input-group label {
             display: block;
-            color: var(--text-secondary);
-            font-size: 0.9em;
-            margin-bottom: 8px;
-            font-weight: 400; /* Regular for labels in Cairo */
+            color: var(--text-secondary); /* Changed color */
+            font-size: 1em; /* Slightly larger */
+            margin-bottom: 10px; /* More space */
+            font-weight: 400; /* Regular weight */
         }
 
         .input-group input {
             width: 100%;
-            padding: 15px 20px;
-            background-color: var(--bg-dark);
-            border: none;
+            padding: 16px 20px; /* Slightly more padding */
+            background-color: var(--bg-light); /* Input background matches main body */
+            border: 1px solid #E0E6EB; /* Subtle light border */
             border-radius: var(--border-radius-soft);
-            color: var(--text-primary);
+            color: var(--text-dark); /* Input text color */
             font-size: 1.1em;
             box-sizing: border-box;
             outline: none;
             transition: all 0.3s ease;
-            box-shadow: 
-                inset var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
-                inset var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light);
-            font-family: 'Cairo', sans-serif; /* Changed to Cairo */
+            box-shadow: none; /* No inset shadow */
         }
 
         .input-group input::placeholder {
-            font-family: 'Cairo', sans-serif; /* Changed to Cairo */
+            font-family: 'Cairo', sans-serif;
             color: var(--text-secondary);
-            opacity: 0.7;
+            opacity: 0.8;
         }
 
         .input-group input:focus {
-            box-shadow: 
-                inset var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
-                inset var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light),
-                0 0 0 2px var(--accent-blue);
+            border-color: var(--accent-blue); /* Blue border on focus */
+            box-shadow: var(--shadow-input-focus); /* Blue glow on focus */
         }
 
         .error-message {
-            color: var(--accent-pink);
-            font-size: 0.85em;
+            color: var(--error-red); /* Red for errors */
+            font-size: 0.88em;
             margin-top: 8px;
-            text-align: center; /* Centered below input */
-            display: block; /* Ensure it takes full width */
-            font-weight: 400; /* Regular for error messages */
-            visibility: hidden; /* Hidden by default */
+            text-align: center;
+            display: block;
+            font-weight: 400;
+            visibility: hidden;
             opacity: 0;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
@@ -121,51 +119,46 @@
 
         .btn-login {
             width: 100%;
-            padding: 16px;
-            background-color: var(--accent-green);
-            color: var(--bg-dark);
+            padding: 18px; /* More padding for a bolder button */
+            background-color: var(--accent-blue); /* Light blue button */
+            color: var(--surface-white); /* White text on button */
             border: none;
             border-radius: var(--border-radius-soft);
-            font-size: 1.2em;
-            font-weight: 600;
+            font-size: 1.25em; /* Slightly larger font */
+            font-weight: 700; /* Bold */
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 
-                var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
-                var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light);
-            font-family: 'Cairo', sans-serif; /* Changed to Cairo */
+            box-shadow: var(--shadow-elevation-1); /* Soft shadow */
+            font-family: 'Cairo', sans-serif;
         }
 
         .btn-login:hover {
-            background-color: #00E6A0;
-            box-shadow: 
-                var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
-                var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light),
-                0 0 15px rgba(0, 255, 178, 0.6);
+            background-color: #0288D1; /* Slightly darker blue on hover */
+            box-shadow: var(--shadow-elevation-2); /* Stronger shadow on hover */
             transform: translateY(-2px);
         }
 
         .btn-login:active {
             transform: translateY(1px);
-            box-shadow: 
-                inset var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
-                inset var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); /* Pressed effect */
         }
 
         .forgot-password {
-            margin-top: 20px;
-            font-size: 0.9em;
+            margin-top: 25px; /* More space */
+            font-size: 1em;
         }
 
         .forgot-password a {
-            color: var(--text-secondary);
+            color: var(--text-secondary); /* Secondary text color */
             text-decoration: none;
             transition: color 0.3s ease;
-            font-family: 'Cairo', sans-serif; /* Changed to Cairo */
+            font-family: 'Cairo', sans-serif;
+            font-weight: 400;
         }
 
         .forgot-password a:hover {
-            color: var(--accent-blue);
+            color: var(--accent-blue); /* Blue on hover */
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -174,9 +167,9 @@
         <h1>تسجيل الدخول</h1>
         <form id="loginForm">
             <div class="input-group">
-                <label for="username">اسم المستخدم</label>
-                <input type="text" id="username" placeholder="أدخل اسم المستخدم الخاص بك" required>
-                <span class="error-message" id="usernameError"></span>
+                <label for="email">البريد الإلكتروني</label>
+                <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required>
+                <span class="error-message" id="emailError"></span>
             </div>
             <div class="input-group">
                 <label for="password">كلمة المرور</label>
@@ -191,14 +184,12 @@
     </div>
 
     <script type="module">
-        // Import the functions you need from the SDKs you need
+        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
 
         // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
             apiKey: "AIzaSyBtJaifspNzKeht9mOmZGvVU1IOvmnyrwQ",
             authDomain: "sheikh-of-the-arabs.firebaseapp.com",
@@ -211,46 +202,75 @@
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app); // Get the Auth service
         const analytics = getAnalytics(app);
 
-        // Basic form validation (for demonstration)
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
+        // Get elements
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
 
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const usernameError = document.getElementById('usernameError');
-            const passwordError = document.getElementById('passwordError');
+        // Function to display error message
+        function showError(element, message) {
+            element.textContent = message;
+            element.classList.add('show');
+        }
 
-            let isValid = true;
+        // Function to clear error message
+        function clearError(element) {
+            element.textContent = '';
+            element.classList.remove('show');
+        }
 
-            // Clear previous errors
-            usernameError.textContent = '';
-            usernameError.classList.remove('show');
-            passwordError.textContent = '';
-            passwordError.classList.remove('show');
+        // Handle form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent default form submission
 
-            if (usernameInput.value.trim() === '') {
-                usernameError.textContent = 'الرجاء إدخال اسم المستخدم.';
-                usernameError.classList.add('show');
-                isValid = false;
+            clearError(emailError);
+            clearError(passwordError);
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email) {
+                showError(emailError, 'الرجاء إدخال البريد الإلكتروني.');
+                return;
+            }
+            if (!password) {
+                showError(passwordError, 'الرجاء إدخال كلمة المرور.');
+                return;
             }
 
-            if (passwordInput.value.trim() === '') {
-                passwordError.textContent = 'الرجاء إدخال كلمة المرور.';
-                passwordError.classList.add('show');
-                isValid = false;
-            }
-
-            if (isValid) {
-                // Here you would typically handle login with Firebase Authentication
-                // For demonstration, we'll just log to console
-                console.log('Login attempt with:', {
-                    username: usernameInput.value,
-                    password: passwordInput.value
-                });
-                alert('تم إرسال بيانات تسجيل الدخول (للتجربة فقط).');
-                // Example: firebase.auth().signInWithEmailAndPassword(email, password);
+            try {
+                // Sign in with email and password
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log('User signed in:', userCredential.user);
+                // Redirect to dashboard on successful login
+                window.location.href = 'dashboard.html'; // Or your actual dashboard URL
+            } catch (error) {
+                // Handle errors from Firebase Authentication
+                let errorMessage = 'حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.';
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        errorMessage = 'صيغة البريد الإلكتروني غير صحيحة.';
+                        showError(emailError, errorMessage);
+                        break;
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password':
+                        errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+                        showError(passwordError, errorMessage); // Display general error for security
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'لقد تجاوزت عدد المحاولات. يرجى المحاولة لاحقًا.';
+                        showError(passwordError, errorMessage);
+                        break;
+                    default:
+                        console.error('Firebase Auth Error:', error.code, error.message);
+                        showError(passwordError, errorMessage);
+                        break;
+                }
             }
         });
     </script>
