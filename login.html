@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - شيخ العرب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0F111A;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0A3B1;
+            --accent-green: #00FFB2;
+            --accent-pink: #FF005C;
+            --accent-blue: #5A8DEE;
+            --border-radius-soft: 16px;
+            --shadow-light-x: 6px;
+            --shadow-light-y: 6px;
+            --shadow-dark-x: -6px;
+            --shadow-dark-y: -6px;
+            --shadow-blur: 10px;
+            --shadow-spread: 0px;
+            --shadow-color-light: rgba(255, 255, 255, 0.05);
+            --shadow-color-dark: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            direction: rtl; /* Set direction for RTL */
+            text-align: right; /* Align text to the right */
+        }
+
+        .login-container {
+            background-color: var(--bg-dark);
+            padding: 40px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: 
+                var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
+                var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-container h1 {
+            color: var(--text-primary);
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            font-weight: 700; /* Bold for headings */
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: right;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            font-weight: 300; /* Light for labels */
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: var(--bg-dark);
+            border: none;
+            border-radius: var(--border-radius-soft);
+            color: var(--text-primary);
+            font-size: 1.1em;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 
+                inset var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
+                inset var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light);
+        }
+
+        .input-group input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .input-group input:focus {
+            box-shadow: 
+                inset var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
+                inset var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light),
+                0 0 0 2px var(--accent-blue); /* Focus highlight */
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--accent-green);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: var(--border-radius-soft);
+            font-size: 1.2em;
+            font-weight: 600; /* Semi-bold for buttons */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
+                var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light);
+        }
+
+        .btn-login:hover {
+            background-color: #00E6A0; /* Slightly darker green on hover */
+            box-shadow: 
+                var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
+                var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light),
+                0 0 15px rgba(0, 255, 178, 0.6); /* Glow effect */
+            transform: translateY(-2px);
+        }
+
+        .btn-login:active {
+            transform: translateY(1px);
+            box-shadow: 
+                inset var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
+                inset var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light);
+        }
+
+        .forgot-password {
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        .forgot-password a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>تسجيل الدخول</h1>
+        <form>
+            <div class="input-group">
+                <label for="username">اسم المستخدم</label>
+                <input type="text" id="username" placeholder="أدخل اسم المستخدم الخاص بك" required>
+            </div>
+            <div class="input-group">
+                <label for="password">كلمة المرور</label>
+                <input type="password" id="password" placeholder="أدخل كلمة المرور الخاصة بك" required>
+            </div>
+            <button type="submit" class="btn-login">تسجيل الدخول</button>
+        </form>
+        <div class="forgot-password">
+            <a href="#">هل نسيت كلمة المرور؟</a>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtJaifspNzKeht9mOmZGvVU1IOvmnyrwQ",
+            authDomain: "sheikh-of-the-arabs.firebaseapp.com",
+            projectId: "sheikh-of-the-arabs",
+            storageBucket: "sheikh-of-the-arabs.firebasestorage.app",
+            messagingSenderId: "64212176848",
+            appId: "1:64212176848:web:8a02363e1be4e706fdb3d5",
+            measurementId: "G-HV2WKFZ32B"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+</body>
+</html>
