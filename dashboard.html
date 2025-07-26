@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - شيخ العرب</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         :root {
-            /* New Color Palette */
+            /* Color Palette */
             --bg-light: #F0F4F8; /* Light blueish white background */
             --surface-white: #FFFFFF; /* Pure white for cards/elements */
             --text-dark: #2C3E50; /* Dark blueish black for primary text */
@@ -25,82 +26,264 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-light); /* Changed background */
-            color: var(--text-dark); /* Changed text color */
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            text-align: right;
+            display: flex; /* Use flexbox for main layout */
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px; /* Fixed width for sidebar */
+            background-color: var(--surface-white);
+            box-shadow: var(--shadow-elevation-1);
+            padding: 30px 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            direction: rtl;
+            border-radius: 0 var(--border-radius-soft) var(--border-radius-soft) 0; /* Rounded right corners */
+        }
+
+        .logo {
+            font-family: 'Cairo', sans-serif; /* Using Cairo, but imagine a geometric font */
+            font-size: 2.5em;
+            font-weight: 700; /* Bold to simulate geometric strength */
+            color: var(--text-dark); /* Dark text for logo */
+            margin-bottom: 50px;
             text-align: center;
-        }
-
-        .dashboard-container {
-            background-color: var(--surface-white); /* Changed background */
-            padding: 50px 40px; /* More padding */
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1); /* New shadow */
+            line-height: 1.2;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 600px;
-            transition: box-shadow 0.3s ease;
+        }
+        .logo span {
+            color: var(--accent-blue); /* Highlight part of the logo */
+        }
+        /* For a true geometric Arabic font, you would typically embed a custom font like "Almarai" or "Droid Arabic Kufi" or a custom SVG/image for the logo */
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
         }
 
-        .dashboard-container:hover {
-            box-shadow: var(--shadow-elevation-2);
+        .nav-item {
+            margin-bottom: 10px;
         }
 
-        h1 {
-            color: var(--accent-blue); /* Light blue for headings */
-            font-size: 2.8em; /* Larger heading */
-            margin-bottom: 25px;
-            font-weight: 700;
-        }
-
-        p {
-            color: var(--text-secondary); /* Secondary text color */
-            font-size: 1.2em;
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-
-        .btn-logout {
-            padding: 15px 30px; /* More padding */
-            background-color: var(--error-red); /* Red for logout/warning */
-            color: var(--surface-white); /* White text */
-            border: none;
-            border-radius: var(--border-radius-soft);
-            font-size: 1.15em;
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.1em;
             font-weight: 600;
-            cursor: pointer;
+            border-radius: var(--border-radius-soft);
             transition: all 0.3s ease;
-            box-shadow: var(--shadow-elevation-1); /* Soft shadow */
-            font-family: 'Cairo', sans-serif;
         }
 
-        .btn-logout:hover {
+        .nav-link i {
+            font-size: 1.4em;
+            margin-left: 15px; /* Space between icon and text */
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background-color: var(--bg-light);
+            color: var(--accent-blue);
+        }
+
+        .nav-link:hover i {
+            color: var(--accent-blue);
+        }
+
+        .nav-link.active {
+            background-color: var(--accent-blue);
+            color: var(--surface-white);
+            box-shadow: var(--shadow-elevation-1);
+        }
+
+        .nav-link.active i {
+            color: var(--surface-white);
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            flex-grow: 1; /* Takes up remaining space */
+            padding: 30px 40px;
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+
+        .content-section {
+            background-color: var(--surface-white);
+            padding: 30px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-elevation-1);
+            margin-bottom: 30px;
+            display: none; /* Hidden by default */
+        }
+
+        .content-section.active {
+            display: block; /* Show active section */
+        }
+
+        .content-section h2 {
+            color: var(--text-dark);
+            font-size: 2em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 15px;
+        }
+
+        .content-section p {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            line-height: 1.7;
+        }
+
+        /* Logout Button Specific Styling in Sidebar */
+        .nav-item.logout {
+            margin-top: auto; /* Pushes logout to the bottom */
+            width: 100%;
+        }
+
+        .nav-link.logout-btn {
+            background-color: var(--error-red);
+            color: var(--surface-white);
+            justify-content: center; /* Center text and icon */
+            margin-top: 20px;
+        }
+
+        .nav-link.logout-btn i {
+            color: var(--surface-white);
+        }
+
+        .nav-link.logout-btn:hover {
             background-color: #D32F2F; /* Darker red on hover */
-            box-shadow: var(--shadow-elevation-2);
-            transform: translateY(-2px);
+            color: var(--surface-white);
         }
 
-        .btn-logout:active {
-            transform: translateY(1px);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column; /* Stack sidebar and content vertically */
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+                border-radius: var(--border-radius-soft) var(--border-radius-soft) 0 0;
+                box-shadow: var(--shadow-elevation-1);
+                flex-direction: row; /* Align items horizontally in mobile sidebar */
+                justify-content: space-around;
+                flex-wrap: wrap; /* Allow tabs to wrap */
+            }
+            .logo {
+                display: none; /* Hide logo on small screens */
+            }
+            .nav-list {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+            .nav-item {
+                margin: 5px;
+            }
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 0.9em;
+                flex-direction: column; /* Stack icon and text */
+                text-align: center;
+            }
+            .nav-link i {
+                margin: 0 0 5px 0;
+            }
+            .nav-item.logout {
+                margin-top: 10px;
+                width: auto; /* Adjust width for mobile */
+            }
+            .main-content {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <h1>أهلاً بك في لوحة التحكم!</h1>
-        <p>لقد تم تسجيل دخولك بنجاح إلى نظام إدارة "شيخ العرب". يمكنك الآن البدء في إدارة منتجاتك ونقطة البيع.</p>
-        <button id="logoutButton" class="btn-logout">تسجيل الخروج</button>
-    </div>
+    <aside class="sidebar">
+        <div class="logo">
+            شيخ <span>العرب</span>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="#home" class="nav-link active" data-tab="home">
+                    <i class="ri-dashboard-line"></i>
+                    <span>الصفحة الرئيسية</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#inventory" class="nav-link" data-tab="inventory">
+                    <i class="ri-box-3-line"></i>
+                    <span>إدارة المخزون</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#pos" class="nav-link" data-tab="pos">
+                    <i class="ri-shopping-cart-line"></i>
+                    <span>نقطة البيع</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#settings" class="nav-link" data-tab="settings">
+                    <i class="ri-settings-3-line"></i>
+                    <span>الإعدادات</span>
+                </a>
+            </li>
+            <li class="nav-item logout">
+                <a href="#" id="logoutButton" class="nav-link logout-btn">
+                    <i class="ri-logout-box-line"></i>
+                    <span>تسجيل الخروج</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <section id="home" class="content-section active">
+            <h2>الصفحة الرئيسية</h2>
+            <p>مرحباً بك في لوحة تحكم شيخ العرب! هنا يمكنك الحصول على نظرة عامة سريعة على أداء متجرك.</p>
+            <p>ستظهر هنا لوحات المعلومات الرئيسية، مثل المبيعات اليومية، المنتجات الأكثر مبيعاً، وحالة المخزون.</p>
+        </section>
+
+        <section id="inventory" class="content-section">
+            <h2>إدارة المخزون</h2>
+            <p>هذه هي صفحة إدارة المخزون. يمكنك هنا إضافة منتجات جديدة، تعديل المنتجات الحالية، وتتبع الكميات المتاحة.</p>
+            <p>ستتضمن هذه الصفحة جداول للمنتجات، خيارات للبحث والتصفية، وأدوات لإدارة المخزون بكفاءة.</p>
+        </section>
+
+        <section id="pos" class="content-section">
+            <h2>نقطة البيع</h2>
+            <p>هذه هي واجهة نقطة البيع. يمكن للموظفين استخدامها لإجراء المعاملات بسرعة وسهولة.</p>
+            <p>ستحتوي على واجهة لاختيار المنتجات، حساب الإجمالي، ومعالجة المدفوعات.</p>
+        </section>
+
+        <section id="settings" class="content-section">
+            <h2>الإعدادات</h2>
+            <p>قم بإدارة إعدادات النظام هنا، بما في ذلك معلومات المتجر، إعدادات المستخدمين، وإعدادات الفواتير.</p>
+            <p>ستوفر هذه الصفحة خيارات لتخصيص تجربتك مع نظام شيخ العرب.</p>
+        </section>
+    </main>
 
     <script type="module">
+        // Firebase Configuration (same as index.html)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
@@ -119,7 +302,7 @@
         const auth = getAuth(app);
         const analytics = getAnalytics(app);
 
-        // Check auth state on page load
+        // Authentication Check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 // User is not signed in, redirect to login page
@@ -127,8 +310,9 @@
             }
         });
 
-        // Handle logout
-        document.getElementById('logoutButton').addEventListener('click', async () => {
+        // Logout Functionality
+        document.getElementById('logoutButton').addEventListener('click', async (e) => {
+            e.preventDefault(); // Prevent default link behavior
             try {
                 await signOut(auth);
                 window.location.href = 'index.html'; // Redirect to login page after logout
@@ -136,6 +320,37 @@
                 console.error("Error signing out:", error);
                 alert("حدث خطأ أثناء تسجيل الخروج. يرجى المحاولة مرة أخرى.");
             }
+        });
+
+        // Tab Switching Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // Prevent default behavior for logout button
+                    if (link.id === 'logoutButton') {
+                        return;
+                    }
+
+                    e.preventDefault(); // Prevent default link behavior for other tabs
+
+                    // Remove active class from all links and content sections
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    contentSections.forEach(section => section.classList.remove('active'));
+
+                    // Add active class to clicked link
+                    link.classList.add('active');
+
+                    // Show corresponding content section
+                    const targetTab = link.dataset.tab;
+                    const targetSection = document.getElementById(targetTab);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                });
+            });
         });
     </script>
 </body>
