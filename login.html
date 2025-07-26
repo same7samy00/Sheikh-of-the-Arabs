@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - شيخ العرب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #0F111A;
             --text-primary: #FFFFFF;
             --text-secondary: #A0A3B1;
             --accent-green: #00FFB2;
-            --accent-pink: #FF005C;
+            --accent-pink: #FF005C; /* For error messages */
             --accent-blue: #5A8DEE;
             --border-radius-soft: 16px;
             --shadow-light-x: 6px;
@@ -25,7 +25,7 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Cairo', sans-serif; /* Changed to Cairo */
             background-color: var(--bg-dark);
             color: var(--text-primary);
             display: flex;
@@ -35,8 +35,8 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
-            direction: rtl; /* Set direction for RTL */
-            text-align: right; /* Align text to the right */
+            direction: rtl;
+            text-align: right;
         }
 
         .login-container {
@@ -55,12 +55,13 @@
             color: var(--text-primary);
             font-size: 2.2em;
             margin-bottom: 30px;
-            font-weight: 700; /* Bold for headings */
+            font-weight: 700;
         }
 
         .input-group {
             margin-bottom: 25px;
             text-align: right;
+            position: relative; /* Needed for absolute positioning of error */
         }
 
         .input-group label {
@@ -68,7 +69,7 @@
             color: var(--text-secondary);
             font-size: 0.9em;
             margin-bottom: 8px;
-            font-weight: 300; /* Light for labels */
+            font-weight: 400; /* Regular for labels in Cairo */
         }
 
         .input-group input {
@@ -85,9 +86,11 @@
             box-shadow: 
                 inset var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
                 inset var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light);
+            font-family: 'Cairo', sans-serif; /* Changed to Cairo */
         }
 
         .input-group input::placeholder {
+            font-family: 'Cairo', sans-serif; /* Changed to Cairo */
             color: var(--text-secondary);
             opacity: 0.7;
         }
@@ -96,7 +99,24 @@
             box-shadow: 
                 inset var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
                 inset var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light),
-                0 0 0 2px var(--accent-blue); /* Focus highlight */
+                0 0 0 2px var(--accent-blue);
+        }
+
+        .error-message {
+            color: var(--accent-pink);
+            font-size: 0.85em;
+            margin-top: 8px;
+            text-align: center; /* Centered below input */
+            display: block; /* Ensure it takes full width */
+            font-weight: 400; /* Regular for error messages */
+            visibility: hidden; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .error-message.show {
+            visibility: visible;
+            opacity: 1;
         }
 
         .btn-login {
@@ -107,20 +127,21 @@
             border: none;
             border-radius: var(--border-radius-soft);
             font-size: 1.2em;
-            font-weight: 600; /* Semi-bold for buttons */
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 
                 var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
                 var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light);
+            font-family: 'Cairo', sans-serif; /* Changed to Cairo */
         }
 
         .btn-login:hover {
-            background-color: #00E6A0; /* Slightly darker green on hover */
+            background-color: #00E6A0;
             box-shadow: 
                 var(--shadow-light-x) var(--shadow-light-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-dark),
                 var(--shadow-dark-x) var(--shadow-dark-y) var(--shadow-blur) var(--shadow-spread) var(--shadow-color-light),
-                0 0 15px rgba(0, 255, 178, 0.6); /* Glow effect */
+                0 0 15px rgba(0, 255, 178, 0.6);
             transform: translateY(-2px);
         }
 
@@ -140,6 +161,7 @@
             color: var(--text-secondary);
             text-decoration: none;
             transition: color 0.3s ease;
+            font-family: 'Cairo', sans-serif; /* Changed to Cairo */
         }
 
         .forgot-password a:hover {
@@ -150,14 +172,16 @@
 <body>
     <div class="login-container">
         <h1>تسجيل الدخول</h1>
-        <form>
+        <form id="loginForm">
             <div class="input-group">
                 <label for="username">اسم المستخدم</label>
                 <input type="text" id="username" placeholder="أدخل اسم المستخدم الخاص بك" required>
+                <span class="error-message" id="usernameError"></span>
             </div>
             <div class="input-group">
                 <label for="password">كلمة المرور</label>
                 <input type="password" id="password" placeholder="أدخل كلمة المرور الخاصة بك" required>
+                <span class="error-message" id="passwordError"></span>
             </div>
             <button type="submit" class="btn-login">تسجيل الدخول</button>
         </form>
@@ -188,6 +212,47 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
+
+        // Basic form validation (for demonstration)
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const usernameError = document.getElementById('usernameError');
+            const passwordError = document.getElementById('passwordError');
+
+            let isValid = true;
+
+            // Clear previous errors
+            usernameError.textContent = '';
+            usernameError.classList.remove('show');
+            passwordError.textContent = '';
+            passwordError.classList.remove('show');
+
+            if (usernameInput.value.trim() === '') {
+                usernameError.textContent = 'الرجاء إدخال اسم المستخدم.';
+                usernameError.classList.add('show');
+                isValid = false;
+            }
+
+            if (passwordInput.value.trim() === '') {
+                passwordError.textContent = 'الرجاء إدخال كلمة المرور.';
+                passwordError.classList.add('show');
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Here you would typically handle login with Firebase Authentication
+                // For demonstration, we'll just log to console
+                console.log('Login attempt with:', {
+                    username: usernameInput.value,
+                    password: passwordInput.value
+                });
+                alert('تم إرسال بيانات تسجيل الدخول (للتجربة فقط).');
+                // Example: firebase.auth().signInWithEmailAndPassword(email, password);
+            }
+        });
     </script>
 </body>
 </html>
