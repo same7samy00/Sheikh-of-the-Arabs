@@ -4,504 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - شيخ العرب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
-    <style>
-        :root {
-            /* Color Palette (Matching base-font-size from inventory.html) */
-            --bg-light: #F0F4F8;
-            --surface-white: #FFFFFF;
-            --text-dark: #2C3E50;
-            --text-secondary: #607D8B;
-            --accent-blue: #03A9F4;
-            --error-red: #FF5252;
-            --success-green: #4CAF50;
-            --info-yellow: #FFC107;
-
-            --border-radius-soft: 12px;
-            --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-elevation-2: 0 8px 20px rgba(0, 0, 0, 0.12);
-
-            --base-font-size: 0.95em; /* Inherit from inventory.html */
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            direction: rtl;
-            text-align: right;
-            display: flex;
-            min-height: 100vh;
-            font-size: var(--base-font-size); /* Apply base font size */
-        }
-
-        /* Sidebar Styling (Adjusted for consistency) */
-        .sidebar {
-            width: 260px; /* Consistent with inventory.html */
-            background-color: var(--surface-white);
-            box-shadow: var(--shadow-elevation-1);
-            padding: 25px 15px; /* Consistent with inventory.html */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-radius: 0 var(--border-radius-soft) var(--border-radius-soft) 0;
-            flex-shrink: 0;
-        }
-
-        .logo {
-            font-family: 'Cairo', sans-serif;
-            font-size: 2.2em; /* Consistent with inventory.html */
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 40px; /* Consistent with inventory.html */
-            text-align: center;
-            line-height: 1.2;
-            padding-bottom: 8px; /* Consistent with inventory.html */
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            width: 100%;
-        }
-        .logo span {
-            color: var(--accent-blue);
-        }
-
-        .nav-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-        }
-
-        .nav-item {
-            margin-bottom: 8px; /* Consistent with inventory.html */
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 12px 18px; /* Consistent with inventory.html */
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 1em; /* Consistent with inventory.html */
-            font-weight: 600;
-            border-radius: var(--border-radius-soft);
-            transition: all 0.3s ease;
-        }
-
-        .nav-link i {
-            font-size: 1.3em; /* Consistent with inventory.html */
-            margin-left: 12px; /* Consistent with inventory.html */
-            color: var(--text-secondary);
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            background-color: var(--bg-light);
-            color: var(--accent-blue);
-        }
-
-        .nav-link:hover i {
-            color: var(--accent-blue);
-        }
-
-        .nav-link.active {
-            background-color: var(--accent-blue);
-            color: var(--surface-white);
-            box-shadow: var(--shadow-elevation-1);
-        }
-
-        .nav-link.active i {
-            color: var(--surface-white);
-        }
-
-        .nav-item.logout {
-            margin-top: auto;
-            width: 100%;
-        }
-
-        .nav-link.logout-btn {
-            background-color: var(--error-red);
-            color: var(--surface-white);
-            justify-content: center;
-            margin-top: 15px; /* Consistent with inventory.html */
-        }
-
-        .nav-link.logout-btn i {
-            color: var(--surface-white);
-        }
-
-        .nav-link.logout-btn:hover {
-            background-color: #D32F2F;
-            color: var(--surface-white);
-        }
-
-        /* Main Content Styling (Adjusted for consistency) */
-        .main-content {
-            flex-grow: 1;
-            padding: 25px 30px; /* Consistent with inventory.html */
-            overflow-y: auto;
-        }
-
-        .content-section {
-            background-color: var(--surface-white);
-            padding: 25px; /* Consistent with inventory.html sections */
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1);
-            margin-bottom: 25px; /* Consistent with inventory.html sections */
-        }
-
-        .content-section h2 {
-            color: var(--text-dark);
-            font-size: 2em;
-            margin-bottom: 20px;
-            font-weight: 700;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 15px;
-        }
-
-        .content-section p {
-            color: var(--text-secondary);
-            font-size: 1em; /* Adjusted for consistency */
-            line-height: 1.7;
-        }
-
-        /* Dashboard Cards (Adjusted for consistency) */
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjusted min-width */
-            gap: 20px; /* Adjusted gap */
-            margin-bottom: 25px; /* Adjusted margin */
-        }
-
-        .card {
-            background-color: var(--surface-white);
-            padding: 20px; /* Adjusted padding */
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-elevation-2);
-        }
-
-        .card .icon {
-            font-size: 2.2em; /* Adjusted icon size */
-            color: var(--accent-blue);
-            margin-bottom: 10px; /* Adjusted margin */
-        }
-
-        .card .title {
-            font-size: 1.1em; /* Adjusted font size */
-            color: var(--text-secondary);
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .card .value {
-            font-size: 2em; /* Adjusted font size */
-            color: var(--text-dark);
-            font-weight: 700;
-        }
-
-        /* Recent Products/Low Stock Section (Adjusted for consistency) */
-        .recent-products, .low-stock-products {
-            background-color: var(--surface-white);
-            padding: 25px; /* Adjusted padding */
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1);
-            margin-bottom: 25px; /* Adjusted margin */
-        }
-
-        .recent-products h3, .low-stock-products h3 {
-            color: var(--text-dark);
-            font-size: 1.4em; /* Adjusted font size */
-            margin-bottom: 15px; /* Adjusted margin */
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 10px;
-        }
-
-        .product-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .product-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0; /* Adjusted padding */
-            border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
-            font-size: 0.95em; /* Adjusted font size */
-            color: var(--text-dark);
-        }
-
-        .product-list-item:last-child {
-            border-bottom: none;
-        }
-
-        .product-list-item .name {
-            font-weight: 600;
-        }
-
-        .product-list-item .quantity, .product-list-item .price {
-            color: var(--text-secondary);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar {
-                width: 100%; height: auto; padding: 20px;
-                border-radius: var(--border-radius-soft) var(--border-radius-soft) 0 0;
-                flex-direction: row; justify-content: space-around; flex-wrap: wrap;
-                font-size: 1em;
-            }
-            .logo { display: none; }
-            .nav-list { display: flex; flex-wrap: wrap; justify-content: center; width: 100%; }
-            .nav-item { margin: 5px; }
-            .nav-link { padding: 10px 15px; font-size: 0.9em; flex-direction: column; text-align: center; }
-            .nav-link i { margin: 0 0 5px 0; }
-            .nav-item.logout { margin-top: 10px; width: auto; }
-            .main-content { padding: 20px; }
-            .dashboard-cards { grid-template-columns: 1fr; }
-        }
-    </style>
 </head>
 <body>
     <aside class="sidebar">
-        <div class="logo">
-            شيخ <span>العرب</span>
-        </div>
+        <div class="logo">شيخ <span>العرب</span></div>
         <ul class="nav-list">
-            <li class="nav-item">
-                <a href="dashboard.html" class="nav-link">
-                    <i class="ri-dashboard-line"></i>
-                    <span>الصفحة الرئيسية</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="inventory.html" class="nav-link">
-                    <i class="ri-box-3-line"></i>
-                    <span>إدارة المخزون</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="pos.html" class="nav-link">
-                    <i class="ri-shopping-cart-line"></i>
-                    <span>نقطة البيع</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="settings.html" class="nav-link">
-                    <i class="ri-settings-3-line"></i>
-                    <span>الإعدادات</span>
-                </a>
-            </li>
-            <li class="nav-item logout">
-                <a href="#" id="logoutButton" class="nav-link logout-btn">
-                    <i class="ri-logout-box-line"></i>
-                    <span>تسجيل الخروج</span>
-                </a>
-            </li>
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="ri-dashboard-line"></i><span>لوحة التحكم</span></a></li>
+            <li class="nav-item"><a href="inventory.html" class="nav-link"><i class="ri-box-3-line"></i><span>المخزون</span></a></li>
+            <li class="nav-item"><a href="pos.html" class="nav-link"><i class="ri-shopping-cart-line"></i><span>نقطة البيع</span></a></li>
+            <li class="nav-item logout"><a href="#" id="logoutButton" class="nav-link logout-btn"><i class="ri-logout-box-line"></i><span>الخروج</span></a></li>
         </ul>
     </aside>
-
     <main class="main-content">
-        <section id="home" class="content-section">
-            <h2>الصفحة الرئيسية</h2>
-            <p>مرحباً بك في لوحة تحكم شيخ العرب! هنا يمكنك الحصول على نظرة عامة سريعة على أداء متجرك.</p>
-            
-            <div class="dashboard-cards">
-                <div class="card">
-                    <i class="ri-box-3-line icon"></i>
-                    <div class="title">إجمالي المنتجات</div>
-                    <div class="value" id="totalProducts">0</div>
-                </div>
-                <div class="card">
-                    <i class="ri-alert-line icon" style="color: var(--info-yellow);"></i>
-                    <div class="title">المنتجات قليلة المخزون</div>
-                    <div class="value" id="lowStockProducts">0</div>
-                </div>
-                <div class="card">
-                    <i class="ri-currency-line icon" style="color: var(--success-green);"></i>
-                    <div class="title">إجمالي قيمة المخزون</div>
-                    <div class="value" id="totalInventoryValue">0.00 جنيه</div>
+        <div class="page-header"><h1 class="page-title">لوحة التحكم</h1></div>
+        <div class="kpi-grid">
+            <div class="card kpi-card">
+                <div class="details">
+                    <div class="title">إجمالي أنواع المنتجات</div>
+                    <div class="value" id="totalProducts">...</div>
                 </div>
             </div>
-
-            <div class="recent-products content-section">
-                <h3>آخر المنتجات المضافة</h3>
-                <ul id="latestProductsList" class="product-list">
-                    <li class="product-list-item">
-                        <span class="name">منتج تجريبي 1</span>
-                        <span class="quantity">100 جرام</span>
-                        <span class="price">5.00 جنيه</span>
-                    </li>
-                    <li class="product-list-item">
-                        <span class="name">منتج تجريبي 2</span>
-                        <span class="quantity">50 قطعة</span>
-                        <span class="price">12.50 جنيه</span>
-                    </li>
-                </ul>
+            <div class="card kpi-card">
+                <div class="details">
+                    <div class="title">منتجات قليلة المخزون</div>
+                    <div class="value" id="lowStockProducts">...</div>
+                </div>
             </div>
-
-            <div class="low-stock-products content-section">
-                <h3>المنتجات التي تحتاج إلى إعادة تخزين</h3>
-                <ul id="criticalStockList" class="product-list">
-                    </ul>
+            <div class="card kpi-card">
+                <div class="details">
+                    <div class="title">قيمة المخزون (جنيه)</div>
+                    <div class="value" id="totalInventoryValue">...</div>
+                </div>
             </div>
-
-        </section>
+        </div>
+        <div class="card">
+            <h3>أحدث المنتجات المضافة</h3>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead><tr><th>الاسم</th><th>الكمية</th><th>السعر</th></tr></thead>
+                    <tbody id="latestProductsList">
+                        <tr><td colspan="3" style="text-align:center; padding: 20px;">جاري التحميل...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </main>
-
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+        import { db } from './shared.js';
+        import { collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-        // ************* Your web app's Firebase configuration (MUST MATCH ALL PAGES) *************
-        const firebaseConfig = {
-            apiKey: "AIzaSyC5ls-rPdJ65x5BoMGwAOpdcPtD585C2ys",
-            authDomain: "pharmacy-inventory-bf04a.firebaseapp.com",
-            projectId: "pharmacy-inventory-bf04a",
-            storageBucket: "pharmacy-inventory-bf04a.firebasestorage.app",
-            messagingSenderId: "937788650384",
-            appId: "1:937788650384:web:6451225d00e648f3a0b915",
-            measurementId: "G-ZGC9EQ55SL"
-        };
-        // *****************************************************************************************
+        const totalProductsEl = document.getElementById('totalProducts');
+        const lowStockProductsEl = document.getElementById('lowStockProducts');
+        const totalInventoryValueEl = document.getElementById('totalInventoryValue');
+        const latestProductsListEl = document.getElementById('latestProductsList');
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const productsCol = collection(db, "products");
-        const analytics = getAnalytics(app);
-
-        // Authentication Check
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = 'index.html';
-            } else {
-                fetchDashboardData(); // Fetch data once user is authenticated
-            }
-        });
-
-        // Logout Functionality
-        document.getElementById('logoutButton').addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-                await signOut(auth);
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error("Error signing out:", error);
-                alert("حدث خطأ أثناء تسجيل الخروج. يرجى المحاولة مرة أخرى.");
-            }
-        });
-
-        // Dynamic Active Tab Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const navLinks = document.querySelectorAll('.nav-link');
-            const currentPath = window.location.pathname.split('/').pop();
-
-            navLinks.forEach(link => {
-                const linkPath = link.getAttribute('href');
-                if (linkPath === currentPath) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-        // --- Dashboard Data Fetching ---
         async function fetchDashboardData() {
-            const totalProductsElement = document.getElementById('totalProducts');
-            const lowStockProductsElement = document.getElementById('lowStockProducts');
-            const totalInventoryValueElement = document.getElementById('totalInventoryValue');
-            const latestProductsList = document.getElementById('latestProductsList');
-            const criticalStockList = document.getElementById('criticalStockList');
-
-            totalProductsElement.textContent = '...';
-            lowStockProductsElement.textContent = '...';
-            totalInventoryValueElement.textContent = '...';
-            latestProductsList.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">جاري تحميل البيانات...</li>';
-            criticalStockList.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">جاري تحميل البيانات...</li>';
-
-
             try {
-                const productSnapshot = await getDocs(productsCol);
-                let totalProductsCount = 0;
+                const productsRef = collection(db, "products");
+                const snapshot = await getDocs(productsRef);
+                
+                let totalProducts = 0;
                 let lowStockCount = 0;
-                let totalInventoryValue = 0;
-                const allProducts = [];
-
-                productSnapshot.forEach((doc) => {
+                let totalValue = 0;
+                
+                snapshot.forEach(doc => {
                     const product = doc.data();
-                    totalProductsCount++;
-                    allProducts.push({ id: doc.id, ...product });
-
-                    // Calculate total inventory value
-                    totalInventoryValue += (product.quantity * product.pricePerUnit);
-
-                    // Check for low stock (example threshold: quantity <= 100 or specific units)
-                    if (product.status === 'قليل المخزون' || product.status === 'نفد المخزون') {
+                    totalProducts++;
+                    if (product.quantity <= 10 && product.quantity > 0) {
                         lowStockCount++;
                     }
+                    totalValue += (product.quantity || 0) * (product.pricePerUnit || 0);
                 });
 
-                totalProductsElement.textContent = totalProductsCount;
-                lowStockProductsElement.textContent = lowStockCount;
-                totalInventoryValueElement.textContent = `${totalInventoryValue.toFixed(2)} جنيه`;
+                totalProductsEl.textContent = totalProducts;
+                lowStockProductsEl.textContent = lowStockCount;
+                totalInventoryValueEl.textContent = totalValue.toFixed(2);
 
-                // Display latest products (sorted by createdAt, if available, otherwise by updateAt)
-                // Filter out null/undefined createdAt and sort
-                const sortedProducts = allProducts
-                    .filter(p => p.createdAt)
-                    .sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate()) // Firebase Timestamp to Date for comparison
-                    .slice(0, 5); // Get top 5 latest
-
-                displayProductsInList(latestProductsList, sortedProducts);
-
-                // Display critical stock products
-                const criticalStockProducts = allProducts.filter(p => p.status === 'قليل المخزون' || p.status === 'نفد المخزون');
-                displayProductsInList(criticalStockList, criticalStockProducts);
-
-
+                // Fetch latest 5 products
+                const latestQuery = query(collection(db, "products"), orderBy("createdAt", "desc"), limit(5));
+                const latestSnapshot = await getDocs(latestQuery);
+                
+                latestProductsListEl.innerHTML = '';
+                if (latestSnapshot.empty) {
+                    latestProductsListEl.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 20px;">لا توجد منتجات.</td></tr>';
+                } else {
+                    latestSnapshot.forEach(doc => {
+                        const product = doc.data();
+                        const row = latestProductsListEl.insertRow();
+                        row.innerHTML = `
+                            <td>${product.name}</td>
+                            <td>${product.quantity} ${product.unit}</td>
+                            <td>${product.pricePerUnit.toFixed(2)} جنيه</td>
+                        `;
+                    });
+                }
             } catch (error) {
                 console.error("Error fetching dashboard data:", error);
-                totalProductsElement.textContent = 'خطأ';
-                lowStockProductsElement.textContent = 'خطأ';
-                totalInventoryValueElement.textContent = 'خطأ';
-                latestProductsList.innerHTML = '<li style="text-align: center; color: var(--error-red);">خطأ في تحميل البيانات.</li>';
-                criticalStockList.innerHTML = '<li style="text-align: center; color: var(--error-red);">خطأ في تحميل البيانات.</li>';
+                totalProductsEl.textContent = 'خطأ';
             }
         }
 
-        function displayProductsInList(listElement, products) {
-            listElement.innerHTML = ''; // Clear existing
-            if (products.length === 0) {
-                listElement.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">لا توجد منتجات لعرضها.</li>';
-                return;
-            }
-            products.forEach(product => {
-                const li = document.createElement('li');
-                li.classList.add('product-list-item');
-                li.innerHTML = `
-                    <span class="name">${product.name}</span>
-                    <span class="quantity">${product.quantity} ${product.unit}</span>
-                    <span class="price">${product.pricePerUnit.toFixed(2)} جنيه</span>
-                `;
-                listElement.appendChild(li);
-            });
-        }
-
+        fetchDashboardData();
     </script>
 </body>
 </html>
