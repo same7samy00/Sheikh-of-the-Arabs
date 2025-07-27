@@ -7,27 +7,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* New Color Palette */
-            --bg-light: #F0F4F8; /* Light blueish white background */
-            --surface-white: #FFFFFF; /* Pure white for cards/elements */
-            --text-dark: #2C3E50; /* Dark blueish black for primary text */
-            --text-secondary: #607D8B; /* Medium blueish gray for secondary text */
-            --accent-blue: #03A9F4; /* Light Blue for primary actions/highlights */
-            --error-red: #FF5252; /* Red for errors/warnings */
-            --success-green: #4CAF50; /* Green for success */
+            /* Color Palette (Matching base-font-size from inventory.html) */
+            --bg-light: #F0F4F8;
+            --surface-white: #FFFFFF;
+            --text-dark: #2C3E50;
+            --text-secondary: #607D8B;
+            --accent-blue: #03A9F4;
+            --error-red: #FF5252;
+            --success-green: #4CAF50;
 
             --border-radius-soft: 12px;
+            --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-elevation-2: 0 8px 20px rgba(0, 0, 0, 0.12);
+            --shadow-input-focus: 0 0 0 3px rgba(3, 169, 244, 0.3);
 
-            /* Light Shadows */
-            --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for elements */
-            --shadow-elevation-2: 0 8px 20px rgba(0, 0, 0, 0.12); /* Slightly stronger for hover/active */
-            --shadow-input-focus: 0 0 0 3px rgba(3, 169, 244, 0.3); /* Blue ring for focus */
+            --base-font-size: 0.95em; /* Inherit from inventory.html */
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-light); /* Changed background */
-            color: var(--text-dark); /* Changed text color */
+            background-color: var(--bg-light);
+            color: var(--text-dark);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -37,57 +37,67 @@
             box-sizing: border-box;
             direction: rtl;
             text-align: right;
+            font-size: var(--base-font-size); /* Apply base font size */
         }
 
         .login-container {
-            background-color: var(--surface-white); /* Changed background */
-            padding: 40px;
+            background-color: var(--surface-white);
+            padding: 30px; /* Adjusted padding for consistency */
             border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1); /* New shadow */
+            box-shadow: var(--shadow-elevation-1);
             width: 100%;
-            max-width: 420px; /* Slightly wider */
+            max-width: 380px; /* Adjusted max-width */
             text-align: center;
             transition: box-shadow 0.3s ease;
         }
 
         .login-container:hover {
-            box-shadow: var(--shadow-elevation-2); /* Slightly stronger shadow on hover */
+            box-shadow: var(--shadow-elevation-2);
         }
 
         .login-container h1 {
-            color: var(--text-dark); /* Changed color */
-            font-size: 2.5em; /* Slightly larger */
-            margin-bottom: 35px; /* More space */
+            color: var(--text-dark);
+            font-size: 2.2em; /* Adjusted font size for consistency */
+            margin-bottom: 30px; /* Adjusted margin */
             font-weight: 700;
         }
 
         .input-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px; /* Adjusted margin */
             text-align: right;
             position: relative;
         }
 
         .input-group label {
             display: block;
-            color: var(--text-secondary); /* Changed color */
-            font-size: 1em; /* Slightly larger */
-            margin-bottom: 10px; /* More space */
-            font-weight: 400; /* Regular weight */
+            color: var(--text-secondary);
+            font-size: 1em;
+            margin-bottom: 8px; /* Adjusted margin */
+            font-weight: 400;
         }
 
         .input-group input {
             width: 100%;
-            padding: 16px 20px; /* Slightly more padding */
-            background-color: var(--bg-light); /* Input background matches main body */
-            border: 1px solid #E0E6EB; /* Subtle light border */
+            padding: 12px 15px; /* Adjusted padding for consistency */
+            background-color: var(--bg-light);
+            border: 1px solid #E0E6EB;
             border-radius: var(--border-radius-soft);
-            color: var(--text-dark); /* Input text color */
-            font-size: 1.1em;
+            color: var(--text-dark);
+            font-size: 1em; /* Adjusted font size for consistency */
             box-sizing: border-box;
             outline: none;
             transition: all 0.3s ease;
-            box-shadow: none; /* No inset shadow */
+            box-shadow: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
 
         .input-group input::placeholder {
             font-family: 'Cairo', sans-serif;
@@ -96,14 +106,14 @@
         }
 
         .input-group input:focus {
-            border-color: var(--accent-blue); /* Blue border on focus */
-            box-shadow: var(--shadow-input-focus); /* Blue glow on focus */
+            border-color: var(--accent-blue);
+            box-shadow: var(--shadow-input-focus);
         }
 
         .error-message {
-            color: var(--error-red); /* Red for errors */
-            font-size: 0.88em;
-            margin-top: 8px;
+            color: var(--error-red);
+            font-size: 0.8em; /* Adjusted font size for consistency */
+            margin-top: 5px; /* Adjusted margin */
             text-align: center;
             display: block;
             font-weight: 400;
@@ -119,37 +129,37 @@
 
         .btn-login {
             width: 100%;
-            padding: 18px; /* More padding for a bolder button */
-            background-color: var(--accent-blue); /* Light blue button */
-            color: var(--surface-white); /* White text on button */
+            padding: 15px; /* Adjusted padding for consistency */
+            background-color: var(--accent-blue);
+            color: var(--surface-white);
             border: none;
             border-radius: var(--border-radius-soft);
-            font-size: 1.25em; /* Slightly larger font */
-            font-weight: 700; /* Bold */
+            font-size: 1.1em; /* Adjusted font size for consistency */
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: var(--shadow-elevation-1); /* Soft shadow */
+            box-shadow: var(--shadow-elevation-1);
             font-family: 'Cairo', sans-serif;
         }
 
         .btn-login:hover {
-            background-color: #0288D1; /* Slightly darker blue on hover */
-            box-shadow: var(--shadow-elevation-2); /* Stronger shadow on hover */
+            background-color: #0288D1;
+            box-shadow: var(--shadow-elevation-2);
             transform: translateY(-2px);
         }
 
         .btn-login:active {
             transform: translateY(1px);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); /* Pressed effect */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
         .forgot-password {
-            margin-top: 25px; /* More space */
-            font-size: 1em;
+            margin-top: 20px; /* Adjusted margin */
+            font-size: 0.9em; /* Adjusted font size for consistency */
         }
 
         .forgot-password a {
-            color: var(--text-secondary); /* Secondary text color */
+            color: var(--text-secondary);
             text-decoration: none;
             transition: color 0.3s ease;
             font-family: 'Cairo', sans-serif;
@@ -157,7 +167,7 @@
         }
 
         .forgot-password a:hover {
-            color: var(--accent-blue); /* Blue on hover */
+            color: var(--accent-blue);
             text-decoration: underline;
         }
     </style>
@@ -184,25 +194,25 @@
     </div>
 
     <script type="module">
-        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
-        // Your web app's Firebase configuration
+        // ************* Your web app's Firebase configuration (MUST MATCH ALL PAGES) *************
         const firebaseConfig = {
-            apiKey: "AIzaSyBtJaifspNzKeht9mOmZGvVU1IOvmnyrwQ",
-            authDomain: "sheikh-of-the-arabs.firebaseapp.com",
-            projectId: "sheikh-of-the-arabs",
-            storageBucket: "sheikh-of-the-arabs.firebasestorage.app",
-            messagingSenderId: "64212176848",
-            appId: "1:64212176848:web:8a02363e1be4e706fdb3d5",
-            measurementId: "G-HV2WKFZ32B"
+            apiKey: "AIzaSyC5ls-rPdJ65x5BoMGwAOpdcPtD585C2ys",
+            authDomain: "pharmacy-inventory-bf04a.firebaseapp.com",
+            projectId: "pharmacy-inventory-bf04a",
+            storageBucket: "pharmacy-inventory-bf04a.firebasestorage.app",
+            messagingSenderId: "937788650384",
+            appId: "1:937788650384:web:6451225d00e648f3a0b915",
+            measurementId: "G-ZGC9EQ55SL"
         };
+        // *****************************************************************************************
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app); // Get the Auth service
+        const auth = getAuth(app);
         const analytics = getAnalytics(app);
 
         // Get elements
@@ -244,11 +254,14 @@
             }
 
             try {
+                // Set persistence to LOCAL to keep user logged in across sessions
+                await setPersistence(auth, browserLocalPersistence);
+
                 // Sign in with email and password
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 console.log('User signed in:', userCredential.user);
                 // Redirect to dashboard on successful login
-                window.location.href = 'dashboard.html'; // Or your actual dashboard URL
+                window.location.href = 'dashboard.html';
             } catch (error) {
                 // Handle errors from Firebase Authentication
                 let errorMessage = 'حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.';
