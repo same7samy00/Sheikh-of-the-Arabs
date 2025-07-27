@@ -75,12 +75,115 @@
 
     <div id="notification-container"></div>
     <script src="shared.js" type="module"></script>
+    
     <script type="module">
-        // The script for inventory.html remains the same as the original.
         import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
         import { db, showNotification, showConfirmation, listenToScannerSession, requestScan } from './shared.js';
 
-        // ... (The entire original script for inventory.html goes here)
+        const productsTableBody = document.getElementById('productsTableBody');
+        const searchInput = document.getElementById('searchProduct');
+        const categorySelect = document.getElementById('filterCategory');
+        let allProducts = [];
+
+        async function fetchProducts() {
+            productsTableBody.innerHTML = '<tr><td colspan="7" class="table-placeholder">جاري تحميل المنتجات...</td></tr>';
+            try {
+                const querySnapshot = await getDocs(collection(db, "products"));
+                allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderProducts();
+            } catch (e) {
+                console.error("Error fetching products: ", e);
+                productsTableBody.innerHTML = '<tr><td colspan="7" class="table-placeholder error">حدث خطأ أثناء تحميل المنتجات.</td></tr>';
+                showNotification("خطأ في تحميل المنتجات.", "error");
+            }
+        }
+
+        function renderProducts() {
+            const searchQuery = searchInput.value.toLowerCase().trim();
+            const categoryFilter = categorySelect.value;
+
+            let filteredProducts = allProducts;
+
+            if (categoryFilter) {
+                filteredProducts = filteredProducts.filter(p => p.category === categoryFilter);
+            }
+
+            if (searchQuery) {
+                filteredProducts = filteredProducts.filter(p =>
+                    (p.name && p.name.toLowerCase().includes(searchQuery)) ||
+                    (p.barcode && p.barcode.toLowerCase().includes(searchQuery))
+                );
+            }
+
+            productsTableBody.innerHTML = '';
+            if (filteredProducts.length === 0) {
+                productsTableBody.innerHTML = '<tr><td colspan="7" class="table-placeholder">لا توجد منتجات تطابق البحث.</td></tr>';
+                return;
+            }
+
+            filteredProducts.forEach(product => {
+                const row = productsTableBody.insertRow();
+                const status = product.status || 'متوفر';
+                let statusClass = '';
+                if (status === 'قليل المخزون') statusClass = 'status-warning';
+                else if (status === 'نفد المخزون') statusClass = 'status-danger';
+                else statusClass = 'status-success';
+
+                row.innerHTML = `
+                    <td>${product.barcode || 'N/A'}</td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>${product.quantity} ${product.unit}</td>
+                    <td>${(product.pricePerUnit || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</td>
+                    <td><span class="status-badge ${statusClass}">${status}</span></td>
+                    <td class="actions">
+                        <button title="تعديل" class="action-btn edit-btn" data-id="${product.id}"><i class="ri-edit-line"></i></button>
+                        <button title="حذف" class="action-btn delete-btn" data-id="${product.id}"><i class="ri-delete-bin-line"></i></button>
+                    </td>
+                `;
+            });
+        }
+        
+        productsTableBody.addEventListener('click', (e) => {
+            const editBtn = e.target.closest('.edit-btn');
+            const deleteBtn = e.target.closest('.delete-btn');
+            
+            if (editBtn) {
+                window.location.href = `add_product.html?id=${editBtn.dataset.id}`;
+            }
+            
+            if (deleteBtn) {
+                const productId = deleteBtn.dataset.id;
+                showConfirmation('هل أنت متأكد أنك تريد حذف هذا المنتج؟', async () => {
+                    try {
+                        await deleteDoc(doc(db, "products", productId));
+                        showNotification('تم حذف المنتج بنجاح!', 'success');
+                        fetchProducts(); // Refetch all products
+                    } catch (err) {
+                        console.error("Error deleting document: ", err);
+                        showNotification('فشل حذف المنتج.', 'error');
+                    }
+                });
+            }
+        });
+
+        searchInput.addEventListener('input', renderProducts);
+        categorySelect.addEventListener('change', renderProducts);
+        
+        document.getElementById('requestScanForSearchBtn').addEventListener('click', () => {
+            requestScan('search');
+        });
+        
+        listenToScannerSession((scannedValue, purpose) => {
+            if (purpose === 'search' && scannedValue) {
+                searchInput.value = scannedValue;
+                renderProducts();
+                showNotification(`تم البحث عن: ${scannedValue}`, 'success');
+            }
+        });
+
+        // Initial Load
+        fetchProducts();
     </script>
 </body>
 </html>
