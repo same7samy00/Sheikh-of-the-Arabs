@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سجل المبيعات - شيخ العرب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <style>
+        /* General Styles - Common to all pages */
+        :root {
+            --bg-light: #F0F4F8;
+            --surface-white: #FFFFFF;
+            --text-dark: #2C3E50;
+            --text-secondary: #607D8B;
+            --accent-blue: #03A9F4;
+            --success-green: #4CAF50;
+            --error-red: #FF5252;
+            --warning-yellow: #FFC107;
+            --border-radius: 12px;
+            --shadow-1: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-2: 0 8px 20px rgba(0, 0, 0, 0.12);
+            --shadow-focus: 0 0 0 3px rgba(3, 169, 244, 0.3);
+            --base-font-size: 16px;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+            color: var(--text-dark);
+            direction: rtl;
+            font-size: var(--base-font-size);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--surface-white);
+            box-shadow: var(--shadow-1);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            border-top-left-radius: var(--border-radius);
+            border-bottom-left-radius: var(--border-radius);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar .logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-dark);
+        }
+
+        .sidebar .logo span {
+            color: var(--accent-blue);
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+        }
+
+        .nav-link i {
+            font-size: 1.4em;
+            margin-left: 10px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-blue);
+            background-color: rgba(3, 169, 244, 0.1);
+            border-left: 5px solid var(--accent-blue);
+        }
+
+        .nav-item.logout {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-item.logout .nav-link {
+            color: var(--error-red);
+        }
+
+        .nav-item.logout .nav-link:hover {
+            background-color: rgba(255, 82, 82, 0.1);
+            border-left: 5px solid var(--error-red);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .content-wrapper {
+            background-color: var(--surface-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-1);
+            padding: 20px;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .page-header h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: var(--surface-white);
+            box-shadow: var(--shadow-1);
+        }
+
+        .btn-primary:hover {
+            background-color: #0288D1;
+            box-shadow: var(--shadow-2);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid #E0E6EB;
+        }
+
+        .btn-secondary:hover {
+            background-color: #E0E6EB;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--error-red);
+            color: var(--surface-white);
+        }
+        .btn-danger:hover {
+            background-color: #D32F2F;
+        }
+
+        /* Data Table */
+        .table-container {
+            overflow-x: auto;
+            background-color: var(--surface-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-1);
+            margin-top: 15px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .data-table th, .data-table td {
+            padding: 10px 15px;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table th {
+            background-color: var(--bg-light);
+            color: var(--text-secondary);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .table-placeholder.error {
+            color: var(--error-red);
+        }
+        
+        /* Sales Details Modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1001; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--surface-white);
+            margin: auto;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-2);
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .close-button {
+            color: var(--text-secondary);
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--text-dark);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .modal-details p {
+            margin: 8px 0;
+            font-size: 0.95em;
+            display: flex;
+            justify-content: space-between;
+        }
+        .modal-details p strong {
+            color: var(--text-dark);
+        }
+
+        .modal-products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.85em;
+        }
+
+        .modal-products-table th, .modal-products-table td {
+            border: 1px solid #eee;
+            padding: 8px;
+            text-align: right;
+        }
+        .modal-products-table th {
+            background-color: var(--bg-light);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Password Modal */
+        .password-modal {
+            display: flex; /* Always display as flex to center */
+            position: fixed;
+            z-index: 1002;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .password-modal-content {
+            background-color: var(--surface-white);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-2);
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .password-modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            color: var(--text-dark);
+        }
+
+        .password-modal-content input[type="password"] {
+            width: calc(100% - 24px); /* Account for padding */
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            font-family: 'Cairo', sans-serif;
+            text-align: center;
+            outline: none;
+        }
+
+        .password-modal-content input[type="password"]:focus {
+            border-color: var(--accent-blue);
+            box-shadow: var(--shadow-focus);
+        }
+
+        .password-modal-content .btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+        }
+
+        .password-modal-content .error-message {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+
+        /* Notification System (BOTTOM LEFT) */
+        #notification-container {
+            position: fixed;
+            bottom: 20px; 
+            left: 20px;   
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start; 
+        }
+
+        .notification {
+            background-color: var(--surface-white);
+            color: var(--text-dark);
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 250px;
+            max-width: 350px;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        .notification i {
+            font-size: 1.4em;
+        }
+
+        .notification.info {
+            border-left: 5px solid var(--accent-blue); /* Changed from right */
+            border-right: none;
+        }
+
+        .notification.success {
+            border-left: 5px solid var(--success-green); /* Changed from right */
+            border-right: none;
+        }
+
+        .notification.error {
+            border-left: 5px solid var(--error-red); /* Changed from right */
+            border-right: none;
+        }
+
+        .notification.warning {
+            border-left: 5px solid var(--warning-yellow); /* Changed from right */
+            border-right: none;
+        }
+
+        .notification.confirm {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+            padding-bottom: 10px;
+        }
+        
+        .notification.confirm .confirm-buttons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: flex-end;
+        }
+
+        .notification.confirm .confirm-buttons .btn {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); } 
+        }
+
+        /* Responsive adjustments for sidebar */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-radius: 0;
+                box-shadow: var(--shadow-2);
+                padding: 15px 0;
+            }
+
+            .sidebar .logo {
+                margin-bottom: 20px;
+            }
+
+            .sidebar .nav-list {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            .sidebar .nav-item {
+                margin-bottom: 0;
+            }
+
+            .sidebar .nav-link {
+                padding: 10px 15px;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .sidebar .nav-link span {
+                font-size: 0.8em;
+            }
+
+            .sidebar .nav-link i {
+                margin-left: 0;
+                font-size: 1.2em;
+            }
+
+            .sidebar .nav-link:hover, .sidebar .nav-link.active {
+                border-left: none;
+                border-bottom: 3px solid var(--accent-blue);
+            }
+            
+            .nav-item.logout {
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #eee;
+                width: 100%;
+                text-align: center;
+            }
+            .nav-item.logout .nav-link {
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .content-wrapper {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">شيخ <span>العرب</span></div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="ri-dashboard-line"></i><span>الصفحة الرئيسية</span></a></li>
+            <li class="nav-item"><a href="inventory.html" class="nav-link"><i class="ri-box-3-line"></i><span>إدارة المخزون</span></a></li>
+            <li class="nav-item"><a href="pos.html" class="nav-link"><i class="ri-shopping-cart-line"></i><span>نقطة البيع</span></a></li>
+            <li class="nav-item"><a href="settings.html" class="nav-link"><i class="ri-settings-3-line"></i><span>الإعدادات</span></a></li>
+            <li class="nav-item logout"><a href="#" id="logoutButton" class="nav-link logout-btn"><i class="ri-logout-box-line"></i><span>تسجيل الخروج</span></a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h1>سجل المبيعات</h1>
+                <div class="action-buttons">
+                    <button class="btn btn-danger" id="deleteAllSalesBtn"><i class="ri-delete-bin-line"></i> حذف كل المبيعات</button>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="input-group">
+                    <label for="startDate">من تاريخ:</label>
+                    <input type="date" id="startDate">
+                </div>
+                <div class="input-group">
+                    <label for="endDate">إلى تاريخ:</label>
+                    <input type="date" id="endDate">
+                </div>
+                <button class="btn btn-primary" id="filterSalesBtn">تصفية</button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>رقم الفاتورة</th>
+                            <th>التاريخ</th>
+                            <th>الإجمالي الكلي</th>
+                            <th>المبلغ المدفوع</th>
+                            <th>الباقي للعميل</th>
+                            <th>الخصم</th>
+                            <th>المنتجات</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesTableBody">
+                        <tr><td colspan="8" class="table-placeholder">جاري تحميل سجل المبيعات...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="salesDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>تفاصيل الفاتورة</h2>
+            <div class="modal-details" id="modalDetails">
+                </div>
+            <h3>المنتجات المباعة</h3>
+            <table class="modal-products-table">
+                <thead>
+                    <tr>
+                        <th>المنتج</th>
+                        <th>الكمية</th>
+                        <th>السعر</th>
+                        <th>الإجمالي</th>
+                    </tr>
+                </thead>
+                <tbody id="modalProductsTableBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="passwordModal" class="password-modal">
+        <div class="password-modal-content">
+            <h2>الرجاء إدخال كلمة المرور</h2>
+            <input type="password" id="passwordInput" placeholder="كلمة المرور">
+            <div class="error-message" id="passwordError"></div>
+            <button class="btn btn-primary" id="submitPasswordBtn">دخول</button>
+        </div>
+    </div>
+
+
+    <div id="notification-container"></div>
+    <script src="shared.js" type="module"></script>
+    <script type="module">
+        import { getFirestore, collection, getDocs, doc, deleteDoc, query, orderBy, where, writeBatch } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { db, showNotification, showConfirmation } from './shared.js'; // Ensure shared.js exports these
+
+        const SALES_ADMIN_PASSWORD = "010274"; // كلمة السر لسجل المبيعات
+
+        const salesTableBody = document.getElementById('salesTableBody');
+        const salesDetailsModal = document.getElementById('salesDetailsModal');
+        const modalDetails = document.getElementById('modalDetails');
+        const modalProductsTableBody = document.getElementById('modalProductsTableBody');
+        const closeModalBtn = salesDetailsModal.querySelector('.close-button');
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordError = document.getElementById('passwordError');
+        const submitPasswordBtn = document.getElementById('submitPasswordBtn');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const filterSalesBtn = document.getElementById('filterSalesBtn');
+        const deleteAllSalesBtn = document.getElementById('deleteAllSalesBtn');
+
+
+        let allSales = []; // To store all fetched sales
+
+        // Function to check password before accessing the page
+        function checkPassword() {
+            passwordModal.style.display = 'flex'; // Show modal
+            passwordInput.value = ''; // Clear previous input
+            passwordError.textContent = ''; // Clear previous errors
+            passwordInput.focus();
+
+            submitPasswordBtn.onclick = () => {
+                if (passwordInput.value === SALES_ADMIN_PASSWORD) {
+                    passwordModal.style.display = 'none';
+                    fetchSales(); // Proceed to fetch sales after successful login
+                } else {
+                    passwordError.textContent = "كلمة المرور غير صحيحة.";
+                }
+            };
+
+            // Allow pressing Enter to submit password
+            passwordInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    submitPasswordBtn.click();
+                }
+            });
+        }
+
+        // Fetch sales data from Firestore
+        async function fetchSales() {
+            salesTableBody.innerHTML = '<tr><td colspan="8" class="table-placeholder">جاري تحميل سجل المبيعات...</td></tr>';
+            try {
+                const salesCollectionRef = collection(db, "sales");
+                let q = query(salesCollectionRef, orderBy("saleDate", "desc"));
+
+                // Apply date filters if available
+                const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
+                const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+                
+                if (startDate) {
+                    startDate.setHours(0, 0, 0, 0); // Start of the day
+                    q = query(q, where("saleDate", ">=", startDate));
+                }
+                if (endDate) {
+                    endDate.setHours(23, 59, 59, 999); // End of the day
+                    q = query(q, where("saleDate", "<=", endDate));
+                }
+
+
+                const querySnapshot = await getDocs(q);
+                allSales = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderSales(allSales);
+            } catch (e) {
+                console.error("Error fetching sales: ", e);
+                salesTableBody.innerHTML = '<tr><td colspan="8" class="table-placeholder error">حدث خطأ أثناء تحميل سجل المبيعات.</td></tr>';
+                showNotification("خطأ في تحميل سجل المبيعات.", "error");
+            }
+        }
+
+        // Render sales data into the table
+        function renderSales(salesToRender) {
+            salesTableBody.innerHTML = '';
+            if (salesToRender.length === 0) {
+                salesTableBody.innerHTML = '<tr><td colspan="8" class="table-placeholder">لا توجد عمليات بيع.</td></tr>';
+                return;
+            }
+
+            salesToRender.forEach(sale => {
+                const row = salesTableBody.insertRow();
+                const saleDate = sale.saleDate ? new Date(sale.saleDate.toDate()).toLocaleString('ar-EG') : 'N/A';
+                const totalAmount = (sale.totalAmount || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' });
+                const amountPaid = (sale.amountPaid || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' });
+                const changeDue = (sale.changeDue || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' });
+                const discount = (sale.discount || 0) + '%';
+                const productsCount = sale.products ? sale.products.length : 0;
+
+                row.innerHTML = `
+                    <td>${sale.id.substring(0, 6)}...</td>
+                    <td>${saleDate}</td>
+                    <td>${totalAmount}</td>
+                    <td>${amountPaid}</td>
+                    <td>${changeDue}</td>
+                    <td>${discount}</td>
+                    <td>${productsCount} منتج</td>
+                    <td class="actions">
+                        <button title="عرض التفاصيل" class="action-btn view-details-btn" data-id="${sale.id}"><i class="ri-eye-line"></i></button>
+                        <button title="حذف الفاتورة" class="action-btn delete-sale-btn" data-id="${sale.id}"><i class="ri-delete-bin-line"></i></button>
+                    </td>
+                `;
+            });
+        }
+
+        // Display sale details in modal
+        function showSaleDetails(saleId) {
+            const sale = allSales.find(s => s.id === saleId);
+            if (!sale) {
+                showNotification("تفاصيل البيع غير موجودة.", "error");
+                return;
+            }
+
+            modalDetails.innerHTML = `
+                <p><strong>رقم الفاتورة:</strong> <span>${sale.id}</span></p>
+                <p><strong>التاريخ:</strong> <span>${sale.saleDate ? new Date(sale.saleDate.toDate()).toLocaleString('ar-EG') : 'N/A'}</span></p>
+                <p><strong>الإجمالي الفرعي:</strong> <span>${(sale.subTotal || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span></p>
+                <p><strong>الخصم:</strong> <span>${(sale.discount || 0)}%</span></p>
+                <p><strong>الإجمالي الكلي:</strong> <span>${(sale.totalAmount || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span></p>
+                <p><strong>المبلغ المدفوع:</strong> <span>${(sale.amountPaid || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span></p>
+                <p><strong>الباقي للعميل:</strong> <span>${(sale.changeDue || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span></p>
+                <p><strong>طريقة الدفع:</strong> <span>${sale.paymentMethod === 'cash' ? 'نقداً' : 'غير محدد'}</span></p>
+            `;
+
+            modalProductsTableBody.innerHTML = '';
+            if (sale.products && sale.products.length > 0) {
+                sale.products.forEach(product => {
+                    const row = modalProductsTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${product.name}</td>
+                        <td>${product.quantity} ${product.unit}</td>
+                        <td>${(product.pricePerUnit || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</td>
+                        <td>${(product.itemTotal || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</td>
+                    `;
+                });
+            } else {
+                modalProductsTableBody.innerHTML = '<tr><td colspan="4">لا توجد منتجات لهذه الفاتورة.</td></tr>';
+            }
+
+            salesDetailsModal.style.display = 'flex'; // Show modal
+        }
+
+        // Close sales details modal
+        closeModalBtn.addEventListener('click', () => {
+            salesDetailsModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target === salesDetailsModal) {
+                salesDetailsModal.style.display = 'none';
+            }
+            if (event.target === passwordModal && passwordModal.style.display === 'flex') {
+                 // Prevent closing password modal by clicking outside
+                 // Unless you want a cancel button, which would need to be added explicitly
+            }
+        });
+        
+        // Handle table row clicks (for view and delete buttons)
+        salesTableBody.addEventListener('click', async (e) => {
+            const viewBtn = e.target.closest('.view-details-btn');
+            if (viewBtn) {
+                showSaleDetails(viewBtn.dataset.id);
+                return;
+            }
+
+            const deleteBtn = e.target.closest('.delete-sale-btn');
+            if (deleteBtn) {
+                const saleId = deleteBtn.dataset.id;
+                showConfirmation('هل أنت متأكد أنك تريد حذف عملية البيع هذه؟', async () => {
+                    try {
+                        await deleteDoc(doc(db, "sales", saleId));
+                        showNotification('تم حذف عملية البيع بنجاح!', 'success');
+                        allSales = allSales.filter(s => s.id !== saleId); // Update local state
+                        renderSales(allSales); // Re-render table
+                    } catch (err) {
+                        console.error("Error deleting sale: ", err);
+                        showNotification('فشل حذف عملية البيع.', 'error');
+                    }
+                });
+            }
+        });
+
+        // Filter sales by date
+        filterSalesBtn.addEventListener('click', () => {
+            fetchSales(); // Refetch with current date filters
+        });
+
+        // Delete all sales
+        deleteAllSalesBtn.addEventListener('click', () => {
+            showConfirmation('هل أنت متأكد أنك تريد حذف جميع عمليات البيع؟ لا يمكن التراجع عن هذا الإجراء!', async () => {
+                deleteAllSalesBtn.disabled = true;
+                deleteAllSalesBtn.textContent = 'جاري الحذف...';
+                try {
+                    const salesCollectionRef = collection(db, "sales");
+                    const querySnapshot = await getDocs(salesCollectionRef);
+                    const batch = writeBatch(db);
+                    querySnapshot.docs.forEach((doc) => {
+                        batch.delete(doc.ref);
+                    });
+                    await batch.commit();
+                    showNotification('تم حذف جميع عمليات البيع بنجاح!', 'success');
+                    allSales = []; // Clear local state
+                    renderSales([]); // Clear table
+                } catch (err) {
+                    console.error("Error deleting all sales: ", err);
+                    showNotification('فشل حذف جميع عمليات البيع.', 'error');
+                } finally {
+                    deleteAllSalesBtn.disabled = false;
+                    deleteAllSalesBtn.textContent = 'حذف كل المبيعات';
+                }
+            });
+        });
+
+        // Initial check for password when the page loads
+        checkPassword();
+    </script>
+</body>
+</html>
