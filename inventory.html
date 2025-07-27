@@ -472,6 +472,32 @@
             opacity: 1;
         }
 
+        /* Spinner for scan request */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border-left-color: var(--accent-blue);
+            animation: spin 1s ease infinite;
+            display: none; /* Hidden by default */
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .scan-prompt {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: var(--text-dark);
+            font-weight: 600;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+
         /* Responsive adjustments (same as dashboard.html) */
         @media (max-width: 768px) {
             body { flex-direction: column; }
@@ -568,6 +594,9 @@
             <button class="search-button"><i class="ri-search-line"></i> بحث</button>
         </div>
 
+        <div class="spinner" id="scanSpinner"></div>
+        <p class="scan-prompt" id="scanPrompt"></p>
+
         <div class="product-table-container">
             <table class="product-table">
                 <thead>
@@ -576,7 +605,7 @@
                         <th>اسم المنتج</th>
                         <th>الفئة</th>
                         <th>الكمية المتاحة</th>
-                        <th>سعر الوحدة (ريال)</th>
+                        <th>سعر الوحدة (جنيه)</th>
                         <th>الحالة</th>
                         <th>الإجراءات</th>
                     </tr>
@@ -630,7 +659,7 @@
                         <span class="error-message" id="productUnitError"></span>
                     </div>
                     <div class="input-group">
-                        <label for="productPricePerUnit">سعر الوحدة (ريال)</label>
+                        <label for="productPricePerUnit">سعر الوحدة (جنيه)</label>
                         <input type="number" id="productPricePerUnit" min="0" step="0.01" required>
                         <span class="error-message" id="productPricePerUnitError"></span>
                     </div>
@@ -655,7 +684,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
         const firebaseConfig = {
@@ -672,7 +701,18 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const productsCol = collection(db, "products");
+        const scanRequestsCol = collection(db, "scanRequests");
         const analytics = getAnalytics(app);
+
+        // UI elements for scan feedback
+        const scanSpinner = document.getElementById('scanSpinner');
+        const scanPrompt = document.getElementById('scanPrompt');
+
+        // Function to generate a unique ID for the current session/request
+        function generateSessionId() {
+            return 'pc_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+        const currentPCSessionId = generateSessionId(); // Unique ID for this browser tab
 
         // Authentication Check
         onAuthStateChanged(auth, (user) => {
@@ -705,7 +745,7 @@
         const searchProductInput = document.getElementById('searchProduct');
         const filterCategorySelect = document.getElementById('filterCategory');
         const searchButton = document.querySelector('.filter-section .search-button');
-        const scanQrForSearchBtn = document.getElementById('scanQrForSearchBtn'); // New button for QR search
+        const scanQrForSearchBtn = document.getElementById('scanQrForSearchBtn');
         const scanQrForNewProductBtn = document.getElementById('scanQrForNewProduct');
 
         let editingProductId = null;
@@ -791,11 +831,11 @@
 
             // Determine product status based on quantity and unit
             let status = 'متوفر';
-            if (unit === 'جرام' && quantity <= 100 && quantity > 0) { // Example: less than 100g is low stock
+            if (unit === 'جرام' && quantity <= 100 && quantity > 0) {
                 status = 'قليل المخزون';
             } else if (quantity === 0) {
                 status = 'نفد المخزون';
-            } else if (unit !== 'جرام' && quantity <= 5 && quantity > 0) { // Example: less than 5 units is low stock for non-gram items
+            } else if (unit !== 'جرام' && quantity <= 5 && quantity > 0) {
                  status = 'قليل المخزون';
             }
 
@@ -837,18 +877,15 @@
             let products = [];
 
             try {
-                // Fetch all products first to allow client-side searching by name/barcode
                 const querySnapshot = await getDocs(qry);
                 querySnapshot.forEach((doc) => {
                     products.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Apply category filter if selected
                 if (categoryFilter) {
                     products = products.filter(product => product.category === categoryFilter);
                 }
 
-                // Apply search query filter (name or barcode)
                 if (searchQuery) {
                     const lowerCaseQuery = searchQuery.toLowerCase();
                     products = products.filter(product =>
@@ -883,7 +920,7 @@
                     <td>${product.name}</td>
                     <td>${product.category}</td>
                     <td>${product.quantity} ${product.unit}</td>
-                    <td>${parseFloat(product.pricePerUnit).toFixed(2)}</td>
+                    <td>${parseFloat(product.pricePerUnit).toFixed(2)} جنيه</td>
                     <td style="color: ${statusColor}; font-weight: 600;">${product.status}</td>
                     <td class="actions">
                         <button title="تعديل" class="edit-btn" data-id="${product.id}"><i class="ri-edit-line"></i></button>
@@ -967,7 +1004,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             fetchProducts();
 
-            // Dynamic Active Tab Logic (copied here for consistency)
+            // Dynamic Active Tab Logic
             const navLinks = document.querySelectorAll('.nav-link');
             const currentPath = window.location.pathname.split('/').pop();
 
@@ -979,36 +1016,60 @@
             });
         });
 
-        // --- QR Scanner Integration ---
-        // Open QR scanner for search
-        scanQrForSearchBtn.addEventListener('click', () => {
-            const qrScannerWindow = window.open('qr_scanner.html?mode=search', '_blank', 'width=500,height=600');
-            // Listen for messages from the QR scanner window
-            window.addEventListener('message', (event) => {
-                if (event.origin !== window.location.origin) {
-                    return; // Ensure the message is from the same origin
-                }
-                if (event.data && event.data.type === 'qrScanned' && event.data.value) {
-                    searchProductInput.value = event.data.value;
-                    fetchProducts(event.data.value, filterCategorySelect.value); // Perform search immediately
-                    qrScannerWindow.close(); // Close scanner window after successful scan
-                }
-            }, { once: true }); // Listen only once to prevent multiple handlers
-        });
+        // --- QR Scanner Integration (using Firestore for communication) ---
+        async function requestScan(mode) {
+            scanSpinner.style.display = 'block';
+            scanPrompt.textContent = `يرجى مسح الكود من تطبيق الماسح على الهاتف لوضع ${mode === 'search' ? 'البحث' : 'إضافة المنتج'}...`;
+            scanPrompt.style.display = 'block';
 
-        // Open QR scanner for new product barcode
+            // Create a new scan request in Firestore
+            const scanRequestRef = await addDoc(scanRequestsCol, {
+                requestedBy: currentPCSessionId,
+                mode: mode,
+                status: 'pending',
+                timestamp: new Date()
+            });
+
+            // Listen for changes on this specific scan request document
+            const unsubscribe = onSnapshot(doc(db, "scanRequests", scanRequestRef.id), (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    if (data.status === 'scanned' && data.scannedValue && data.requestedBy === currentPCSessionId) {
+                        scanSpinner.style.display = 'none';
+                        scanPrompt.style.display = 'none';
+                        alert('تم المسح بنجاح!');
+
+                        if (mode === 'search') {
+                            searchProductInput.value = data.scannedValue;
+                            fetchProducts(data.scannedValue, filterCategorySelect.value);
+                        } else if (mode === 'add_new') {
+                            productBarcodeInput.value = data.scannedValue;
+                            productModal.style.display = 'flex'; // Ensure modal is open
+                        }
+                        
+                        // Clean up the request after processing
+                        deleteDoc(scanRequestRef);
+                        unsubscribe(); // Stop listening
+
+                    } else if (data.status === 'error' && data.requestedBy === currentPCSessionId) {
+                        scanSpinner.style.display = 'none';
+                        scanPrompt.textContent = 'حدث خطأ أثناء المسح على الهاتف. يرجى المحاولة مرة أخرى.';
+                        scanPrompt.style.color = 'var(--error-red)';
+                        
+                        // Allow user to try again or close. Keep the request in Firestore for debugging.
+                        // deleteDoc(scanRequestRef); // Optional: delete on error as well
+                        unsubscribe(); // Stop listening
+                    }
+                }
+            });
+        }
+
+        // Event listeners for QR buttons
+        scanQrForSearchBtn.addEventListener('click', () => requestScan('search'));
         scanQrForNewProductBtn.addEventListener('click', () => {
-            const qrScannerWindow = window.open('qr_scanner.html?mode=add_new', '_blank', 'width=500,height=600');
-            // Listen for messages from the QR scanner window
-            window.addEventListener('message', (event) => {
-                if (event.origin !== window.location.origin) {
-                    return;
-                }
-                if (event.data && event.data.type === 'qrScanned' && event.data.value) {
-                    productBarcodeInput.value = event.data.value;
-                    qrScannerWindow.close();
-                }
-            }, { once: true });
+            // Close modal temporarily to show scan prompt, will reopen after scan
+            productModal.style.display = 'none'; 
+            requestScan('add_new');
         });
 
     </script>
