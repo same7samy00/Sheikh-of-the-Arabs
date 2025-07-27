@@ -50,6 +50,7 @@
             position: sticky;
             top: 0;
             height: 100vh; /* Make sidebar full height */
+            z-index: 100; /* Ensure sidebar is above other content */
         }
 
         .sidebar .logo {
@@ -114,32 +115,33 @@
         /* Main Content */
         .main-content {
             flex-grow: 1;
-            padding: 30px;
+            padding: 20px; /* Reduced padding */
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
+            overflow-y: auto; /* Allow scrolling for main content */
         }
 
         .content-wrapper {
             background-color: var(--surface-white);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-1);
-            padding: 30px;
+            padding: 20px; /* Reduced padding */
             margin-bottom: 20px;
-            flex-grow: 1; /* Allow content to grow */
+            flex-grow: 1;
         }
 
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
+            margin-bottom: 20px; /* Reduced margin */
+            padding-bottom: 10px; /* Reduced padding */
             border-bottom: 1px solid #eee;
         }
 
         .page-header h1 {
-            font-size: 2em;
+            font-size: 1.8em; /* Reduced font size */
             font-weight: 700;
             color: var(--text-dark);
             margin: 0;
@@ -147,23 +149,23 @@
 
         .page-description {
             color: var(--text-secondary);
-            font-size: 1.1em;
-            margin-bottom: 30px;
+            font-size: 1em; /* Reduced font size */
+            margin-bottom: 20px; /* Reduced margin */
         }
 
         /* Buttons */
         .btn {
-            padding: 10px 20px;
+            padding: 8px 15px; /* Reduced padding */
             border: none;
             border-radius: var(--border-radius);
-            font-size: 1em;
+            font-size: 0.95em; /* Reduced font size */
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px; /* Reduced gap */
             text-decoration: none;
             font-family: 'Cairo', sans-serif;
         }
@@ -199,22 +201,34 @@
         .btn-danger:hover {
             background-color: #D32F2F;
         }
+        
+        .btn-info { /* New style for "View Sales" button */
+            background-color: #17A2B8;
+            color: var(--surface-white);
+            box-shadow: var(--shadow-1);
+        }
+        .btn-info:hover {
+            background-color: #138496;
+            box-shadow: var(--shadow-2);
+            transform: translateY(-2px);
+        }
 
         .btn-icon {
-            padding: 10px; /* Only icon buttons */
+            padding: 8px; /* Reduced padding */
         }
 
         /* Form Elements */
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Reduced margin */
             text-align: right;
         }
 
         .input-group label {
             display: block;
             color: var(--text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 6px; /* Reduced margin */
             font-weight: 600;
+            font-size: 0.9em; /* Reduced font size */
         }
 
         .input-group input[type="text"],
@@ -224,12 +238,12 @@
         .input-group select,
         .input-group textarea {
             width: 100%;
-            padding: 12px 15px;
+            padding: 10px 12px; /* Reduced padding */
             background-color: var(--bg-light);
             border: 1px solid #E0E6EB;
             border-radius: var(--border-radius);
             font-family: 'Cairo', sans-serif;
-            font-size: 1em;
+            font-size: 0.95em; /* Reduced font size */
             box-sizing: border-box;
             outline: none;
             transition: all 0.3s ease;
@@ -245,11 +259,11 @@
 
         .error-message {
             color: var(--error-red);
-            font-size: 0.9em;
-            margin-top: 5px;
+            font-size: 0.8em; /* Reduced font size */
+            margin-top: 3px; /* Reduced margin */
             text-align: right;
             display: block;
-            height: 1em; /* To prevent layout shift */
+            height: 1em;
         }
 
         /* Data Table */
@@ -258,16 +272,17 @@
             background-color: var(--surface-white);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-1);
-            margin-top: 20px;
+            margin-top: 15px; /* Reduced margin */
         }
 
         .data-table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.9em; /* Reduced font size */
         }
 
         .data-table th, .data-table td {
-            padding: 15px 20px;
+            padding: 10px 15px; /* Reduced padding */
             text-align: right;
             border-bottom: 1px solid #eee;
         }
@@ -276,7 +291,7 @@
             background-color: var(--bg-light);
             color: var(--text-secondary);
             font-weight: 600;
-            white-space: nowrap; /* Prevent wrapping in headers */
+            white-space: nowrap;
         }
 
         .data-table tbody tr:last-child td {
@@ -286,7 +301,7 @@
         .table-placeholder {
             text-align: center;
             color: var(--text-secondary);
-            padding: 30px;
+            padding: 20px; /* Reduced padding */
             font-style: italic;
         }
 
@@ -298,10 +313,10 @@
             background: none;
             border: none;
             color: var(--text-secondary);
-            font-size: 1.2em;
+            font-size: 1.1em; /* Reduced font size */
             cursor: pointer;
-            margin: 0 5px;
-            padding: 5px;
+            margin: 0 3px; /* Reduced margin */
+            padding: 3px; /* Reduced padding */
             border-radius: 50%;
             transition: all 0.2s ease;
         }
@@ -318,9 +333,9 @@
         /* Status Badges */
         .status-badge {
             display: inline-block;
-            padding: 5px 10px;
+            padding: 4px 8px; /* Reduced padding */
             border-radius: 20px;
-            font-size: 0.85em;
+            font-size: 0.8em; /* Reduced font size */
             font-weight: 600;
             text-align: center;
         }
@@ -340,16 +355,16 @@
             color: var(--error-red);
         }
 
-        /* Notification System */
+        /* Notification System (BOTTOM LEFT) */
         #notification-container {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            bottom: 20px; /* Changed from top */
+            left: 20px;   /* Changed from right */
             z-index: 2000;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            align-items: flex-end;
+            align-items: flex-start; /* Changed from flex-end */
         }
 
         .notification {
@@ -406,13 +421,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
+            from { opacity: 0; transform: translateY(20px); } /* Adjusted for bottom */
             to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeOut {
             from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 0; transform: translateY(20px); } /* Adjusted for bottom */
         }
 
         /* Responsive adjustments for sidebar */
@@ -479,11 +494,11 @@
             }
 
             .main-content {
-                padding: 20px;
+                padding: 15px; /* Further reduced padding */
             }
 
             .content-wrapper {
-                padding: 20px;
+                padding: 15px; /* Further reduced padding */
             }
         }
 
@@ -491,190 +506,127 @@
         .pos-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px; /* Reduced gap */
         }
 
         .pos-grid {
             display: grid;
             grid-template-columns: 2fr 1fr; /* Left (products) larger than right (summary) */
-            gap: 25px;
-            align-items: start; /* Align items to the top */
+            gap: 20px; /* Reduced gap */
+            align-items: start;
         }
 
         .pos-left, .pos-right {
             background-color: var(--surface-white);
-            padding: 25px;
+            padding: 20px; /* Reduced padding */
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-1);
         }
 
         .search-product-section .input-group {
             display: flex;
-            gap: 10px;
+            gap: 8px; /* Reduced gap */
             margin-bottom: 15px;
         }
 
         .search-product-section input[type="text"] {
-            flex-grow: 1;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-family: 'Cairo', sans-serif;
-            font-size: 1em;
+            padding: 8px 10px; /* Reduced padding */
+            font-size: 0.9em; /* Reduced font size */
         }
 
         .search-product-section .btn-icon {
-            background-color: var(--accent-blue);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 1.2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s ease;
-        }
-
-        .search-product-section .btn-icon:hover {
-            background-color: #0288D1;
+            padding: 8px 12px; /* Adjusted padding */
+            font-size: 1em; /* Reduced font size */
         }
 
         .search-results-dropdown {
-            position: relative; /* Make it appear above other elements */
-            background-color: var(--surface-white);
-            border: 1px solid #eee;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-1);
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000; /* Ensure it's on top */
-            display: none; /* Controlled by JavaScript */
-            margin-top: 5px; /* Slight margin from search input */
+            max-height: 180px; /* Reduced max-height */
+            font-size: 0.85em; /* Reduced font size */
         }
 
         .search-result-item {
-            padding: 10px 15px;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-            text-align: right;
-            font-size: 0.95em;
-            color: var(--text-dark);
-        }
-
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
-
-        .search-result-item:hover {
-            background-color: var(--bg-light);
-        }
-
-        .search-result-item.no-results {
-            color: var(--text-secondary);
-            font-style: italic;
-            text-align: center;
+            padding: 8px 10px; /* Reduced padding */
         }
 
         .cart-section h2, .invoice-summary h2, .invoice-summary h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: var(--text-dark);
-            font-weight: 600;
+            margin-bottom: 15px; /* Reduced margin */
+            font-size: 1.2em; /* Reduced font size */
         }
 
         .cart-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 15px; /* Reduced margin */
+            font-size: 0.85em; /* Reduced font size */
         }
 
         .cart-table th, .cart-table td {
-            padding: 12px 15px;
-            text-align: right;
-            border-bottom: 1px solid #eee;
-        }
-
-        .cart-table th {
-            background-color: var(--bg-light);
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
-        .cart-table tbody tr:last-child td {
-            border-bottom: none;
+            padding: 8px 12px; /* Reduced padding */
         }
 
         .cart-table .cart-quantity-input {
-            width: 60px;
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            text-align: center;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .cart-table .actions {
-            text-align: center;
+            width: 50px; /* Reduced width */
+            padding: 3px; /* Reduced padding */
+            font-size: 0.85em; /* Reduced font size */
         }
 
         .invoice-summary .summary-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px dashed #eee;
-            font-size: 1.1em;
-        }
-
-        .invoice-summary .summary-item:last-of-type {
-            border-bottom: none;
-            margin-bottom: 20px;
+            padding: 8px 0; /* Reduced padding */
+            font-size: 1em; /* Reduced font size */
         }
 
         .invoice-summary .summary-item.total {
-            font-size: 1.4em;
-            font-weight: 700;
-            color: var(--accent-blue);
-            border-top: 2px solid var(--accent-blue);
+            font-size: 1.2em; /* Reduced font size */
+            padding-top: 10px; /* Reduced padding */
+            margin-top: 10px; /* Reduced margin */
+        }
+        
+        /* New Styles for Discount and Payment/Change */
+        .payment-details {
+            margin-top: 20px;
             padding-top: 15px;
-            margin-top: 15px;
+            border-top: 1px dashed #eee;
+        }
+        .payment-details .input-group {
+            margin-bottom: 10px;
+        }
+        .payment-details .summary-item {
+            font-size: 1.05em;
+            font-weight: 600;
+        }
+        .payment-details .summary-item span:first-child {
+            color: var(--text-dark);
+        }
+        .payment-details .summary-item span:last-child {
+            color: var(--accent-blue);
+        }
+        .payment-details .summary-item.change span:last-child {
+            color: var(--success-green); /* Highlight change amount */
+            font-size: 1.1em;
         }
 
+
         .payment-options {
-            margin-top: 20px;
-            margin-bottom: 30px;
+            margin-top: 15px; /* Reduced margin */
+            margin-bottom: 20px; /* Reduced margin */
         }
 
         .payment-options .form-control {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-family: 'Cairo', sans-serif;
-            font-size: 1em;
-            background-color: var(--bg-light);
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23607D8B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-6.5H18.5a17.6%2017.6%200%200%00-13.2%206.5c-3.8%203.8-5%208.6-3.8%2013.2l128%20128c4.8%204.8%2012.2%204.8%2017%200l128-128c1.2-4.6%200-9.4-3.8-13.2z%22%2F%3E%3C%2Fsvg%3E');
-            background-repeat: no-repeat;
-            background-position: left 15px center;
-            background-size: 12px;
-            padding-left: 40px;
-            text-align: right;
+            padding: 8px 12px; /* Reduced padding */
+            font-size: 0.9em; /* Reduced font size */
         }
 
         .pos-actions {
             display: flex;
-            gap: 15px;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            gap: 10px; /* Reduced gap */
             justify-content: flex-end;
+            margin-top: 20px; /* Added margin to separate from payment options */
         }
 
         .pos-actions .btn {
             flex: 1;
-            padding: 12px;
-            font-size: 1.1em;
+            min-width: 110px; /* Ensure buttons don't get too small */
+            padding: 10px; /* Adjusted padding */
+            font-size: 0.95em; /* Adjusted font size */
         }
 
         /* Responsive adjustments for POS */
@@ -683,7 +635,105 @@
                 grid-template-columns: 1fr; /* Single column on smaller screens */
             }
             .pos-actions {
-                flex-direction: column; /* Buttons stack vertically */
+                flex-direction: row; /* Buttons remain in a row if space allows */
+                justify-content: center; /* Center buttons when wrapping */
+            }
+            .pos-actions .btn {
+                flex: none; /* Do not force them to take full width */
+                width: 48%; /* Adjust width for two buttons per row */
+            }
+        }
+        @media (max-width: 576px) {
+            .pos-actions .btn {
+                width: 100%; /* Stack buttons vertically on very small screens */
+            }
+        }
+
+        /* Print Specific Styles (for invoice printing) */
+        @media print {
+            body {
+                display: block;
+                margin: 0;
+                padding: 0;
+                background-color: white;
+                color: black;
+                font-size: 12pt;
+            }
+            .sidebar, .main-content .page-header, 
+            .main-content .search-product-section, 
+            .main-content .pos-actions, 
+            #notification-container,
+            .cart-table .actions {
+                display: none !important; /* Hide elements not needed for print */
+            }
+            .main-content {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+                flex-direction: row; /* For a side-by-side print layout if needed */
+                justify-content: center;
+                align-items: flex-start;
+            }
+            .content-wrapper, .pos-grid, .pos-left, .pos-right {
+                background-color: white;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                display: block; /* Make them flow naturally */
+                width: 100%; /* Take full width for printing */
+                page-break-inside: avoid; /* Prevent breaking inside sections */
+            }
+            .pos-grid {
+                grid-template-columns: 1fr; /* Single column for print */
+                gap: 0;
+            }
+            .cart-table {
+                font-size: 10pt;
+                width: 100%;
+                margin: 20px 0;
+            }
+            .cart-table th, .cart-table td {
+                border: 1px solid #ccc; /* Add borders for print table clarity */
+                padding: 5px;
+            }
+            .invoice-summary {
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 2px solid #333;
+                text-align: right;
+            }
+            .invoice-summary h2 {
+                text-align: center;
+                margin-bottom: 20px;
+                font-size: 1.5em;
+            }
+            .invoice-summary .summary-item {
+                font-size: 1em;
+                padding: 5px 0;
+                border-bottom: none;
+            }
+            .invoice-summary .summary-item.total {
+                font-size: 1.3em;
+                font-weight: bold;
+                border-top: 1px solid #aaa;
+                padding-top: 10px;
+                margin-top: 10px;
+            }
+            .invoice-header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .invoice-header h2 {
+                margin: 0;
+                font-size: 2em;
+                color: black;
+            }
+            .invoice-header p {
+                margin: 5px 0;
+                font-size: 0.9em;
             }
         }
     </style>
@@ -743,23 +793,40 @@
                             <span>الإجمالي الفرعي:</span>
                             <span id="subTotal">0.00 جنيه</span>
                         </div>
+                        <div class="input-group">
+                            <label for="discount">الخصم (%)</label>
+                            <input type="number" id="discount" value="0" min="0" max="100" step="0.01">
+                        </div>
                         <div class="summary-item total">
                             <span>الإجمالي الكلي:</span>
                             <span id="grandTotal">0.00 جنيه</span>
                         </div>
+                    </div>
 
-                        <div class="payment-options">
-                            <h3>طريقة الدفع</h3>
-                            <select id="paymentMethod" class="form-control">
-                                <option value="cash">نقداً</option>
-                                <option value="card">بطاقة ائتمان</option>
-                                </select>
+                    <div class="payment-details">
+                        <h3>الدفع والباقي</h3>
+                        <div class="input-group">
+                            <label for="amountPaid">المبلغ المدفوع</label>
+                            <input type="number" id="amountPaid" value="0" min="0" step="0.01">
                         </div>
+                        <div class="summary-item change">
+                            <span>الباقي للعميل:</span>
+                            <span id="changeDue">0.00 جنيه</span>
+                        </div>
+                    </div>
 
-                        <div class="pos-actions">
-                            <button class="btn btn-primary" id="completeSaleBtn"><i class="ri-check-line"></i> إتمام البيع</button>
-                            <button class="btn btn-secondary" id="cancelSaleBtn"><i class="ri-close-line"></i> إلغاء الفاتورة</button>
-                        </div>
+                    <div class="payment-options">
+                        <h3>طريقة الدفع</h3>
+                        <select id="paymentMethod" class="form-control">
+                            <option value="cash">نقداً</option>
+                            </select>
+                    </div>
+
+                    <div class="pos-actions">
+                        <button class="btn btn-primary" id="completeSaleBtn"><i class="ri-check-line"></i> إتمام البيع</button>
+                        <button class="btn btn-secondary" id="printInvoiceBtn"><i class="ri-printer-line"></i> طباعة الفاتورة</button>
+                        <button class="btn btn-danger" id="cancelSaleBtn"><i class="ri-close-line"></i> إلغاء الفاتورة</button>
+                        <a href="#" id="viewSalesHistoryBtn" class="btn btn-info"><i class="ri-history-line"></i> سجل المبيعات</a>
                     </div>
                 </div>
             </div>
@@ -769,7 +836,7 @@
     <div id="notification-container"></div>
     <script src="shared.js" type="module"></script>
     <script type="module">
-        import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, query, where, writeBatch, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, writeBatch, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
         import { db, showNotification, showConfirmation, listenToScannerSession, requestScan } from './shared.js';
 
         const productSearchInput = document.getElementById('productSearchInput');
@@ -777,14 +844,21 @@
         const cartTableBody = document.getElementById('cartTableBody');
         const subTotalSpan = document.getElementById('subTotal');
         const grandTotalSpan = document.getElementById('grandTotal');
+        const discountInput = document.getElementById('discount');
+        const amountPaidInput = document.getElementById('amountPaid');
+        const changeDueSpan = document.getElementById('changeDue');
         const completeSaleBtn = document.getElementById('completeSaleBtn');
         const cancelSaleBtn = document.getElementById('cancelSaleBtn');
         const scanProductBtn = document.getElementById('scanProductBtn');
+        const printInvoiceBtn = document.getElementById('printInvoiceBtn');
+        const viewSalesHistoryBtn = document.getElementById('viewSalesHistoryBtn'); // New button
 
-        let allProducts = []; // لتخزين جميع المنتجات من قاعدة البيانات
-        let cart = []; // لتخزين المنتجات في الفاتورة الحالية
+        const ADMIN_PASSWORD = "010274"; // كلمة السر لسجل المبيعات
 
-        // جلب جميع المنتجات عند تحميل الصفحة
+        let allProducts = [];
+        let cart = [];
+
+        // Fetch all products on page load
         async function fetchAllProducts() {
             try {
                 const querySnapshot = await getDocs(collection(db, "products"));
@@ -795,7 +869,7 @@
             }
         }
 
-        // عرض نتائج البحث
+        // Display search results
         function displaySearchResults(query) {
             searchResultsDiv.innerHTML = '';
             searchResultsDiv.style.display = 'none';
@@ -805,7 +879,7 @@
             const filtered = allProducts.filter(p =>
                 (p.name && p.name.toLowerCase().includes(query.toLowerCase())) ||
                 (p.barcode && p.barcode.toLowerCase().includes(query.toLowerCase()))
-            ).slice(0, 10); // عرض 10 نتائج فقط
+            ).slice(0, 10);
 
             if (filtered.length === 0) {
                 searchResultsDiv.innerHTML = '<div class="search-result-item no-results">لا توجد نتائج مطابقة</div>';
@@ -816,7 +890,7 @@
             filtered.forEach(product => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'search-result-item';
-                itemDiv.textContent = `${product.name} (${product.barcode || 'لا يوجد كود'}) - ${product.pricePerUnit.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}`;
+                itemDiv.textContent = `${product.name} (${product.barcode || 'لا يوجد كود'}) - ${parseFloat(product.pricePerUnit || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}`;
                 itemDiv.addEventListener('click', () => {
                     addProductToCart(product);
                     productSearchInput.value = '';
@@ -828,22 +902,21 @@
             searchResultsDiv.style.display = 'block';
         }
 
-        // إضافة منتج إلى الفاتورة
+        // Add product to cart
         function addProductToCart(product, quantityToAdd = 1) {
             const existingProductIndex = cart.findIndex(item => item.id === product.id);
+            const availableStock = parseFloat(product.quantity || 0);
 
             if (existingProductIndex > -1) {
-                const currentCartQuantity = cart[existingProductIndex].quantity;
-                const availableStock = product.quantity;
-
+                const currentCartQuantity = parseFloat(cart[existingProductIndex].quantity);
                 if (currentCartQuantity + quantityToAdd > availableStock) {
                     showNotification(`الكمية المطلوبة من ${product.name} تتجاوز المتوفر. المتوفر: ${availableStock} ${product.unit}`, 'warning', 5000);
                     return;
                 }
-                cart[existingProductIndex].quantity += quantityToAdd;
+                cart[existingProductIndex].quantity = currentCartQuantity + quantityToAdd;
             } else {
-                if (quantityToAdd > product.quantity) {
-                    showNotification(`الكمية المطلوبة من ${product.name} تتجاوز المتوفر. المتوفر: ${product.quantity} ${product.unit}`, 'warning', 5000);
+                if (quantityToAdd > availableStock) {
+                    showNotification(`الكمية المطلوبة من ${product.name} تتجاوز المتوفر. المتوفر: ${availableStock} ${product.unit}`, 'warning', 5000);
                     return;
                 }
                 cart.push({ ...product, quantity: quantityToAdd });
@@ -852,7 +925,7 @@
             showNotification(`${product.name} أضيف إلى الفاتورة.`, 'success', 2000);
         }
 
-        // عرض المنتجات في الفاتورة (الجدول)
+        // Render products in cart table
         function renderCart() {
             cartTableBody.innerHTML = '';
             if (cart.length === 0) {
@@ -860,13 +933,13 @@
             } else {
                 cart.forEach(item => {
                     const row = cartTableBody.insertRow();
-                    const itemTotal = item.quantity * item.pricePerUnit;
+                    const itemTotal = parseFloat(item.quantity || 0) * parseFloat(item.pricePerUnit || 0);
                     row.innerHTML = `
                         <td>${item.name}</td>
                         <td>
-                            <input type="number" class="cart-quantity-input" data-id="${item.id}" value="${item.quantity}" min="1" step="any">
+                            <input type="number" class="cart-quantity-input" data-id="${item.id}" value="${item.quantity}" min="0.001" step="any">
                         </td>
-                        <td>${item.pricePerUnit.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</td>
+                        <td>${parseFloat(item.pricePerUnit || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</td>
                         <td>${itemTotal.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</td>
                         <td class="actions">
                             <button title="إزالة" class="action-btn remove-from-cart-btn" data-id="${item.id}"><i class="ri-delete-bin-line"></i></button>
@@ -877,43 +950,69 @@
             updateTotals();
         }
 
-        // تحديث الإجمالي الفرعي والكلي
+        // Update subtotal, grand total, discount, and change
         function updateTotals() {
-            let subTotal = cart.reduce((sum, item) => sum + (item.quantity * item.pricePerUnit), 0);
-            let grandTotal = subTotal; // حاليًا، الإجمالي الكلي هو نفسه الفرعي
+            let subTotal = cart.reduce((sum, item) => sum + (parseFloat(item.quantity || 0) * parseFloat(item.pricePerUnit || 0)), 0);
+            
+            let discountPercentage = parseFloat(discountInput.value) || 0;
+            if (discountPercentage < 0) discountPercentage = 0;
+            if (discountPercentage > 100) discountPercentage = 100;
+            discountInput.value = discountPercentage; // Keep input value clamped
+
+            const discountAmount = subTotal * (discountPercentage / 100);
+            let grandTotal = subTotal - discountAmount;
+            if (grandTotal < 0) grandTotal = 0; // Prevent negative total
+
+            let amountPaid = parseFloat(amountPaidInput.value) || 0;
+            if (amountPaid < 0) amountPaid = 0;
+            amountPaidInput.value = amountPaid; // Keep input value clamped
+
+            let changeDue = amountPaid - grandTotal;
 
             subTotalSpan.textContent = subTotal.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' });
             grandTotalSpan.textContent = grandTotal.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' });
+            changeDueSpan.textContent = changeDue.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' });
         }
 
-        // إزالة منتج من الفاتورة
+        // Remove product from cart
         function removeFromCart(productId) {
             cart = cart.filter(item => item.id !== productId);
             renderCart();
             showNotification('تمت إزالة المنتج من الفاتورة.', 'info', 2000);
         }
 
-        // تحديث كمية المنتج في الفاتورة من حقل الإدخال
+        // Update cart item quantity from input field
         function updateCartItemQuantity(productId, newQuantity) {
             const itemIndex = cart.findIndex(item => item.id === productId);
             if (itemIndex > -1) {
                 const productInStock = allProducts.find(p => p.id === productId);
-                if (newQuantity > productInStock.quantity) {
-                     showNotification(`الكمية المطلوبة من ${productInStock.name} تتجاوز المتوفر. المتوفر: ${productInStock.quantity} ${productInStock.unit}`, 'warning', 5000);
+                const availableStock = parseFloat(productInStock.quantity || 0);
+
+                if (newQuantity > availableStock) {
+                     showNotification(`الكمية المطلوبة من ${productInStock.name} تتجاوز المتوفر. المتوفر: ${availableStock} ${productInStock.unit}`, 'warning', 5000);
                      renderCart(); 
                      return;
                 }
-                cart[itemIndex].quantity = parseFloat(newQuantity);
+                cart[itemIndex].quantity = newQuantity;
                 renderCart();
             }
         }
 
-        // إتمام عملية البيع
+        // Complete sale process
         async function completeSale() {
             if (cart.length === 0) {
                 showNotification("الفاتورة فارغة. يرجى إضافة منتجات.", "warning");
                 return;
             }
+
+            const grandTotalValue = parseFloat(grandTotalSpan.textContent.replace(/[^\d.-]/g, ''));
+            const amountPaidValue = parseFloat(amountPaidInput.value);
+
+            if (amountPaidValue < grandTotalValue) {
+                showNotification(`المبلغ المدفوع غير كافٍ. المبلغ المطلوب: ${grandTotalValue.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}`, 'warning');
+                return;
+            }
+
 
             showConfirmation("هل أنت متأكد من إتمام عملية البيع؟", async () => {
                 completeSaleBtn.disabled = true;
@@ -930,14 +1029,14 @@
                         hasStockIssue = true;
                         break;
                     }
-                    const currentStock = productDoc.data().quantity;
-                    if (currentStock < item.quantity) {
+                    const currentStock = parseFloat(productDoc.data().quantity || 0);
+                    if (currentStock < parseFloat(item.quantity || 0)) {
                         showNotification(`الكمية المتوفرة من ${item.name} غير كافية. المتوفر: ${currentStock} ${item.unit}`, 'error', 5000);
                         hasStockIssue = true;
                         break;
                     }
                     
-                    const newQuantity = currentStock - item.quantity;
+                    const newQuantity = currentStock - parseFloat(item.quantity || 0);
                     let newStatus = productDoc.data().status;
                     if (newQuantity <= 0) newStatus = 'نفد المخزون';
                     else if (newQuantity > 0 && newQuantity <= 10) newStatus = 'قليل المخزون';
@@ -957,7 +1056,6 @@
                 }
 
                 try {
-                    // إضافة الفاتورة إلى مجموعة المبيعات
                     await addDoc(collection(db, "sales"), {
                         products: cart.map(p => ({
                             id: p.id,
@@ -965,11 +1063,15 @@
                             barcode: p.barcode,
                             category: p.category,
                             unit: p.unit,
-                            quantity: p.quantity,
-                            pricePerUnit: p.pricePerUnit,
-                            itemTotal: p.quantity * p.pricePerUnit
+                            quantity: parseFloat(p.quantity || 0),
+                            pricePerUnit: parseFloat(p.pricePerUnit || 0),
+                            itemTotal: parseFloat(p.quantity || 0) * parseFloat(p.pricePerUnit || 0)
                         })),
-                        totalAmount: parseFloat(grandTotalSpan.textContent.replace(/[^\d.-]/g, '')), 
+                        subTotal: parseFloat(subTotalSpan.textContent.replace(/[^\d.-]/g, '')),
+                        discount: parseFloat(discountInput.value),
+                        totalAmount: grandTotalValue,
+                        amountPaid: amountPaidValue,
+                        changeDue: parseFloat(changeDueSpan.textContent.replace(/[^\d.-]/g, '')),
                         paymentMethod: document.getElementById('paymentMethod').value,
                         saleDate: new Date(),
                     });
@@ -977,8 +1079,11 @@
                     await batch.commit();
 
                     showNotification("تم إتمام عملية البيع بنجاح!", "success");
+                    printInvoice(); // Call print function after successful sale
                     cart = [];
                     renderCart();
+                    amountPaidInput.value = 0; // Reset payment inputs
+                    discountInput.value = 0;
                     await fetchAllProducts();
                 } catch (e) {
                     console.error("Error completing sale:", e);
@@ -990,19 +1095,88 @@
             });
         }
 
-        // إلغاء الفاتورة
+        // Cancel sale
         function cancelSale() {
             showConfirmation("هل أنت متأكد من إلغاء الفاتورة؟ سيتم مسح جميع المنتجات.", () => {
                 cart = [];
                 renderCart();
+                amountPaidInput.value = 0;
+                discountInput.value = 0;
                 showNotification("تم إلغاء الفاتورة.", "info");
             });
         }
 
-        // المستمعين للأحداث
+        // Print Invoice Function
+        function printInvoice() {
+            if (cart.length === 0) {
+                showNotification("لا توجد منتجات لطباعتها في الفاتورة.", "warning");
+                return;
+            }
+
+            const invoiceWindow = window.open('', '_blank');
+            invoiceWindow.document.write('<html><head><title>فاتورة شيخ العرب</title>');
+            invoiceWindow.document.write('<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">');
+            invoiceWindow.document.write('<style>');
+            // Include only the necessary print styles
+            invoiceWindow.document.write(`
+                body { font-family: 'Cairo', sans-serif; margin: 20px; color: #333; direction: rtl; font-size: 10pt; }
+                .invoice-header { text-align: center; margin-bottom: 20px; }
+                .invoice-header h2 { margin: 0; font-size: 1.8em; color: #2C3E50; }
+                .invoice-header p { margin: 5px 0; font-size: 0.9em; }
+                .invoice-details { margin-bottom: 20px; font-size: 0.9em; }
+                .invoice-details div { display: flex; justify-content: space-between; margin-bottom: 5px; }
+                .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                .invoice-table th, .invoice-table td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+                .invoice-table th { background-color: #f2f2f2; }
+                .invoice-summary-print { border-top: 2px solid #ccc; padding-top: 15px; }
+                .invoice-summary-print div { display: flex; justify-content: space-between; margin-bottom: 5px; }
+                .invoice-summary-print .total-amount { font-weight: bold; font-size: 1.1em; }
+                .thank-you { text-align: center; margin-top: 30px; font-size: 1em; color: #555; }
+            `);
+            invoiceWindow.document.write('</style></head><body>');
+
+            // Invoice Content
+            invoiceWindow.document.write('<div class="invoice-header">');
+            invoiceWindow.document.write('<h2>فاتورة مبيعات</h2>');
+            invoiceWindow.document.write('<p>شيخ العرب للعطارة</p>');
+            invoiceWindow.document.write('<p>العنوان: [عنوان المتجر]</p>'); // FIX: Update store address
+            invoiceWindow.document.write('<p>الهاتف: [رقم الهاتف]</p>'); // FIX: Update store phone
+            invoiceWindow.document.write(`<p>التاريخ: ${new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}</p>`);
+            invoiceWindow.document.write(`</div>`);
+
+            invoiceWindow.document.write('<table class="invoice-table">');
+            invoiceWindow.document.write('<thead><tr><th>المنتج</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody>');
+            
+            cart.forEach(item => {
+                const itemTotal = parseFloat(item.quantity || 0) * parseFloat(item.pricePerUnit || 0);
+                invoiceWindow.document.write(`
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.quantity} ${item.unit}</td>
+                        <td>${parseFloat(item.pricePerUnit || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</td>
+                        <td>${itemTotal.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</td>
+                    </tr>
+                `);
+            });
+            invoiceWindow.document.write('</tbody></table>');
+
+            invoiceWindow.document.write('<div class="invoice-summary-print">');
+            invoiceWindow.document.write(`<div><span>الإجمالي الفرعي:</span><span>${subTotalSpan.textContent}</span></div>`);
+            invoiceWindow.document.write(`<div><span>الخصم (${discountInput.value}%):</span><span>${(parseFloat(subTotalSpan.textContent.replace(/[^\d.-]/g, '')) * (parseFloat(discountInput.value)/100)).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span></div>`);
+            invoiceWindow.document.write(`<div class="total-amount"><span>الإجمالي الكلي:</span><span>${grandTotalSpan.textContent}</span></div>`);
+            invoiceWindow.document.write(`<div><span>المبلغ المدفوع:</span><span>${parseFloat(amountPaidInput.value).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span></div>`);
+            invoiceWindow.document.write(`<div><span>الباقي للعميل:</span><span>${changeDueSpan.textContent}</span></div>`);
+            invoiceWindow.document.write(`<div><span>طريقة الدفع:</span><span>${document.getElementById('paymentMethod').selectedOptions[0].text}</span></div>`);
+            invoiceWindow.document.write('</div>');
+
+            invoiceWindow.document.write('<p class="thank-you">شكراً لتسوقكم من شيخ العرب!</p>');
+            invoiceWindow.document.write('</body></html>');
+            invoiceWindow.document.close();
+            invoiceWindow.print();
+        }
+
+        // Event Listeners
         productSearchInput.addEventListener('input', (e) => displaySearchResults(e.target.value));
-        
-        // إخفاء نتائج البحث عند النقر خارجها
         document.addEventListener('click', (e) => {
             if (!searchResultsDiv.contains(e.target) && e.target !== productSearchInput) {
                 searchResultsDiv.style.display = 'none';
@@ -1011,7 +1185,6 @@
 
         scanProductBtn.addEventListener('click', () => requestScan('pos_scan'));
 
-        // الاستماع إلى الباركود من الماسح
         listenToScannerSession(async (scannedValue, purpose) => {
             if (purpose === 'pos_scan' && scannedValue) {
                 productSearchInput.value = scannedValue;
@@ -1029,7 +1202,6 @@
             }
         });
 
-        // المستمع لأحداث النقر على جدول الفاتورة (لإزالة أو تعديل الكمية)
         cartTableBody.addEventListener('click', (e) => {
             const removeBtn = e.target.closest('.remove-from-cart-btn');
             if (removeBtn) {
@@ -1041,21 +1213,37 @@
         cartTableBody.addEventListener('change', (e) => {
             if (e.target.classList.contains('cart-quantity-input')) {
                 const productId = e.target.dataset.id;
-                const newQuantity = parseFloat(e.target.value);
-                if (!isNaN(newQuantity) && newQuantity >= 0) {
-                    updateCartItemQuantity(productId, newQuantity);
-                } else {
-                     e.target.value = cart.find(item => item.id === productId).quantity;
+                let newQuantity = parseFloat(e.target.value);
+                if (isNaN(newQuantity) || newQuantity < 0.001) { // Ensure minimum quantity for calculation
+                    showNotification("يرجى إدخال كمية صحيحة أكبر من صفر.", "warning");
+                    e.target.value = cart.find(item => item.id === productId).quantity; // Revert to old value
+                    return;
                 }
+                updateCartItemQuantity(productId, newQuantity);
             }
         });
 
+        discountInput.addEventListener('input', updateTotals);
+        amountPaidInput.addEventListener('input', updateTotals);
+
         completeSaleBtn.addEventListener('click', completeSale);
         cancelSaleBtn.addEventListener('click', cancelSale);
+        printInvoiceBtn.addEventListener('click', printInvoice);
+        
+        // Event Listener for "View Sales History" button
+        viewSalesHistoryBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const password = prompt("الرجاء إدخال كلمة المرور لعرض سجل المبيعات:");
+            if (password === ADMIN_PASSWORD) {
+                window.location.href = 'sales_history.html';
+            } else if (password !== null) { // If user didn't cancel
+                showNotification("كلمة المرور غير صحيحة.", "error");
+            }
+        });
 
-        // التحميل الأولي
+        // Initial Load
         fetchAllProducts();
-        renderCart();
+        renderCart(); // This will also call updateTotals()
     </script>
 </body>
 </html>
