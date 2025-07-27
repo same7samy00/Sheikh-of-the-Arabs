@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="form-page-body">
-    <div class="form-container">
-        <div class="form-header">
+    <div class="add-product-container">
+        <div class="add-product-header">
             <h2 id="pageTitle">إضافة منتج جديد</h2>
-            <a href="inventory.html" class="close-btn" title="إغلاق">&times;</a>
         </div>
+        
         <form id="productForm" class="form-body" novalidate>
             <div class="input-group">
                 <label for="productName">اسم المنتج</label>
@@ -60,7 +60,7 @@
                 <input type="number" id="productPricePerUnit" min="0" step="any" required>
                 <span class="error-message" id="productPricePerUnitError"></span>
             </div>
-            <div class="input-group barcode-group">
+            <div class="input-group">
                 <label for="productBarcode">كود المنتج (Barcode/QR)</label>
                 <div class="input-with-button">
                     <input type="text" id="productBarcode" placeholder="أدخل الكود أو امسحه">
@@ -69,9 +69,10 @@
                  <span class="error-message" id="productBarcodeError"></span>
             </div>
         </form>
+
         <div class="form-footer">
-            <button type="button" class="btn btn-primary" id="saveProductBtn">حفظ المنتج</button>
             <a href="inventory.html" class="btn btn-secondary">إلغاء</a>
+            <button type="button" class="btn btn-primary" id="saveProductBtn">حفظ المنتج</button>
         </div>
     </div>
 
@@ -127,7 +128,7 @@
 
             const quantity = parseFloat(fields.quantity.input.value);
             let status = 'متوفر';
-            if (quantity === 0) status = 'نفد المخزون';
+            if (quantity <= 0) status = 'نفد المخزون';
             else if (quantity <= 10) status = 'قليل المخزون';
 
             const productData = {
@@ -161,7 +162,7 @@
         async function loadProductForEdit() {
             if (!editingProductId) return;
             pageTitle.textContent = 'تعديل المنتج';
-            saveBtn.textContent = 'حفظ التعديلات';
+            saveBtn.innerHTML = '<i class="ri-save-line"></i><span>حفظ التعديلات</span>';
             try {
                 const docRef = doc(db, "products", editingProductId);
                 const docSnap = await getDoc(docRef);
@@ -194,7 +195,6 @@
             }
         });
 
-        // Initial Load
         loadProductForEdit();
     </script>
 </body>
