@@ -75,9 +75,8 @@
 
     <div id="notification-container"></div>
     <script src="shared.js" type="module"></script>
-    
     <script type="module">
-        import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
         import { db, showNotification, showConfirmation, listenToScannerSession, requestScan } from './shared.js';
 
         const productsTableBody = document.getElementById('productsTableBody');
@@ -88,7 +87,8 @@
         async function fetchProducts() {
             productsTableBody.innerHTML = '<tr><td colspan="7" class="table-placeholder">جاري تحميل المنتجات...</td></tr>';
             try {
-                const querySnapshot = await getDocs(collection(db, "products"));
+                const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
                 allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderProducts();
             } catch (e) {
@@ -98,26 +98,31 @@
             }
         }
 
-        function renderProducts() {
-            const searchQuery = searchInput.value.toLowerCase().trim();
-            const categoryFilter = categorySelect.value;
+        function renderProducts(productsToRender = null) {
+            let filteredProducts = productsToRender;
 
-            let filteredProducts = allProducts;
+            if (filteredProducts === null) {
+                const searchQuery = searchInput.value.toLowerCase().trim();
+                const categoryFilter = categorySelect.value;
+                
+                filteredProducts = allProducts;
 
-            if (categoryFilter) {
-                filteredProducts = filteredProducts.filter(p => p.category === categoryFilter);
+                if (categoryFilter) {
+                    filteredProducts = filteredProducts.filter(p => p.category === categoryFilter);
+                }
+
+                if (searchQuery) {
+                    filteredProducts = filteredProducts.filter(p =>
+                        (p.name && p.name.toLowerCase().includes(searchQuery)) ||
+                        (p.barcode && p.barcode.toLowerCase().includes(searchQuery))
+                    );
+                }
             }
 
-            if (searchQuery) {
-                filteredProducts = filteredProducts.filter(p =>
-                    (p.name && p.name.toLowerCase().includes(searchQuery)) ||
-                    (p.barcode && p.barcode.toLowerCase().includes(searchQuery))
-                );
-            }
 
             productsTableBody.innerHTML = '';
             if (filteredProducts.length === 0) {
-                productsTableBody.innerHTML = '<tr><td colspan="7" class="table-placeholder">لا توجد منتجات تطابق البحث.</td></tr>';
+                productsTableBody.innerHTML = '<tr><td colspan="7" class="table-placeholder">لا توجد منتجات.</td></tr>';
                 return;
             }
 
@@ -144,21 +149,31 @@
             });
         }
         
+        // --- FIX: This logic now allows for consecutive deletions ---
         productsTableBody.addEventListener('click', (e) => {
             const editBtn = e.target.closest('.edit-btn');
-            const deleteBtn = e.target.closest('.delete-btn');
-            
             if (editBtn) {
                 window.location.href = `add_product.html?id=${editBtn.dataset.id}`;
+                return;
             }
             
+            const deleteBtn = e.target.closest('.delete-btn');
             if (deleteBtn) {
                 const productId = deleteBtn.dataset.id;
+                const rowToDelete = deleteBtn.closest('tr');
+
                 showConfirmation('هل أنت متأكد أنك تريد حذف هذا المنتج؟', async () => {
                     try {
+                        // 1. Delete from Firestore
                         await deleteDoc(doc(db, "products", productId));
                         showNotification('تم حذف المنتج بنجاح!', 'success');
-                        fetchProducts(); // Refetch all products
+                        
+                        // 2. Remove from the local array state
+                        allProducts = allProducts.filter(p => p.id !== productId);
+
+                        // 3. Re-render the filtered list without a server call
+                        renderProducts();
+
                     } catch (err) {
                         console.error("Error deleting document: ", err);
                         showNotification('فشل حذف المنتج.', 'error');
@@ -167,8 +182,8 @@
             }
         });
 
-        searchInput.addEventListener('input', renderProducts);
-        categorySelect.addEventListener('change', renderProducts);
+        searchInput.addEventListener('input', () => renderProducts());
+        categorySelect.addEventListener('change', () => renderProducts());
         
         document.getElementById('requestScanForSearchBtn').addEventListener('click', () => {
             requestScan('search');
