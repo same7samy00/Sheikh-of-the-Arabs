@@ -1,79 +1,37 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إضافة منتج - شيخ العرب</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 <body>
-    <aside class="sidebar">
-         <div class="logo">شيخ <span>العرب</span></div>
-         </aside>
-    <main class="main-content">
-        <div class="page-header">
-            <h1 id="pageTitle">إضافة منتج جديد</h1>
-        </div>
-
-        <div class="card">
-            <form id="productForm" class="form-grid">
-                <div class="input-group">
-                    <label for="productName">اسم المنتج</label>
-                    <input type="text" id="productName" required>
-                </div>
-                <div class="input-group">
-                    <label for="productCategory">الفئة</label>
-                    <select id="productCategory" required>
-                        <option value="" disabled selected>اختر فئة...</option>
-                        <option value="بهارات">بهارات</option>
-                        </select>
-                </div>
-                <div class="input-group">
-                    <label for="productQuantity">الكمية بالمخزون</label>
-                    <input type="number" id="productQuantity" min="0" required>
-                </div>
-                <div class="input-group">
-                    <label for="productUnit">وحدة القياس</label>
-                    <select id="productUnit" required>
-                        <option value="جرام">جرام</option>
-                        <option value="كيلو جرام">كيلو جرام</option>
-                        <option value="قطعة">قطعة</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="productPricePerUnit">سعر الوحدة (جنيه)</label>
-                    <input type="number" id="productPricePerUnit" min="0" required>
-                </div>
-                <div class="input-group">
-                    <label for="productBarcode">كود المنتج (Barcode/QR)</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="productBarcode" style="flex-grow: 1;">
-                        <button type="button" class="btn btn-secondary" id="requestScanForNewProduct"><i class="ri-qr-code-line"></i></button>
+    <aside class="sidebar"></aside>
+    <div class="page-container">
+        <header class="main-header"></header>
+        <main class="main-content">
+            <h1 class="page-title" id="pageTitle">إضافة منتج جديد</h1>
+            <div class="card">
+                <form id="productForm" class="form-grid">
+                    <div class="input-group"><label for="productName">اسم المنتج</label><input type="text" id="productName" required></div>
+                    <div class="input-group"><label for="productCategory">الفئة</label><select id="productCategory" required></select></div>
+                    <div class="input-group"><label for="productQuantity">الكمية بالمخزون</label><input type="number" id="productQuantity" min="0" required></div>
+                    <div class="input-group"><label for="productUnit">وحدة القياس</label><select id="productUnit" required><option value="جرام">جرام</option><option value="قطعة">قطعة</option></select></div>
+                    <div class="input-group"><label for="productPricePerUnit">سعر الوحدة</label><input type="number" id="productPricePerUnit" min="0" required></div>
+                    <div class="input-group">
+                        <label for="productBarcode">كود المنتج (QR)</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="productBarcode" style="flex-grow: 1;">
+                            <button type="button" class="btn btn-secondary" id="requestScanForNewProduct" title="مسح QR"><i class="ri-qr-code-line"></i></button>
+                        </div>
                     </div>
-                </div>
-                <div class="form-actions" style="grid-column: span 2;">
-                    <a href="inventory.html" class="btn btn-secondary">إلغاء</a>
-                    <button type="button" class="btn btn-primary" id="saveProductBtn">حفظ المنتج</button>
-                </div>
-            </form>
-        </div>
-    </main>
-    <div id="notification-container"></div>
-    <script src="shared.js" type="module"></script>
-    <script type="module">
-        import { db, showNotification, requestScan, listenToScannerSession } from './shared.js';
-        // The rest of the JS for saving/loading the product remains the same.
-        // Add the listener for the scan button:
-        document.getElementById('requestScanForNewProduct').addEventListener('click', () => {
-            requestScan('add_new');
-        });
-        listenToScannerSession((scannedValue, purpose) => {
-            if (purpose === 'add_new' && scannedValue) {
-                document.getElementById('productBarcode').value = scannedValue;
-                showNotification(`تم استلام الكود: ${scannedValue}`, 'success');
-            }
-        });
-    </script>
-</body>
+                    <div class="form-actions" style="grid-column: span 2;">
+                        <a href="inventory.html" class="btn btn-secondary">إلغاء</a>
+                        <button type="button" class="btn btn-primary" id="saveProductBtn">حفظ المنتج</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+    </body>
 </html>
