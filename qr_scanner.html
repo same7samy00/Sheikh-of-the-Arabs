@@ -3,203 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ماسح QR / الباركود - شيخ العرب</title>
+    <title>ماسح QR / الباركود - شيخ العرب (الهاتف)</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-    <style>
-        :root {
-            --bg-light: #F0F4F8;
-            --surface-white: #FFFFFF;
-            --text-dark: #2C3E50;
-            --text-secondary: #607D8B;
-            --accent-blue: #03A9F4;
-            --error-red: #FF5252;
-            --success-green: #4CAF50;
-            --border-radius-soft: 12px;
-            --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
+    <script type="module">
+        // Import Firebase modules for scanner
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getFirestore, collection, query, where, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            direction: rtl;
-            text-align: center;
-        }
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtJaifspNzKeht9mOmZGvVU1IOvmnyrwQ",
+            authDomain: "sheikh-of-the-arabs.firebaseapp.com",
+            projectId: "sheikh-of-the-arabs",
+            storageBucket: "sheikh-of-the-arabs.firebasestorage.app",
+            messagingSenderId: "64212176848",
+            appId: "1:64212176848:web:8a02363e1be4e706fdb3d5",
+            measurementId: "G-HV2WKFZ32B"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const scanRequestsCol = collection(db, "scanRequests");
+        const analytics = getAnalytics(app);
 
-        .scanner-container {
-            background-color: var(--surface-white);
-            padding: 30px;
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1);
-            width: 100%;
-            max-width: 500px;
-        }
+        // Define qrCodeReader globally to be accessible from non-module script
+        window.qrCodeReader = new Html5Qrcode("qr-reader");
 
-        h1 {
-            color: var(--text-dark);
-            font-size: 2em;
-            margin-bottom: 25px;
-        }
-
-        #qr-reader {
-            width: 100%;
-            max-width: 400px; /* Adjust as needed */
-            margin: 0 auto 20px auto;
-        }
-
-        #qr-reader video {
-            width: 100% !important;
-            height: auto !important;
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1);
-        }
-
-        #qr-reader__dashboard_section_csr span { /* Hide default 'Scan an Item' text */
-            display: none;
-        }
-        #qr-reader__dashboard_section_csr button { /* Style the camera controls */
-            background-color: var(--accent-blue);
-            color: var(--surface-white);
-            border: none;
-            padding: 10px 20px;
-            border-radius: var(--border-radius-soft);
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            font-size: 1em;
-            margin: 5px;
-            transition: background-color 0.3s ease;
-        }
-        #qr-reader__dashboard_section_csr button:hover {
-            background-color: #0288D1;
-        }
-        #qr-reader__dashboard_section_csr button:disabled {
-            background-color: var(--text-secondary);
-            cursor: not-allowed;
-        }
-
-        .result-message {
-            margin-top: 20px;
-            font-size: 1.1em;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-        .result-message.success {
-            color: var(--success-green);
-        }
-        .result-message.error {
-            color: var(--error-red);
-        }
-
-        .btn-close {
-            background-color: var(--error-red);
-            color: var(--surface-white);
-            padding: 10px 20px;
-            border: none;
-            border-radius: var(--border-radius-soft);
-            cursor: pointer;
-            margin-top: 20px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-        }
-        .btn-close:hover {
-            background-color: #D32F2F;
-        }
-    </style>
-</head>
-<body>
-    <div class="scanner-container">
-        <h1>مسح QR / الباركود</h1>
-        <div id="qr-reader" style="width: 100%;"></div>
-        <div id="qr-reader-results" class="result-message"></div>
-        <button class="btn-close" id="closeScannerBtn">إغلاق</button>
-    </div>
-
-    <script>
-        const qrCodeReader = new Html5Qrcode("qr-reader");
+        // UI elements
         const qrCodeResults = document.getElementById('qr-reader-results');
-        const closeScannerBtn = document.getElementById('closeScannerBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        const qrSection = document.getElementById('qr-section');
+        const noRequestsSection = document.getElementById('noRequestsSection');
 
-        let scanMode = 'search'; // Default mode, can be 'add_new' or 'pos'
+        let currentActiveScanRequestId = null; // To keep track of the request being processed
+        let currentScanMode = null; // To store the mode ('search', 'add_new', 'pos')
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('mode')) {
-                scanMode = urlParams.get('mode');
-            }
-
-            startScanner();
-
-            closeScannerBtn.addEventListener('click', () => {
-                qrCodeReader.stop().then(() => {
-                    console.log("QR Code scanning stopped.");
-                    window.close(); // Close the pop-up window
-                }).catch((err) => {
-                    console.error("Error stopping QR Code scanning:", err);
-                    window.close();
-                });
-            });
-        });
-
-        const onScanSuccess = (decodedText, decodedResult) => {
+        const onScanSuccess = async (decodedText, decodedResult) => {
             qrCodeResults.textContent = `تم المسح بنجاح: ${decodedText}`;
             qrCodeResults.classList.add('success');
             console.log(`Code matched = ${decodedText}`, decodedResult);
 
-            // Send the scanned value back to the opener window
-            if (window.opener) {
-                window.opener.postMessage({ type: 'qrScanned', value: decodedText, mode: scanMode }, window.location.origin);
+            // Stop the scanner
+            if (window.qrCodeReader.is=Started()) {
+                await window.qrCodeReader.stop().then(() => {
+                    statusMessage.textContent = 'تم المسح بنجاح. يتم إرسال البيانات...';
+                    statusMessage.style.color = 'var(--success-green)';
+                }).catch((err) => {
+                    console.error("Error stopping QR Code scanning after success:", err);
+                    statusMessage.textContent = 'خطأ في إيقاف الماسح.';
+                    statusMessage.style.color = 'var(--error-red)';
+                });
             }
 
-            // Stop the scanner after a successful scan
-            qrCodeReader.stop().then(() => {
-                console.log("Scanner stopped after successful scan.");
-                window.close(); // Close the pop-up window
-            }).catch((err) => {
-                console.error("Error stopping QR Code scanning after success:", err);
-                window.close();
-            });
+            // Update the Firestore request document
+            if (currentActiveScanRequestId) {
+                const scanRequestRef = doc(db, "scanRequests", currentActiveScanRequestId);
+                try {
+                    await updateDoc(scanRequestRef, {
+                        status: 'scanned',
+                        scannedValue: decodedText,
+                        scannedAt: new Date()
+                    });
+                    console.log("Firestore request updated successfully.");
+                    statusMessage.textContent = 'تم إرسال الكود بنجاح.';
+                    statusMessage.style.color = 'var(--success-green)';
+                    
+                    // After successful update, reset the UI to wait for next request
+                    setTimeout(() => {
+                        qrSection.style.display = 'none';
+                        noRequestsSection.style.display = 'block';
+                        statusMessage.textContent = '';
+                        qrCodeResults.textContent = '';
+                        qrCodeResults.classList.remove('success', 'error');
+                        currentActiveScanRequestId = null;
+                        currentScanMode = null;
+                    }, 2000);
+
+                } catch (e) {
+                    console.error("Error updating Firestore request:", e);
+                    statusMessage.textContent = 'خطأ في تحديث طلب المسح في قاعدة البيانات.';
+                    statusMessage.style.color = 'var(--error-red)';
+                }
+            }
         };
 
         const onScanFailure = (error) => {
-            // console.warn(`QR Code scanning error = ${error}`); // Keep this for debugging, but don't show to user constantly
-            qrCodeResults.textContent = 'جاري البحث عن كود...';
-            qrCodeResults.classList.remove('success', 'error');
+            // Keep the scanner running, but update status message
+            statusMessage.textContent = 'جاري البحث عن كود...';
+            statusMessage.classList.remove('success', 'error');
+            qrCodeResults.textContent = ''; // Clear previous results
         };
 
-        const startScanner = () => {
+        const startScanner = (mode) => {
+            statusMessage.textContent = `جاري بدء الماسح لوضع ${mode === 'search' ? 'البحث' : mode === 'add_new' ? 'إضافة المنتج' : 'نقطة البيع'}...`;
+            statusMessage.style.color = 'var(--text-dark)';
+            qrSection.style.display = 'block';
+            noRequestsSection.style.display = 'none';
+            qrCodeResults.textContent = '';
+            qrCodeResults.classList.remove('success', 'error');
+
+            // Ensure previous scanner is stopped before starting a new one
+            if (window.qrCodeReader.is=Started()) {
+                window.qrCodeReader.stop().catch(err => console.warn("Error stopping existing scanner:", err));
+            }
+
             // Use facing mode "environment" to try to get the back camera
-            qrCodeReader.start({ facingMode: "environment" }, {
+            window.qrCodeReader.start({ facingMode: "environment" }, {
                 fps: 10,
                 qrbox: { width: 250, height: 250 }
             }, onScanSuccess, onScanFailure)
             .catch(err => {
                 console.error(`Unable to start scanning: ${err}`);
-                qrCodeResults.textContent = 'لا يمكن الوصول إلى الكاميرا. يرجى التأكد من السماح بالوصول.';
-                qrCodeResults.classList.add('error');
+                statusMessage.textContent = 'لا يمكن الوصول إلى الكاميرا. يرجى التأكد من السماح بالوصول.';
+                statusMessage.classList.add('error');
+                // If camera fails, mark request as error
+                if (currentActiveScanRequestId) {
+                    updateDoc(doc(db, "scanRequests", currentActiveScanRequestId), { status: 'error', errorMessage: err.message });
+                }
             });
         };
 
-        // Handle window closing by the user
+        // Listen for new scan requests from the PC
+        onSnapshot(query(scanRequestsCol, where("status", "==", "pending")), (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") { // New request received
+                    const request = change.doc.data();
+                    console.log("New scan request:", request);
+                    currentActiveScanRequestId = change.doc.id;
+                    currentScanMode = request.mode;
+                    startScanner(request.mode);
+                } else if (change.type === "removed") { // Request was processed/deleted from PC
+                    if (change.doc.id === currentActiveScanRequestId) {
+                        // The request we were processing was handled by PC, reset UI
+                        if (window.qrCodeReader.is=Started()) {
+                            window.qrCodeReader.stop().catch(err => console.warn("Error stopping scanner on request removal:", err));
+                        }
+                        qrSection.style.display = 'none';
+                        noRequestsSection.style.display = 'block';
+                        statusMessage.textContent = 'جاهز للمسح الجديد...';
+                        statusMessage.style.color = 'var(--text-secondary)';
+                        qrCodeResults.textContent = '';
+                        qrCodeResults.classList.remove('success', 'error');
+                        currentActiveScanRequestId = null;
+                        currentScanMode = null;
+                    }
+                }
+            });
+        });
+
+        // Initialize UI state
+        document.addEventListener('DOMContentLoaded', () => {
+            qrSection.style.display = 'none';
+            noRequestsSection.style.display = 'block';
+            statusMessage.textContent = 'جاهز للمسح الجديد... انتظر طلب مسح من الكمبيوتر.';
+        });
+
+        // Handle window closing by the user to clean up
         window.addEventListener('beforeunload', () => {
-            if (qrCodeReader && qrCodeReader.is=Started()) { // Check if scanner is running
-                qrCodeReader.stop().then(() => {
-                    console.log("QR Code scanning stopped on window close.");
-                }).catch((err) => {
+            if (currentActiveScanRequestId) {
+                // Mark the current request as error if the scanner closes unexpectedly
+                updateDoc(doc(db, "scanRequests", currentActiveScanRequestId), { status: 'error', errorMessage: 'Scanner closed unexpectedly by user.' });
+            }
+            if (window.qrCodeReader && window.qrCodeReader.is=Started()) {
+                window.qrCodeReader.stop().catch((err) => {
                     console.warn("Error stopping scanner on beforeunload:", err);
                 });
             }
         });
     </script>
+    <style>
+        /* ... (CSS for scanner-container, h1, #qr-reader, result-message, btn-close from previous version) ... */
+        /* Add specific styles for the new sections */
+        #qr-section {
+            display: none; /* Hidden by default, shown when a scan request is active */
+        }
+        #noRequestsSection {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-secondary);
+            font-size: 1.2em;
+        }
+        #statusMessage {
+            margin-top: 15px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanner-container">
+        <h1>ماسح QR / الباركود</h1>
+
+        <div id="noRequestsSection">
+            <p><i class="ri-smartphone-line" style="font-size: 3em; margin-bottom: 15px; display: block;"></i></p>
+            <p>هذه الصفحة جاهزة لمسح الأكواد. يرجى البدء بطلب مسح من جهاز الكمبيوتر الخاص بك.</p>
+        </div>
+
+        <div id="qr-section">
+            <div id="qr-reader" style="width: 100%;"></div>
+            <div id="qr-reader-results" class="result-message"></div>
+            <div id="statusMessage" class="result-message"></div>
+        </div>
+        
+        <button class="btn-close" id="closeScannerBtn">إغلاق</button>
+    </div>
 </body>
 </html>
