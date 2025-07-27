@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         :root {
-            /* Color Palette (Remains the same) */
+            /* Color Palette (Matching base-font-size from inventory.html) */
             --bg-light: #F0F4F8;
             --surface-white: #FFFFFF;
             --text-dark: #2C3E50;
@@ -16,12 +16,13 @@
             --accent-blue: #03A9F4;
             --error-red: #FF5252;
             --success-green: #4CAF50;
-            --info-yellow: #FFC107; /* Added for low stock */
-
+            --info-yellow: #FFC107;
 
             --border-radius-soft: 12px;
             --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08);
             --shadow-elevation-2: 0 8px 20px rgba(0, 0, 0, 0.12);
+
+            --base-font-size: 0.95em; /* Inherit from inventory.html */
         }
 
         body {
@@ -34,14 +35,15 @@
             text-align: right;
             display: flex;
             min-height: 100vh;
+            font-size: var(--base-font-size); /* Apply base font size */
         }
 
-        /* Sidebar Styling */
+        /* Sidebar Styling (Adjusted for consistency) */
         .sidebar {
-            width: 280px;
+            width: 260px; /* Consistent with inventory.html */
             background-color: var(--surface-white);
             box-shadow: var(--shadow-elevation-1);
-            padding: 30px 20px;
+            padding: 25px 15px; /* Consistent with inventory.html */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -51,13 +53,13 @@
 
         .logo {
             font-family: 'Cairo', sans-serif;
-            font-size: 2.5em;
+            font-size: 2.2em; /* Consistent with inventory.html */
             font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 50px;
+            margin-bottom: 40px; /* Consistent with inventory.html */
             text-align: center;
             line-height: 1.2;
-            padding-bottom: 10px;
+            padding-bottom: 8px; /* Consistent with inventory.html */
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             width: 100%;
         }
@@ -73,24 +75,24 @@
         }
 
         .nav-item {
-            margin-bottom: 10px;
+            margin-bottom: 8px; /* Consistent with inventory.html */
         }
 
         .nav-link {
             display: flex;
             align-items: center;
-            padding: 15px 20px;
+            padding: 12px 18px; /* Consistent with inventory.html */
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 1.1em;
+            font-size: 1em; /* Consistent with inventory.html */
             font-weight: 600;
             border-radius: var(--border-radius-soft);
             transition: all 0.3s ease;
         }
 
         .nav-link i {
-            font-size: 1.4em;
-            margin-left: 15px;
+            font-size: 1.3em; /* Consistent with inventory.html */
+            margin-left: 12px; /* Consistent with inventory.html */
             color: var(--text-secondary);
             transition: color 0.3s ease;
         }
@@ -123,7 +125,7 @@
             background-color: var(--error-red);
             color: var(--surface-white);
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 15px; /* Consistent with inventory.html */
         }
 
         .nav-link.logout-btn i {
@@ -135,19 +137,19 @@
             color: var(--surface-white);
         }
 
-        /* Main Content Styling */
+        /* Main Content Styling (Adjusted for consistency) */
         .main-content {
             flex-grow: 1;
-            padding: 30px 40px;
+            padding: 25px 30px; /* Consistent with inventory.html */
             overflow-y: auto;
         }
 
         .content-section {
             background-color: var(--surface-white);
-            padding: 30px;
+            padding: 25px; /* Consistent with inventory.html sections */
             border-radius: var(--border-radius-soft);
             box-shadow: var(--shadow-elevation-1);
-            margin-bottom: 30px;
+            margin-bottom: 25px; /* Consistent with inventory.html sections */
         }
 
         .content-section h2 {
@@ -161,26 +163,26 @@
 
         .content-section p {
             color: var(--text-secondary);
-            font-size: 1.1em;
+            font-size: 1em; /* Adjusted for consistency */
             line-height: 1.7;
         }
 
-        /* Dashboard Cards */
+        /* Dashboard Cards (Adjusted for consistency) */
         .dashboard-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjusted min-width */
+            gap: 20px; /* Adjusted gap */
+            margin-bottom: 25px; /* Adjusted margin */
         }
 
         .card {
             background-color: var(--surface-white);
-            padding: 25px;
+            padding: 20px; /* Adjusted padding */
             border-radius: var(--border-radius-soft);
             box-shadow: var(--shadow-elevation-1);
             display: flex;
             flex-direction: column;
-            align-items: flex-end; /* Align content to the right */
+            align-items: flex-end;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -190,37 +192,37 @@
         }
 
         .card .icon {
-            font-size: 2.5em;
+            font-size: 2.2em; /* Adjusted icon size */
             color: var(--accent-blue);
-            margin-bottom: 15px;
+            margin-bottom: 10px; /* Adjusted margin */
         }
 
         .card .title {
-            font-size: 1.2em;
+            font-size: 1.1em; /* Adjusted font size */
             color: var(--text-secondary);
             margin-bottom: 5px;
             font-weight: 600;
         }
 
         .card .value {
-            font-size: 2.2em;
+            font-size: 2em; /* Adjusted font size */
             color: var(--text-dark);
             font-weight: 700;
         }
 
-        /* Recent Products/Low Stock Section */
+        /* Recent Products/Low Stock Section (Adjusted for consistency) */
         .recent-products, .low-stock-products {
             background-color: var(--surface-white);
-            padding: 30px;
+            padding: 25px; /* Adjusted padding */
             border-radius: var(--border-radius-soft);
             box-shadow: var(--shadow-elevation-1);
-            margin-bottom: 30px;
+            margin-bottom: 25px; /* Adjusted margin */
         }
 
         .recent-products h3, .low-stock-products h3 {
             color: var(--text-dark);
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 1.4em; /* Adjusted font size */
+            margin-bottom: 15px; /* Adjusted margin */
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             padding-bottom: 10px;
         }
@@ -235,9 +237,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 10px 0; /* Adjusted padding */
             border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
-            font-size: 1em;
+            font-size: 0.95em; /* Adjusted font size */
             color: var(--text-dark);
         }
 
@@ -260,6 +262,7 @@
                 width: 100%; height: auto; padding: 20px;
                 border-radius: var(--border-radius-soft) var(--border-radius-soft) 0 0;
                 flex-direction: row; justify-content: space-around; flex-wrap: wrap;
+                font-size: 1em;
             }
             .logo { display: none; }
             .nav-list { display: flex; flex-wrap: wrap; justify-content: center; width: 100%; }
@@ -365,15 +368,17 @@
         import { getFirestore, collection, getDocs, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
+        // ************* Your web app's Firebase configuration (MUST MATCH ALL PAGES) *************
         const firebaseConfig = {
-            apiKey: "AIzaSyBtJaifspNzKeht9mOmZGvVU1IOvmnyrwQ",
-            authDomain: "sheikh-of-the-arabs.firebaseapp.com",
-            projectId: "sheikh-of-the-arabs",
-            storageBucket: "sheikh-of-the-arabs.firebasestorage.app",
-            messagingSenderId: "64212176848",
-            appId: "1:64212176848:web:8a02363e1be4e706fdb3d5",
-            measurementId: "G-HV2WKFZ32B"
+            apiKey: "AIzaSyC5ls-rPdJ65x5BoMGwAOpdcPtD585C2ys",
+            authDomain: "pharmacy-inventory-bf04a.firebaseapp.com",
+            projectId: "pharmacy-inventory-bf04a",
+            storageBucket: "pharmacy-inventory-bf04a.firebasestorage.app",
+            messagingSenderId: "937788650384",
+            appId: "1:937788650384:web:6451225d00e648f3a0b915",
+            measurementId: "G-ZGC9EQ55SL"
         };
+        // *****************************************************************************************
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
