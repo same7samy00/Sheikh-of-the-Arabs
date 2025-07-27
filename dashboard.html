@@ -16,6 +16,8 @@
             --accent-blue: #03A9F4;
             --error-red: #FF5252;
             --success-green: #4CAF50;
+            --info-yellow: #FFC107; /* Added for low stock */
+
 
             --border-radius-soft: 12px;
             --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -34,7 +36,7 @@
             min-height: 100vh;
         }
 
-        /* Sidebar Styling (Remains the same) */
+        /* Sidebar Styling */
         .sidebar {
             width: 280px;
             background-color: var(--surface-white);
@@ -133,7 +135,7 @@
             color: var(--surface-white);
         }
 
-        /* Main Content Styling (Remains largely the same, but no more display:none for sections) */
+        /* Main Content Styling */
         .main-content {
             flex-grow: 1;
             padding: 30px 40px;
@@ -146,7 +148,6 @@
             border-radius: var(--border-radius-soft);
             box-shadow: var(--shadow-elevation-1);
             margin-bottom: 30px;
-            /* Removed display: none; */
         }
 
         .content-section h2 {
@@ -164,7 +165,95 @@
             line-height: 1.7;
         }
 
-        /* Responsive adjustments (Remains the same) */
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--surface-white);
+            padding: 25px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-elevation-1);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end; /* Align content to the right */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-elevation-2);
+        }
+
+        .card .icon {
+            font-size: 2.5em;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+        }
+
+        .card .title {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .card .value {
+            font-size: 2.2em;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        /* Recent Products/Low Stock Section */
+        .recent-products, .low-stock-products {
+            background-color: var(--surface-white);
+            padding: 30px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-elevation-1);
+            margin-bottom: 30px;
+        }
+
+        .recent-products h3, .low-stock-products h3 {
+            color: var(--text-dark);
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 10px;
+        }
+
+        .product-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .product-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+            font-size: 1em;
+            color: var(--text-dark);
+        }
+
+        .product-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-list-item .name {
+            font-weight: 600;
+        }
+
+        .product-list-item .quantity, .product-list-item .price {
+            color: var(--text-secondary);
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar {
@@ -179,6 +268,7 @@
             .nav-link i { margin: 0 0 5px 0; }
             .nav-item.logout { margin-top: 10px; width: auto; }
             .main-content { padding: 20px; }
+            .dashboard-cards { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -225,14 +315,54 @@
         <section id="home" class="content-section">
             <h2>الصفحة الرئيسية</h2>
             <p>مرحباً بك في لوحة تحكم شيخ العرب! هنا يمكنك الحصول على نظرة عامة سريعة على أداء متجرك.</p>
-            <p>ستظهر هنا لوحات المعلومات الرئيسية، مثل المبيعات اليومية، المنتجات الأكثر مبيعاً، وحالة المخزون.</p>
+            
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="ri-box-3-line icon"></i>
+                    <div class="title">إجمالي المنتجات</div>
+                    <div class="value" id="totalProducts">0</div>
+                </div>
+                <div class="card">
+                    <i class="ri-alert-line icon" style="color: var(--info-yellow);"></i>
+                    <div class="title">المنتجات قليلة المخزون</div>
+                    <div class="value" id="lowStockProducts">0</div>
+                </div>
+                <div class="card">
+                    <i class="ri-currency-line icon" style="color: var(--success-green);"></i>
+                    <div class="title">إجمالي قيمة المخزون</div>
+                    <div class="value" id="totalInventoryValue">0.00 ريال</div>
+                </div>
+            </div>
+
+            <div class="recent-products content-section">
+                <h3>آخر المنتجات المضافة</h3>
+                <ul id="latestProductsList" class="product-list">
+                    <li class="product-list-item">
+                        <span class="name">منتج تجريبي 1</span>
+                        <span class="quantity">100 جرام</span>
+                        <span class="price">5.00 ريال</span>
+                    </li>
+                    <li class="product-list-item">
+                        <span class="name">منتج تجريبي 2</span>
+                        <span class="quantity">50 قطعة</span>
+                        <span class="price">12.50 ريال</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="low-stock-products content-section">
+                <h3>المنتجات التي تحتاج إلى إعادة تخزين</h3>
+                <ul id="criticalStockList" class="product-list">
+                    </ul>
+            </div>
+
         </section>
-        </main>
+    </main>
 
     <script type="module">
-        // Firebase Configuration (same as index.html)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
         const firebaseConfig = {
@@ -247,41 +377,126 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
+        const productsCol = collection(db, "products");
         const analytics = getAnalytics(app);
 
         // Authentication Check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = 'index.html';
+            } else {
+                fetchDashboardData(); // Fetch data once user is authenticated
             }
         });
 
         // Logout Functionality
         document.getElementById('logoutButton').addEventListener('click', async (e) => {
-            e.preventDefault(); // Prevent default link behavior
+            e.preventDefault();
             try {
                 await signOut(auth);
-                window.location.href = 'index.html'; // Redirect to login page after logout
+                window.location.href = 'index.html';
             } catch (error) {
                 console.error("Error signing out:", error);
                 alert("حدث خطأ أثناء تسجيل الخروج. يرجى المحاولة مرة أخرى.");
             }
         });
 
-        // --- NEW: Dynamic Active Tab Logic ---
+        // Dynamic Active Tab Logic
         document.addEventListener('DOMContentLoaded', () => {
             const navLinks = document.querySelectorAll('.nav-link');
-            const currentPath = window.location.pathname.split('/').pop(); // e.g., "dashboard.html"
+            const currentPath = window.location.pathname.split('/').pop();
 
             navLinks.forEach(link => {
                 const linkPath = link.getAttribute('href');
-                // Check if the link's href matches the current page's file name
                 if (linkPath === currentPath) {
                     link.classList.add('active');
                 }
             });
         });
-        // --- END NEW LOGIC ---
+
+        // --- Dashboard Data Fetching ---
+        async function fetchDashboardData() {
+            const totalProductsElement = document.getElementById('totalProducts');
+            const lowStockProductsElement = document.getElementById('lowStockProducts');
+            const totalInventoryValueElement = document.getElementById('totalInventoryValue');
+            const latestProductsList = document.getElementById('latestProductsList');
+            const criticalStockList = document.getElementById('criticalStockList');
+
+            totalProductsElement.textContent = '...';
+            lowStockProductsElement.textContent = '...';
+            totalInventoryValueElement.textContent = '...';
+            latestProductsList.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">جاري تحميل البيانات...</li>';
+            criticalStockList.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">جاري تحميل البيانات...</li>';
+
+
+            try {
+                const productSnapshot = await getDocs(productsCol);
+                let totalProductsCount = 0;
+                let lowStockCount = 0;
+                let totalInventoryValue = 0;
+                const allProducts = [];
+
+                productSnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    totalProductsCount++;
+                    allProducts.push({ id: doc.id, ...product });
+
+                    // Calculate total inventory value
+                    totalInventoryValue += (product.quantity * product.pricePerUnit);
+
+                    // Check for low stock (example threshold: quantity <= 100 or specific units)
+                    if (product.status === 'قليل المخزون' || product.status === 'نفد المخزون') {
+                        lowStockCount++;
+                    }
+                });
+
+                totalProductsElement.textContent = totalProductsCount;
+                lowStockProductsElement.textContent = lowStockCount;
+                totalInventoryValueElement.textContent = `${totalInventoryValue.toFixed(2)} ريال`;
+
+                // Display latest products (sorted by createdAt, if available, otherwise by updateAt)
+                // Filter out null/undefined createdAt and sort
+                const sortedProducts = allProducts
+                    .filter(p => p.createdAt)
+                    .sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate()) // Firebase Timestamp to Date for comparison
+                    .slice(0, 5); // Get top 5 latest
+
+                displayProductsInList(latestProductsList, sortedProducts);
+
+                // Display critical stock products
+                const criticalStockProducts = allProducts.filter(p => p.status === 'قليل المخزون' || p.status === 'نفد المخزون');
+                displayProductsInList(criticalStockList, criticalStockProducts);
+
+
+            } catch (error) {
+                console.error("Error fetching dashboard data:", error);
+                totalProductsElement.textContent = 'خطأ';
+                lowStockProductsElement.textContent = 'خطأ';
+                totalInventoryValueElement.textContent = 'خطأ';
+                latestProductsList.innerHTML = '<li style="text-align: center; color: var(--error-red);">خطأ في تحميل البيانات.</li>';
+                criticalStockList.innerHTML = '<li style="text-align: center; color: var(--error-red);">خطأ في تحميل البيانات.</li>';
+            }
+        }
+
+        function displayProductsInList(listElement, products) {
+            listElement.innerHTML = ''; // Clear existing
+            if (products.length === 0) {
+                listElement.innerHTML = '<li style="text-align: center; color: var(--text-secondary);">لا توجد منتجات لعرضها.</li>';
+                return;
+            }
+            products.forEach(product => {
+                const li = document.createElement('li');
+                li.classList.add('product-list-item');
+                li.innerHTML = `
+                    <span class="name">${product.name}</span>
+                    <span class="quantity">${product.quantity} ${product.unit}</span>
+                    <span class="price">${product.pricePerUnit.toFixed(2)} ريال</span>
+                `;
+                listElement.appendChild(li);
+            });
+        }
+
     </script>
 </body>
 </html>
