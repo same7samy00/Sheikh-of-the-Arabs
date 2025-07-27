@@ -11,15 +11,21 @@
     <aside class="sidebar">
         <div class="logo">شيخ <span>العرب</span></div>
         <ul class="nav-list">
-            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="ri-dashboard-line"></i><span>لوحة التحكم</span></a></li>
-            <li class="nav-item"><a href="inventory.html" class="nav-link"><i class="ri-box-3-line"></i><span>المخزون</span></a></li>
-            <li class="nav-item"><a href="pos.html" class="nav-link"><i class="ri-shopping-cart-line"></i><span>نقطة البيع</span></a></li>
-            <li class="nav-item logout"><a href="#" id="logoutButton" class="nav-link logout-btn"><i class="ri-logout-box-line"></i><span>الخروج</span></a></li>
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="ri-dashboard-line"></i><span>الرئيسية</span></a></li>
+            <li class="nav-item"><a href="inventory.html" class="nav-link active"><i class="ri-inbox-line"></i><span>المخزون</span></a></li>
+            <li class="nav-item"><a href="pos.html" class="nav-link"><i class="ri-store-2-line"></i><span>نقطة البيع</span></a></li>
+            <li class="nav-item logout"><a href="#" id="logoutButton" class="nav-link"><i class="ri-logout-box-r-line"></i><span>خروج</span></a></li>
         </ul>
     </aside>
-    <main class="main-content">
-        <div class="page-header"><h1 class="page-title" id="pageTitle">إضافة منتج جديد</h1></div>
-        <div class="card">
+
+    <div class="page-container">
+        <header class="main-header">
+            <h3>إدارة المنتجات</h3>
+        </header>
+
+        <main class="main-content">
+            <h1 class="page-title" id="pageTitle">إضافة منتج جديد</h1>
+            
             <form id="productForm" class="form-grid">
                 <div class="input-group">
                     <label for="productName">اسم المنتج</label>
@@ -32,6 +38,8 @@
                         <option value="بهارات">بهارات</option>
                         <option value="حبوب">حبوب</option>
                         <option value="أعشاب">أعشاب</option>
+                        <option value="زيوت">زيوت</option>
+                        <option value="مكسرات">مكسرات</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -51,24 +59,26 @@
                     <input type="number" id="productPricePerUnit" min="0" required>
                 </div>
                 <div class="input-group">
-                    <label for="productBarcode">كود المنتج (Barcode)</label>
+                    <label for="productBarcode">كود المنتج (QR/Barcode)</label>
                     <input type="text" id="productBarcode">
                 </div>
-                <div class="form-actions" style="grid-column: span 2;">
+                <div class="form-actions">
                     <a href="inventory.html" class="btn btn-secondary">إلغاء</a>
                     <button type="button" class="btn btn-primary" id="saveProductBtn">حفظ المنتج</button>
                 </div>
             </form>
-        </div>
-    </main>
+        </main>
+    </div>
+    
+    <div id="notification-container"></div>
+    <script src="shared.js" type="module"></script>
     <script type="module">
+        // JavaScript remains the same as it controls functionality, not the container style.
         import { db } from './shared.js';
         import { collection, addDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
         const pageTitle = document.getElementById('pageTitle');
         const saveBtn = document.getElementById('saveProductBtn');
-        const form = document.getElementById('productForm');
-        
         const urlParams = new URLSearchParams(window.location.search);
         const editingProductId = urlParams.get('id');
 
@@ -94,6 +104,11 @@
                 updatedAt: new Date()
             };
 
+            if(!productData.name || !productData.category) {
+                alert("الرجاء ملء اسم المنتج والفئة.");
+                return;
+            }
+
             try {
                 if (editingProductId) {
                     await updateDoc(doc(db, "products", editingProductId), productData);
@@ -117,12 +132,11 @@
             const docSnap = await getDoc(doc(db, "products", editingProductId));
             if (docSnap.exists()) {
                 const product = docSnap.data();
-                fields.name.value = product.name;
-                fields.category.value = product.category;
-                fields.quantity.value = product.quantity;
-                fields.unit.value = product.unit;
-                fields.pricePerUnit.value = product.pricePerUnit;
-                fields.barcode.value = product.barcode || '';
+                Object.keys(fields).forEach(key => {
+                    if (fields[key] && product[key] !== undefined) {
+                        fields[key].value = product[key];
+                    }
+                });
             }
         };
 
