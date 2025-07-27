@@ -210,9 +210,6 @@
             transform: translateY(-2px);
         }
 
-        /* Admin Override Button (Removed as per request) */
-        /* .btn-admin-override { ... } */
-
 
         /* Search and Filter Section */
         .filter-section {
@@ -443,8 +440,6 @@
             -moz-appearance: none;
             appearance: none;
             /* Remove arrows from all input types, including number and password */
-            /* This is a global style applied via CSS only, without relying on type-specific properties */
-            /* The custom arrow for select will still apply due to background-image */
         }
         /* Remove specific arrows for number inputs in WebKit */
         input[type=number]::-webkit-inner-spin-button,
@@ -452,6 +447,7 @@
             -webkit-appearance: none;
             margin: 0;
         }
+        /* Custom arrow for select will still apply due to background-image (already defined) */
 
 
         .modal-body .input-group input:focus,
@@ -511,16 +507,11 @@
             opacity: 1;
         }
 
-        /* Scan Feedback UI (Removed Spinners and Prompts) */
-        /* .spinner { ... } */
-        /* .scan-prompt { ... } */
-        /* The cancel button can remain in HTML but will be hidden by default now */
-
-
-        /* Product Table Admin Action Buttons (Removed as per request) */
-        /* .product-table .actions .admin-action-btn { ... } */
-        /* .product-table .actions .edit-btn.hidden-by-admin,
-        .product-table .actions .delete-btn.hidden-by-admin { ... } */
+        /* Scan Feedback UI (Removed Spinners and Prompts from visual display) */
+        /* These elements exist in HTML but are permanently hidden in CSS */
+        .spinner, .scan-prompt, #cancelScanRequestBtn {
+            display: none !important;
+        }
 
 
         /* Notification System */
@@ -605,9 +596,6 @@
             from { opacity: 1; transform: translateX(0); }
             to { opacity: 0; transform: translateX(-100%); }
         }
-
-        /* Admin Password Modal (Removed as per request) */
-        /* #adminPasswordModal { ... } */
 
 
         /* Responsive adjustments */
@@ -743,9 +731,9 @@
             </div>
         </div>
 
-        <div class="spinner" id="scanSpinner" style="display: none;"></div>
-        <p class="scan-prompt" id="scanPrompt" style="display: none;"></p>
-        <button class="btn-secondary" id="cancelScanRequestBtn" style="display: none; margin-top: 15px;"><i class="ri-close-line"></i> إلغاء طلب المسح</button>
+        <div class="spinner" id="scanSpinner"></div>
+        <p class="scan-prompt" id="scanPrompt"></p>
+        <button class="btn-secondary" id="cancelScanRequestBtn"></button>
 
 
         <div class="product-table-container">
@@ -829,7 +817,8 @@
                     <input type="text" id="productBarcode" placeholder="امسح أو أدخل الكود" autocomplete="off">
                     <button type="button" class="btn-secondary" id="requestScanForNewProduct">
                         <i class="ri-qr-code-line"></i>
-                        <span>مسح QR</span> </button>
+                        <span>مسح QR</span>
+                    </button>
                     <span class="error-message" id="productBarcodeError"></span>
                 </div>
             </div>
@@ -873,10 +862,10 @@
         const scannerSessionDocRef = doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID);
         // ************************************************************************************
 
-        // UI elements for scan feedback (Now primarily handled by notifications)
-        const scanSpinner = document.getElementById('scanSpinner'); // Will remain hidden
-        const scanPrompt = document.getElementById('scanPrompt'); // Will remain hidden
-        const cancelScanRequestBtn = document.getElementById('cancelScanRequestBtn'); // Will remain hidden
+        // UI elements for scan feedback (Now completely hidden visually)
+        const scanSpinner = document.getElementById('scanSpinner'); 
+        const scanPrompt = document.getElementById('scanPrompt'); 
+        const cancelScanRequestBtn = document.getElementById('cancelScanRequestBtn'); 
 
         let scannerSessionUnsubscribe = null;
 
@@ -893,7 +882,7 @@
 
             // Clear any previous notification visuals instantly if a new one arrives
             if (notificationContainer.firstChild) {
-                notificationContainer.innerHTML = ''; // Clears previous notifications
+                notificationContainer.innerHTML = '';
             }
             
             // Clear existing timeout if a new notification arrives quickly
@@ -987,8 +976,7 @@
                 removeNotification();
             });
 
-            // Prevent auto-hide for confirmation notifications, user must click
-            // You can add a timeout if you still want it to disappear after a long time
+            // Confirmation notifications will not auto-hide, user must click.
         }
 
 
@@ -1132,9 +1120,12 @@
                 pricePerUnit,
                 barcode: barcode || null,
                 status: status,
-                createdAt: editingProductId ? undefined : new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date() // Always update updatedAt
             };
+
+            if (!editingProductId) { // Only set createdAt for new products
+                productData.createdAt = new Date();
+            }
 
             try {
                 if (editingProductId) {
@@ -1296,32 +1287,26 @@
 
             // Start listening to the scanner session on page load
             listenToScannerSession();
-
-            // Placeholder for reports - no longer called directly from here
-            // updateReports(); 
         });
 
         // --- QR Scanner Integration (using Firestore for communication) ---
 
-        // Function to update the UI for scan request feedback
-        // Now only shows notifications, hides old UI elements
+        // This function is now simplified as visual feedback is handled by notifications
         function updateScanFeedbackUI(showSpinner, showPrompt, promptMessage = '', showCancelBtn = false) {
-            scanSpinner.style.display = 'none'; // Always hide
-            scanPrompt.style.display = 'none'; // Always hide
-            cancelScanRequestBtn.style.display = 'none'; // Always hide
+            // These elements are permanently hidden in CSS. Function remains for structure.
+            // showNotification handles the user feedback.
         }
 
         // Request a scan from the phone
         async function requestScan(purpose) {
             showNotification(`جاري طلب المسح لوضع ${purpose === 'search' ? 'البحث عن منتج' : 'إضافة باركود منتج جديد'} من الهاتف...`, "info");
-            // No spinners/prompts in UI.
 
             try {
                 const docSnap = await getDoc(scannerSessionDocRef);
                 if (!docSnap.exists() || docSnap.data().status !== 'phoneReady') {
                     if (!docSnap.exists()) {
                          await setDoc(scannerSessionDocRef, {
-                            status: 'desktopConnecting',
+                            status: 'desktopConnecting', // A state for desktop trying to connect
                             requestedBy: 'desktop',
                             createdAt: new Date(),
                             purpose: purpose,
@@ -1332,6 +1317,7 @@
                     } else {
                         showNotification("ماسح الهاتف غير جاهز للمسح. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "warning");
                     }
+                    // In either case, update to scanRequested to trigger phone scanner
                     await updateDoc(scannerSessionDocRef, {
                         status: 'scanRequested',
                         purpose: purpose,
@@ -1339,6 +1325,7 @@
                         lastRequestTime: new Date()
                     });
                 } else {
+                    // If phone is already ready, just send the scan request
                     await updateDoc(scannerSessionDocRef, {
                         status: 'scanRequested',
                         purpose: purpose,
@@ -1405,6 +1392,7 @@
                     }
 
                 } else {
+                    // Document does not exist (e.g., deleted by phone or never created)
                     showNotification("ماسح QR بالهاتف غير نشط أو انتهت الجلسة. يرجى فتحه.", "warning");
                     scannerSessionUnsubscribe();
                     scannerSessionUnsubscribe = null;
@@ -1420,11 +1408,12 @@
         // Event listeners for QR buttons
         requestScanForSearchBtn.addEventListener('click', () => requestScan('search'));
         requestScanForNewProductBtn.addEventListener('click', () => {
-            // productModal.style.display = 'flex'; // Keep modal open. No need to hide and show.
+            // Modal stays open, just request scan
             requestScan('add_new');
         });
 
         cancelScanRequestBtn.addEventListener('click', async () => {
+            // This button is now hidden, but the function remains.
             try {
                 await updateDoc(scannerSessionDocRef, {
                     status: 'phoneReady',
@@ -1438,14 +1427,14 @@
             }
         });
 
-        // --- Placeholder for Reports Logic (will need actual data from sales etc.) ---
-        // Function to update reports (now global for potential use in other pages)
+        // Function placeholder for Reports (to be used in other pages)
         /*
         async function updateReports() {
-            // Placeholder values. In a real app, this would query sales and expense data.
-            document.getElementById('dailySales').textContent = `1500.00 جنيه`; // Assuming element exists in relevant page
-            document.getElementById('topSellingProduct').textContent = `كمون حصى`; // Assuming element exists in relevant page
-            document.getElementById('estimatedProfit').textContent = `450.00 جنيه`; // Assuming element exists in relevant page
+            // This function would fetch sales data, calculate profits, etc.
+            // Example:
+            // document.getElementById('dailySales').textContent = `1500.00 جنيه`;
+            // document.getElementById('topSellingProduct').textContent = `كمون حصى`;
+            // document.getElementById('estimatedProfit').textContent = `450.00 جنيه`;
         }
         */
 
