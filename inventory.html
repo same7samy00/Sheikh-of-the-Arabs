@@ -41,31 +41,31 @@
             text-align: right;
             display: flex;
             min-height: 100vh;
-            font-size: var(--base-font-size); /* Applied smaller base font size */
+            font-size: var(--base-font-size);
         }
 
         /* Sidebar Styling */
         .sidebar {
-            width: 260px; /* Slightly smaller sidebar */
+            width: 260px;
             background-color: var(--surface-white);
             box-shadow: var(--shadow-elevation-1);
-            padding: 25px 15px; /* Smaller padding */
+            padding: 25px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             border-radius: 0 var(--border-radius-soft) var(--border-radius-soft) 0;
-            flex-shrink: 0; /* Prevent sidebar from shrinking */
+            flex-shrink: 0;
         }
 
         .logo {
             font-family: 'Cairo', sans-serif;
-            font-size: 2.2em; /* Slightly smaller logo */
+            font-size: 2.2em;
             font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 40px; /* Smaller margin */
+            margin-bottom: 40px;
             text-align: center;
             line-height: 1.2;
-            padding-bottom: 8px; /* Smaller padding */
+            padding-bottom: 8px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             width: 100%;
         }
@@ -81,24 +81,24 @@
         }
 
         .nav-item {
-            margin-bottom: 8px; /* Smaller margin */
+            margin-bottom: 8px;
         }
 
         .nav-link {
             display: flex;
             align-items: center;
-            padding: 12px 18px; /* Smaller padding */
+            padding: 12px 18px;
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 1em; /* Relative to base-font-size */
+            font-size: 1em;
             font-weight: 600;
             border-radius: var(--border-radius-soft);
             transition: all 0.3s ease;
         }
 
         .nav-link i {
-            font-size: 1.3em; /* Slightly smaller icon */
-            margin-left: 12px; /* Smaller margin */
+            font-size: 1.3em;
+            margin-left: 12px;
             color: var(--text-secondary);
             transition: color 0.3s ease;
         }
@@ -131,11 +131,7 @@
             background-color: var(--error-red);
             color: var(--surface-white);
             justify-content: center;
-            margin-top: 15px; /* Smaller margin */
-        }
-
-        .nav-link.logout-btn i {
-            color: var(--surface-white);
+            margin-top: 15px;
         }
 
         .nav-link.logout-btn:hover {
@@ -146,7 +142,7 @@
         /* Main Content Styling */
         .main-content {
             flex-grow: 1;
-            padding: 25px 30px; /* Smaller padding */
+            padding: 25px 30px;
             overflow-y: auto;
         }
 
@@ -154,27 +150,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px; /* Smaller margin */
+            margin-bottom: 25px;
         }
 
         .page-header h1 {
-            font-size: 2.2em; /* Smaller heading */
+            font-size: 2.2em;
             font-weight: 700;
             color: var(--text-dark);
         }
 
+        /* Action Buttons Styling (Updated for general purpose) */
         .action-buttons {
             display: flex;
             align-items: center;
-            gap: 12px; /* Smaller spacing between buttons */
+            gap: 12px;
         }
 
         .action-buttons .btn-primary,
         .action-buttons .btn-secondary { /* Apply to both button types */
-            padding: 10px 20px; /* Smaller padding */
+            padding: 10px 20px;
             border: none;
             border-radius: var(--border-radius-soft);
-            font-size: 0.95em; /* Smaller font */
+            font-size: 0.95em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -183,32 +180,49 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px; /* Smaller space between icon and text */
-            text-decoration: none; /* For the new <a> tag button */
+            gap: 8px;
+            text-decoration: none; /* For link buttons */
             color: var(--surface-white); /* Default color for primary */
+        }
+        .action-buttons .btn-primary {
+            background-color: var(--accent-blue);
+        }
+        .action-buttons .btn-primary:hover {
+            background-color: #0288D1;
+            box-shadow: var(--shadow-elevation-2);
+            transform: translateY(-2px);
+        }
+        .action-buttons .btn-secondary {
+            background-color: var(--surface-white);
+            color: var(--text-dark);
+            border: 1px solid #E0E6EB;
+        }
+        .action-buttons .btn-secondary:hover {
+            background-color: var(--bg-light);
+            box-shadow: var(--shadow-elevation-2);
+            transform: translateY(-2px);
         }
         .action-buttons .btn-primary:hover,
         .action-buttons .btn-secondary:hover {
              text-decoration: none;
         }
 
-
         /* Search and Filter Section */
         .filter-section {
             background-color: var(--surface-white);
-            padding: 20px; /* Smaller padding */
+            padding: 20px;
             border-radius: var(--border-radius-soft);
             box-shadow: var(--shadow-elevation-1);
-            margin-bottom: 25px; /* Smaller margin */
+            margin-bottom: 25px;
             display: flex;
-            gap: 15px; /* Smaller gap */
+            gap: 15px;
             align-items: center;
             flex-wrap: wrap;
         }
 
         .filter-section .input-group {
             flex: 1;
-            min-width: 200px; /* Smaller min-width */
+            min-width: 200px;
             margin-bottom: 0;
             position: relative;
         }
@@ -216,23 +230,22 @@
         .filter-section .input-group input,
         .filter-section .input-group select {
             width: 100%;
-            padding: 10px 15px; /* Smaller padding */
+            padding: 10px 15px;
             background-color: var(--bg-light);
             border: 1px solid #E0E6EB;
             border-radius: var(--border-radius-soft);
             color: var(--text-dark);
-            font-size: 0.95em; /* Smaller font */
+            font-size: 0.95em;
             box-sizing: border-box;
             outline: none;
             transition: all 0.3s ease;
-            -webkit-appearance: none; /* Remove default select arrow */
+            -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            /* Custom arrow for select fields */
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23607D8B%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
-            background-position: left 0.8rem center; /* Adjust for RTL */
-            background-size: 1.2em; /* Smaller arrow */
+            background-position: left 0.8rem center;
+            background-size: 1.2em;
         }
         /* Remove default clear button for search input in WebKit browsers */
         input[type="search"]::-webkit-search-cancel-button {
@@ -260,7 +273,7 @@
         /* Product Table */
         .product-table-container {
             background-color: var(--surface-white);
-            padding: 15px; /* Smaller padding */
+            padding: 15px;
             border-radius: var(--border-radius-soft);
             box-shadow: var(--shadow-elevation-1);
             overflow-x: auto;
@@ -273,9 +286,9 @@
         }
 
         .product-table th, .product-table td {
-            padding: 12px 10px; /* Smaller padding */
+            padding: 12px 10px;
             border-bottom: 1px solid #E0E6EB;
-            font-size: 0.9em; /* Smaller font */
+            font-size: 0.9em;
             color: var(--text-dark);
         }
 
@@ -294,9 +307,9 @@
             background: none;
             border: none;
             color: var(--accent-blue);
-            font-size: 1.1em; /* Smaller icon */
+            font-size: 1.1em;
             cursor: pointer;
-            margin-right: 8px; /* Smaller margin */
+            margin-right: 8px;
             transition: color 0.3s ease;
         }
         .product-table .actions button:hover {
@@ -310,7 +323,7 @@
         }
 
 
-        /* Scan Feedback UI (All elements are now hidden visually) */
+        /* Scan Feedback UI (Completely hidden visually) */
         .spinner, .scan-prompt, #cancelScanRequestBtn {
             display: none !important;
         }
@@ -320,7 +333,7 @@
         #notification-container {
             position: fixed;
             bottom: 20px;
-            left: 20px; /* Moved to bottom-left (in RTL, this is bottom-right for the user) */
+            left: 20px; /* For RTL, this is bottom-right for the user */
             z-index: 2000;
             display: flex;
             flex-direction: column;
@@ -331,47 +344,39 @@
         .notification {
             background-color: var(--surface-white);
             color: var(--text-dark);
-            padding: 12px 18px; /* Smaller padding */
+            padding: 12px 18px;
             border-radius: var(--border-radius-soft);
             box-shadow: var(--shadow-elevation-1);
-            min-width: 200px; /* Smaller min-width */
-            max-width: 300px; /* Smaller max-width */
+            min-width: 200px;
+            max-width: 300px;
             opacity: 0;
             transform: translateX(-100%); /* Start off-screen to the left */
-            animation: slideIn 0.5s forwards; /* Only slide in initially */
+            animation: slideIn 0.5s forwards;
             position: relative;
             display: flex;
             align-items: center;
-            gap: 8px; /* Smaller gap */
+            gap: 8px;
             font-weight: 600;
-            font-size: 0.9em; /* Smaller font for notification */
-            white-space: nowrap; /* Attempt to keep text on one line */
-            overflow: hidden; /* Hide overflow */
-            text-overflow: ellipsis; /* Add ellipsis if overflow */
+            font-size: 0.9em;
+            white-space: nowrap; /* Keep text on one line if possible */
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .notification.success {
-            border-left: 5px solid var(--success-green); /* Green border on left */
-        }
-        .notification.error {
-            border-left: 5px solid var(--error-red); /* Red border on left */
-        }
-        .notification.info {
-            border-left: 5px solid var(--accent-blue); /* Blue border on left */
-        }
-        .notification.warning {
-            border-left: 5px solid var(--info-yellow); /* Yellow border on left */
-        }
+        .notification.success { border-left: 5px solid var(--success-green); }
+        .notification.error { border-left: 5px solid var(--error-red); }
+        .notification.info { border-left: 5px solid var(--accent-blue); }
+        .notification.warning { border-left: 5px solid var(--info-yellow); }
 
         .notification i {
-            font-size: 1.3em; /* Smaller icon */
+            font-size: 1.3em;
             color: var(--text-secondary);
-            flex-shrink: 0; /* Prevent icon from shrinking */
+            flex-shrink: 0;
         }
         .notification span {
-            flex-grow: 1; /* Allow text to grow */
-            overflow: hidden; /* Hide overflow */
-            text-overflow: ellipsis; /* Add ellipsis */
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .notification .confirm-buttons {
@@ -380,7 +385,7 @@
             margin-top: 10px;
             justify-content: flex-end; /* Align buttons to the left (end in RTL) */
             width: 100%;
-            flex-shrink: 0; /* Prevent buttons from shrinking */
+            flex-shrink: 0;
         }
         .notification .confirm-buttons button {
             background-color: var(--accent-blue);
@@ -393,21 +398,11 @@
             font-weight: 600;
             transition: background-color 0.2s ease;
         }
-        .notification .confirm-buttons button.cancel {
-            background-color: var(--text-secondary);
-        }
-        .notification .confirm-buttons button:hover {
-            opacity: 0.9;
-        }
+        .notification .confirm-buttons button.cancel { background-color: var(--text-secondary); }
+        .notification .confirm-buttons button:hover { opacity: 0.9; }
 
-        @keyframes slideIn {
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes fadeOut { /* Keep fadeOut for when we manually remove it */
-            from { opacity: 1; transform: translateX(0); }
-            to { opacity: 0; transform: translateX(-100%); }
-        }
+        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-100%); } }
 
 
         /* Responsive adjustments */
@@ -417,7 +412,7 @@
                 width: 100%; height: auto; padding: 20px;
                 border-radius: var(--border-radius-soft) var(--border-radius-soft) 0 0;
                 flex-direction: row; justify-content: space-around; flex-wrap: wrap;
-                font-size: 1em; /* Reset font size for mobile sidebar */
+                font-size: 1em;
             }
             .logo { display: none; }
             .nav-list { display: flex; flex-wrap: wrap; justify-content: center; width: 100%; }
@@ -429,17 +424,16 @@
             .page-header { flex-direction: column; align-items: flex-end; }
             .page-header h1 { margin-bottom: 20px; font-size: 2em; }
             .action-buttons { width: 100%; display: flex; justify-content: space-around; flex-wrap: wrap; }
-            .action-buttons .btn-primary, .action-buttons .btn-secondary { /* Target both types */
+            .action-buttons .btn-primary, .action-buttons .btn-secondary {
                  margin: 5px;
             }
             .filter-section { flex-direction: column; align-items: stretch; }
             .filter-section .input-group { min-width: auto; width: 100%; }
-            /* Modal is removed from here now */
             #notification-container {
                 bottom: 10px;
                 left: 10px;
-                right: 10px; /* Allow notifications to spread on small screens */
-                align-items: center; /* Center them horizontally */
+                right: 10px;
+                align-items: center;
             }
             .notification {
                 min-width: unset;
@@ -523,11 +517,6 @@
             </div>
         </div>
 
-        <div class="spinner" id="scanSpinner"></div>
-        <p class="scan-prompt" id="scanPrompt"></p>
-        <button class="btn-secondary" id="cancelScanRequestBtn"></button>
-
-
         <div class="product-table-container">
             <table class="product-table">
                 <thead>
@@ -540,7 +529,7 @@
                         <th>الحالة</th>
                         <th>الإجراءات</th>
                     </tr>
-                </thead>
+</thead>
                 <tbody id="productsTableBody">
                     </tbody>
             </table>
@@ -548,7 +537,6 @@
     </main>
 
     <div id="notification-container"></div>
-
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
@@ -575,10 +563,10 @@
         const scannerSessionsCol = collection(db, "scannerSessions");
         const analytics = getAnalytics(app);
 
-        // ************* SHARED SCANNER SESSION ID (MUST MATCH QR SCANNER PAGE) *************
+        // ************* SHARED SCANNER SESSION ID (MUST MATCH QR SCANNER PAGE AND ADD_PRODUCT PAGE) *************
         const SHARED_SCANNER_SESSION_ID = "YOUR_STORE_UNIQUE_SCANNER_ID_12345";
         const scannerSessionDocRef = doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID);
-        // ************************************************************************************
+        // ****************************************************************************************************
 
         let scannerSessionUnsubscribe = null;
 
@@ -823,8 +811,8 @@
         }
 
         // Live Search and Filter Event Listeners
-        searchProductInput.addEventListener('input', fetchProducts); // Live search on input
-        filterCategorySelect.addEventListener('change', fetchProducts); // Live filter on category change
+        searchProductInput.addEventListener('input', fetchProducts);
+        filterCategorySelect.addEventListener('change', fetchProducts);
 
 
         // Initial fetch on page load
@@ -853,11 +841,15 @@
             showNotification(`جاري طلب المسح لوضع ${purpose === 'search' ? 'البحث عن منتج' : 'إضافة باركود منتج جديد'} من الهاتف...`, "info");
 
             try {
-                const docSnap = await getDoc(doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID));
+                // Get current status of the scanner session
+                const docSnap = await getDoc(scannerSessionDocRef);
+
+                // If document does not exist or phone is not ready, initialize/update it
                 if (!docSnap.exists() || docSnap.data().status !== 'phoneReady') {
+                    // If document doesn't exist, create it with 'desktopConnecting' status
                     if (!docSnap.exists()) {
-                         await setDoc(doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID), {
-                            status: 'desktopConnecting',
+                         await setDoc(scannerSessionDocRef, {
+                            status: 'desktopConnecting', // Desktop initiates connection
                             requestedBy: 'desktop',
                             createdAt: new Date(),
                             purpose: purpose,
@@ -866,16 +858,19 @@
                         });
                         showNotification("جاري إعداد الاتصال بماسح الهاتف. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "info");
                     } else {
+                        // If document exists but phone not ready, just notify
                         showNotification("ماسح الهاتف غير جاهز للمسح. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "warning");
                     }
-                    await updateDoc(doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID), {
-                        status: 'scanRequested',
+                    // After initial check/setup, update the status to scanRequested to trigger phone scanner
+                    await updateDoc(scannerSessionDocRef, {
+                        status: 'scanRequested', // This tells the phone to start scanning
                         purpose: purpose,
                         scannedValue: null,
                         lastRequestTime: new Date()
                     });
                 } else {
-                    await updateDoc(doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID), {
+                    // If phone is already ready, just send the scan request
+                    await updateDoc(scannerSessionDocRef, {
                         status: 'scanRequested',
                         purpose: purpose,
                         scannedValue: null,
@@ -888,7 +883,7 @@
             } catch (error) {
                 console.error("Error requesting scan:", error);
                 showNotification("فشل طلب المسح. تأكد من اتصال Firebase.", "error");
-                await updateDoc(doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID), {
+                await updateDoc(scannerSessionDocRef, { // Signal error back to Firestore
                     status: 'errorFromDesktop',
                     errorMessage: error.message,
                     errorTime: new Date()
@@ -899,13 +894,13 @@
         // Listen to the scanner session document for updates from the phone
         function listenToScannerSession() {
             if (scannerSessionUnsubscribe) {
-                scannerSessionUnsubscribe();
+                scannerSessionUnsubscribe(); // Unsubscribe from previous listener if any
             }
 
-            scannerSessionUnsubscribe = onSnapshot(doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID), async (docSnap) => {
+            scannerSessionUnsubscribe = onSnapshot(scannerSessionDocRef, async (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    console.log("Scanner session data:", data);
+                    console.log("Scanner session data (inventory):", data);
 
                     if (data.status === 'phoneReady') {
                         showNotification("ماسح QR بالهاتف متصل وجاهز.", "success");
@@ -916,17 +911,18 @@
                         
                         if (data.purpose === 'search') {
                             searchProductInput.value = data.scannedValue;
-                            fetchProducts();
+                            fetchProducts(); // Trigger live search in inventory
                         } else if (data.purpose === 'add_new') {
-                            // This part is now handled in add_product.html
-                            // We will send a message directly to add_product.html if it's the active page
-                            // For now, it will just show the notification.
-                            // The user would typically be on add_product.html already when requesting scan for new product.
+                            // If purpose is add_new, the user is likely on add_product.html.
+                            // We don't interact with add_product.html directly from here.
+                            // The add_product.html will listen for this scan too.
+                            showNotification("تم مسح باركود لمنتج جديد. يرجى الذهاب لصفحة إضافة المنتج.", "info");
                         }
                         
-                        await updateDoc(doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID), {
+                        // Signal back to the phone that the desktop has processed the scan
+                        await updateDoc(scannerSessionDocRef, {
                             status: 'readyForNextScan',
-                            scannedValue: null,
+                            scannedValue: null, // Clear scanned value after processing
                             processedAt: new Date()
                         }).catch(e => console.error("Error updating session status to readyForNextScan:", e));
 
@@ -957,7 +953,6 @@
 
         // Event listeners for QR buttons
         requestScanForSearchBtn.addEventListener('click', () => requestScan('search'));
-        // requestScanForNewProductBtn will be handled in add_product.html
     </script>
 </body>
 </html>
