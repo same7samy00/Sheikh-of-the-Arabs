@@ -54,7 +54,7 @@
             flex-direction: column;
             align-items: center;
             border-radius: 0 var(--border-radius-soft) var(--border-radius-soft) 0;
-            flex-shrink: 0;
+            flex-shrink: 0; /* Prevent sidebar from shrinking */
         }
 
         .logo {
@@ -210,23 +210,8 @@
             transform: translateY(-2px);
         }
 
-        /* Admin Override Button */
-        .btn-admin-override {
-            background-color: transparent;
-            color: var(--text-secondary);
-            border: none;
-            padding: 6px; /* Smaller padding */
-            border-radius: 50%;
-            font-size: 1.4em; /* Smaller icon */
-            box-shadow: none;
-            order: -1;
-        }
-        .btn-admin-override:hover {
-            color: var(--accent-blue);
-            background-color: var(--bg-light);
-            transform: scale(1.1);
-            box-shadow: var(--shadow-elevation-1);
-        }
+        /* Admin Override Button (Removed as per request) */
+        /* .btn-admin-override { ... } */
 
 
         /* Search and Filter Section */
@@ -457,11 +442,18 @@
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23607D8B%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: left 0.8rem center; /* Adjust for RTL */
-            background-size: 1.2em;
+            /* Remove arrows from all input types, including number and password */
+            /* This is a global style applied via CSS only, without relying on type-specific properties */
+            /* The custom arrow for select will still apply due to background-image */
         }
+        /* Remove specific arrows for number inputs in WebKit */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+
         .modal-body .input-group input:focus,
         .modal-body .input-group select:focus {
             border-color: var(--accent-blue);
@@ -519,52 +511,23 @@
             opacity: 1;
         }
 
-        /* Scan Feedback UI */
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 25px; /* Smaller spinner */
-            height: 25px;
-            border-radius: 50%;
-            border-left-color: var(--accent-blue);
-            animation: spin 1s ease infinite;
-            display: none;
-            margin: 0 auto;
-        }
-        /* Removed .scan-prompt styling as it's now handled by notifications */
+        /* Scan Feedback UI (Removed Spinners and Prompts) */
+        /* .spinner { ... } */
+        /* .scan-prompt { ... } */
+        /* The cancel button can remain in HTML but will be hidden by default now */
 
-        /* Admin Action Buttons in table actions */
-        .product-table .actions .admin-action-btn {
-            background-color: var(--info-yellow);
-            color: var(--text-dark);
-            font-size: 0.8em;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: none; /* Hidden by default */
-        }
-        .product-table .actions .admin-action-btn:hover {
-            background-color: #fdd835;
-        }
-        .product-table .actions .admin-action-btn.active {
-            background-color: var(--success-green);
-            color: var(--surface-white);
-        }
-        .product-table .actions .admin-action-btn.active:hover {
-            background-color: #388E3C;
-        }
-        /* Hide default edit/delete buttons in admin mode */
-        .product-table .actions .edit-btn.hidden-by-admin,
-        .product-table .actions .delete-btn.hidden-by-admin {
-            display: none !important;
-        }
+
+        /* Product Table Admin Action Buttons (Removed as per request) */
+        /* .product-table .actions .admin-action-btn { ... } */
+        /* .product-table .actions .edit-btn.hidden-by-admin,
+        .product-table .actions .delete-btn.hidden-by-admin { ... } */
 
 
         /* Notification System */
         #notification-container {
             position: fixed;
             bottom: 20px;
-            left: 20px; /* Moved to bottom-left (in RTL, this is bottom-right) */
+            left: 20px; /* Moved to bottom-left (in RTL, this is bottom-right for the user) */
             z-index: 2000;
             display: flex;
             flex-direction: column;
@@ -582,7 +545,7 @@
             max-width: 300px; /* Smaller max-width */
             opacity: 0;
             transform: translateX(-100%); /* Start off-screen to the left */
-            animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 4.5s;
+            animation: slideIn 0.5s forwards; /* Only slide in initially */
             position: relative;
             display: flex;
             align-items: center;
@@ -609,14 +572,43 @@
             color: var(--text-secondary);
         }
 
+        .notification .confirm-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: flex-end; /* Align buttons to the left (end in RTL) */
+            width: 100%;
+        }
+        .notification .confirm-buttons button {
+            background-color: var(--accent-blue);
+            color: var(--surface-white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--border-radius-soft);
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+        .notification .confirm-buttons button.cancel {
+            background-color: var(--text-secondary);
+        }
+        .notification .confirm-buttons button:hover {
+            opacity: 0.9;
+        }
+
         @keyframes slideIn {
             to { opacity: 1; transform: translateX(0); }
         }
 
-        @keyframes fadeOut {
+        @keyframes fadeOut { /* Keep fadeOut for when we manually remove it */
             from { opacity: 1; transform: translateX(0); }
             to { opacity: 0; transform: translateX(-100%); }
         }
+
+        /* Admin Password Modal (Removed as per request) */
+        /* #adminPasswordModal { ... } */
+
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -718,7 +710,6 @@
         <div class="page-header">
             <h1>إدارة المخزون</h1>
             <div class="action-buttons">
-                <button class="btn-admin-override" id="adminOverrideBtn" title="صلاحيات المسؤول"><i class="ri-shield-user-line"></i></button>
                 <button class="btn-primary" id="addProductBtn">
                     <i class="ri-add-line"></i>
                     <span>إضافة منتج جديد</span>
@@ -750,7 +741,7 @@
                     <option value="أخرى">أخرى</option>
                 </select>
             </div>
-            </div>
+        </div>
 
         <div class="spinner" id="scanSpinner" style="display: none;"></div>
         <p class="scan-prompt" id="scanPrompt" style="display: none;"></p>
@@ -849,25 +840,6 @@
         </div>
     </div>
 
-    <div id="adminPasswordModal" class="modal">
-        <div class="modal-content" style="max-width: 400px; height: auto;">
-            <div class="modal-header">
-                <h2 id="adminModalTitle">صلاحيات المسؤول</h2>
-                <span class="modal-close" id="adminModalClose">&times;</span>
-            </div>
-            <div class="modal-body" style="display: block;"> <div class="input-group">
-                    <label for="adminPassword">كلمة المرور</label>
-                    <input type="password" id="adminPassword" placeholder="أدخل كلمة مرور المسؤول" autocomplete="off">
-                    <span class="error-message" id="adminPasswordError"></span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-save" id="verifyAdminPasswordBtn">تأكيد</button>
-                <button type="button" class="btn-cancel" id="cancelAdminPasswordBtn">إلغاء</button>
-            </div>
-        </div>
-    </div>
-
     <div id="notification-container"></div>
 
 
@@ -879,9 +851,9 @@
 
         // ************* Firebase Configuration (MUST MATCH QR SCANNER PAGE) *************
         const firebaseConfig = {
-            apiKey: "AIzaSyC5ls-rPdJ65x5BoMGwAOpdcPtD585C2ys", // <--- هذا يجب أن يتطابق مع qr_scanner.html
-            authDomain: "pharmacy-inventory-bf04a.firebaseapp.com", // <--- هذا يجب أن يتطابق مع qr_scanner.html
-            projectId: "pharmacy-inventory-bf04a", // <--- هذا يجب أن يتطابق مع qr_scanner.html
+            apiKey: "AIzaSyC5ls-rPdJ65x5BoMGwAOpdcPtD585C2ys",
+            authDomain: "pharmacy-inventory-bf04a.firebaseapp.com",
+            projectId: "pharmacy-inventory-bf04a",
             storageBucket: "pharmacy-inventory-bf04a.firebasestorage.app",
             messagingSenderId: "937788650384",
             appId: "1:937788650384:web:6451225d00e648f3a0b915",
@@ -893,46 +865,29 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const productsCol = collection(db, "products");
-        const scannerSessionsCol = collection(db, "scannerSessions"); // New collection for scanner communication
+        const scannerSessionsCol = collection(db, "scannerSessions");
         const analytics = getAnalytics(app);
 
         // ************* SHARED SCANNER SESSION ID (MUST MATCH QR SCANNER PAGE) *************
-        const SHARED_SCANNER_SESSION_ID = "YOUR_STORE_UNIQUE_SCANNER_ID_12345"; // <--- هذا يجب أن يتطابق مع qr_scanner.html
+        const SHARED_SCANNER_SESSION_ID = "YOUR_STORE_UNIQUE_SCANNER_ID_12345";
         const scannerSessionDocRef = doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID);
         // ************************************************************************************
 
-        // UI elements for scan feedback
-        const scanSpinner = document.getElementById('scanSpinner'); // Kept for now, but not used as heavily
-        const scanPrompt = document.getElementById('scanPrompt'); // Kept for now, but not used as heavily
-        const cancelScanRequestBtn = document.getElementById('cancelScanRequestBtn'); // Kept for consistency
+        // UI elements for scan feedback (Now primarily handled by notifications)
+        const scanSpinner = document.getElementById('scanSpinner'); // Will remain hidden
+        const scanPrompt = document.getElementById('scanPrompt'); // Will remain hidden
+        const cancelScanRequestBtn = document.getElementById('cancelScanRequestBtn'); // Will remain hidden
 
-        let scannerSessionUnsubscribe = null; // To store the unsubscribe function for the Firestore listener
-
-        // Admin Override Elements
-        const adminOverrideBtn = document.getElementById('adminOverrideBtn');
-        const adminPasswordModal = document.getElementById('adminPasswordModal');
-        const adminModalClose = document.getElementById('adminModalClose');
-        const adminPasswordInput = document.getElementById('adminPassword');
-        const adminPasswordError = document.getElementById('adminPasswordError');
-        const verifyAdminPasswordBtn = document.getElementById('verifyAdminPasswordBtn');
-        const cancelAdminPasswordBtn = document.getElementById('cancelAdminPasswordBtn');
-
-        // Admin default password (for client-side verification - NOT SECURE FOR PRODUCTION)
-        let ADMIN_PASSWORD = "010274"; // This should ideally be fetched from Firestore and compared server-side/securely
-
-        let isAdminModeActive = localStorage.getItem('isAdminModeActive') === 'true'; // Load from localStorage
-        let isEditActive = isAdminModeActive;
-        let isDeleteActive = isAdminModeActive;
-        let isAddActive = isAdminModeActive;
+        let scannerSessionUnsubscribe = null;
 
         // Notification System
         const notificationContainer = document.getElementById('notification-container');
         let lastNotificationMessage = ''; // To prevent duplicate consecutive notifications
         let notificationTimeoutId = null; // To manage notification timeout
 
-        function showNotification(message, type = 'info') {
+        function showNotification(message, type = 'info', duration = 5000) {
             // Check if the exact same message was shown recently to prevent spam
-            if (message === lastNotificationMessage) {
+            if (message === lastNotificationMessage && notificationContainer.firstChild) {
                 return;
             }
 
@@ -977,7 +932,63 @@
                     }
                 }, { once: true });
                 lastNotificationMessage = ''; // Clear last message after it fades out
-            }, 5000); // Notification stays for 5 seconds
+            }, duration); // Notification stays for 'duration' milliseconds
+        }
+
+        // Custom confirmation notification
+        function showConfirmation(message, onConfirm, onCancel) {
+            // Ensure no other notifications are present
+            if (notificationContainer.firstChild) {
+                notificationContainer.innerHTML = '';
+            }
+            if (notificationTimeoutId) {
+                clearTimeout(notificationTimeoutId);
+                notificationTimeoutId = null;
+            }
+
+            const notificationDiv = document.createElement('div');
+            notificationDiv.classList.add('notification', 'warning'); // Confirmation is a type of warning
+            notificationDiv.innerHTML = `
+                <i class="ri-question-fill"></i>
+                <span>${message}</span>
+                <div class="confirm-buttons">
+                    <button class="confirm-yes">نعم</button>
+                    <button class="confirm-cancel">إلغاء</button>
+                </div>
+            `;
+            
+            notificationContainer.appendChild(notificationDiv);
+
+            void notificationDiv.offsetWidth; // Trigger reflow
+            notificationDiv.style.opacity = '1';
+            notificationDiv.style.transform = 'translateX(0)';
+
+            const confirmYesBtn = notificationDiv.querySelector('.confirm-yes');
+            const confirmCancelBtn = notificationDiv.querySelector('.confirm-cancel');
+
+            const removeNotification = () => {
+                notificationDiv.style.opacity = '0';
+                notificationDiv.style.transform = 'translateX(-100%)';
+                notificationDiv.addEventListener('transitionend', () => {
+                    if (notificationDiv.parentNode) {
+                        notificationDiv.parentNode.removeChild(notificationDiv);
+                    }
+                }, { once: true });
+                lastNotificationMessage = ''; // Clear last message after action
+            };
+
+            confirmYesBtn.addEventListener('click', () => {
+                onConfirm();
+                removeNotification();
+            });
+
+            confirmCancelBtn.addEventListener('click', () => {
+                if (onCancel) onCancel();
+                removeNotification();
+            });
+
+            // Prevent auto-hide for confirmation notifications, user must click
+            // You can add a timeout if you still want it to disappear after a long time
         }
 
 
@@ -991,14 +1002,21 @@
         // Logout Functionality
         document.getElementById('logoutButton').addEventListener('click', async (e) => {
             e.preventDefault();
-            try {
-                await signOut(auth);
-                showNotification("تم تسجيل الخروج بنجاح.", "info");
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error("Error signing out:", error);
-                showNotification("حدث خطأ أثناء تسجيل الخروج. يرجى المحاولة مرة أخرى.", "error");
-            }
+            showConfirmation("هل أنت متأكد أنك تريد تسجيل الخروج؟",
+                async () => { // On Confirm
+                    try {
+                        await signOut(auth);
+                        showNotification("تم تسجيل الخروج بنجاح.", "info");
+                        window.location.href = 'index.html';
+                    } catch (error) {
+                        console.error("Error signing out:", error);
+                        showNotification("حدث خطأ أثناء تسجيل الخروج. يرجى المحاولة مرة أخرى.", "error");
+                    }
+                },
+                () => { // On Cancel
+                    showNotification("تم إلغاء عملية تسجيل الخروج.", "info");
+                }
+            );
         });
 
         // Inventory Management Logic
@@ -1013,7 +1031,7 @@
         const searchProductInput = document.getElementById('searchProduct');
         const filterCategorySelect = document.getElementById('filterCategory');
         const requestScanForSearchBtn = document.getElementById('requestScanForSearchBtn');
-        const requestScanForNewProductBtn = document.getElementById('requestScanForNewProduct'); // New button for modal
+        const requestScanForNewProductBtn = document.getElementById('requestScanForNewProduct');
 
         let editingProductId = null;
 
@@ -1048,15 +1066,10 @@
             clearError(productUnitError);
             clearError(productPricePerUnitError);
             clearError(productBarcodeError);
-            clearError(adminPasswordError); // Clear admin password error too
         }
 
         // Open Modal (for Add/Edit Product)
         addProductBtn.addEventListener('click', () => {
-            if (!isAdminModeActive || !isAddActive) {
-                showNotification("لا تملك صلاحية إضافة المنتجات.", "warning");
-                return;
-            }
             modalTitle.textContent = 'إضافة منتج جديد';
             productForm.reset();
             clearAllErrors();
@@ -1125,18 +1138,10 @@
 
             try {
                 if (editingProductId) {
-                    if (!isAdminModeActive || !isEditActive) {
-                        showNotification("لا تملك صلاحية تعديل المنتجات.", "error");
-                        return;
-                    }
                     const productRef = doc(db, "products", editingProductId);
                     await updateDoc(productRef, productData);
                     showNotification('تم تحديث المنتج بنجاح!', "success");
                 } else {
-                    if (!isAdminModeActive || !isAddActive) {
-                        showNotification("لا تملك صلاحية إضافة المنتجات.", "error");
-                        return;
-                    }
                     await addDoc(productsCol, productData);
                     showNotification('تم إضافة المنتج بنجاح!', "success");
                 }
@@ -1175,7 +1180,6 @@
                 }
 
                 displayProducts(products);
-                updateAdminActionButtonsVisibility(); // Update button visibility after products are displayed
             } catch (e) {
                 console.error("Error fetching products: ", e);
                 productsTableBody.innerHTML = '<tr><td colspan="7" style="color: var(--error-red); text-align: center;">حدث خطأ أثناء تحميل المنتجات.</td></tr>';
@@ -1205,51 +1209,23 @@
                     <td>${parseFloat(product.pricePerUnit).toFixed(2)} جنيه</td>
                     <td style="color: ${statusColor}; font-weight: 600;">${product.status}</td>
                     <td class="actions">
-                        <button title="تعديل" class="edit-btn ${isAdminModeActive ? 'hidden-by-admin' : ''}" data-id="${product.id}"><i class="ri-edit-line"></i></button>
-                        <button title="حذف" class="delete-btn ${isAdminModeActive ? 'hidden-by-admin' : ''}" data-id="${product.id}"><i class="ri-delete-bin-line"></i></button>
-                        <button class="admin-action-btn toggle-edit ${isEditActive ? 'active' : ''}" data-id="${product.id}" style="${isAdminModeActive ? 'display: inline-block;' : 'display: none;'}">تعديل</button>
-                        <button class="admin-action-btn toggle-delete ${isDeleteActive ? 'active' : ''}" data-id="${product.id}" style="${isAdminModeActive ? 'display: inline-block;' : 'display: none;'}">حذف</button>
+                        <button title="تعديل" class="edit-btn" data-id="${product.id}"><i class="ri-edit-line"></i></button>
+                        <button title="حذف" class="delete-btn" data-id="${product.id}"><i class="ri-delete-bin-line"></i></button>
                     </td>
                 `;
             });
 
-            // Add event listeners for edit/delete buttons (default)
+            // Add event listeners for edit/delete buttons
             productsTableBody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const productId = e.currentTarget.dataset.id;
-                    if (!isAdminModeActive || !isEditActive) { // Only allow if admin mode and edit permission is active
-                        showNotification("لا تملك صلاحية تعديل المنتجات.", "warning");
-                        return;
-                    }
                     editProduct(productId);
                 });
             });
             productsTableBody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const productId = e.currentTarget.dataset.id;
-                    if (!isAdminModeActive || !isDeleteActive) { // Only allow if admin mode and delete permission is active
-                        showNotification("لا تملك صلاحية حذف المنتجات.", "warning");
-                        return;
-                    }
                     deleteProduct(productId);
-                });
-            });
-
-            // Admin Toggle Buttons (for enabling/disabling edit/delete visually)
-            productsTableBody.querySelectorAll('.admin-action-btn.toggle-edit').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    isEditActive = !isEditActive;
-                    localStorage.setItem('isEditActive', isEditActive); // Save state
-                    updateAdminActionButtonsVisibility();
-                    showNotification(isEditActive ? "صلاحية التعديل مفعلة." : "صلاحية التعديل معطلة.", 'info');
-                });
-            });
-             productsTableBody.querySelectorAll('.admin-action-btn.toggle-delete').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    isDeleteActive = !isDeleteActive;
-                    localStorage.setItem('isDeleteActive', isDeleteActive); // Save state
-                    updateAdminActionButtonsVisibility();
-                    showNotification(isDeleteActive ? "صلاحية الحذف مفعلة." : "صلاحية الحذف معطلة.", 'info');
                 });
             });
         }
@@ -1281,16 +1257,21 @@
         }
 
         async function deleteProduct(productId) {
-            if (confirm('هل أنت متأكد أنك تريد حذف هذا المنتج؟')) {
-                try {
-                    await deleteDoc(doc(db, "products", productId));
-                    showNotification('تم حذف المنتج بنجاح!', "success");
-                    fetchProducts();
-                } catch (e) {
-                    console.error("Error removing document: ", e);
-                    showNotification('حدث خطأ أثناء حذف المنتج. يرجى المحاولة مرة أخرى.', "error");
+            showConfirmation('هل أنت متأكد أنك تريد حذف هذا المنتج؟',
+                async () => { // On Confirm
+                    try {
+                        await deleteDoc(doc(db, "products", productId));
+                        showNotification('تم حذف المنتج بنجاح!', "success");
+                        fetchProducts();
+                    } catch (e) {
+                        console.error("Error removing document: ", e);
+                        showNotification('حدث خطأ أثناء حذف المنتج. يرجى المحاولة مرة أخرى.', "error");
+                    }
+                },
+                () => { // On Cancel
+                    showNotification("تم إلغاء عملية الحذف.", "info");
                 }
-            }
+            );
         }
 
         // Live Search and Filter Event Listeners
@@ -1316,41 +1297,30 @@
             // Start listening to the scanner session on page load
             listenToScannerSession();
 
-            // Initialize admin mode state on load
-            isAddActive = isAdminModeActive;
-            isEditActive = isAdminModeActive;
-            isDeleteActive = isAdminModeActive;
-            updateAdminActionButtonsVisibility(); // Set initial visibility
-
-            // Placeholder for reports
-            // updateReports(); // Will be called from dashboard or dedicated reports page
-
+            // Placeholder for reports - no longer called directly from here
+            // updateReports(); 
         });
 
         // --- QR Scanner Integration (using Firestore for communication) ---
 
         // Function to update the UI for scan request feedback
-        // Removed `scanSpinner` and `scanPrompt` usage from here, now rely on notifications
+        // Now only shows notifications, hides old UI elements
         function updateScanFeedbackUI(showSpinner, showPrompt, promptMessage = '', showCancelBtn = false) {
-            // These elements are now generally hidden or used minimally
-            scanSpinner.style.display = showSpinner ? 'block' : 'none';
-            scanPrompt.textContent = promptMessage;
-            scanPrompt.style.display = showPrompt ? 'block' : 'none';
-            cancelScanRequestBtn.style.display = showCancelBtn ? 'inline-flex' : 'none';
+            scanSpinner.style.display = 'none'; // Always hide
+            scanPrompt.style.display = 'none'; // Always hide
+            cancelScanRequestBtn.style.display = 'none'; // Always hide
         }
 
         // Request a scan from the phone
         async function requestScan(purpose) {
             showNotification(`جاري طلب المسح لوضع ${purpose === 'search' ? 'البحث عن منتج' : 'إضافة باركود منتج جديد'} من الهاتف...`, "info");
-            updateScanFeedbackUI(true, true, '', true); // Show spinner/cancel button as an overall UI state
+            // No spinners/prompts in UI.
 
             try {
-                // Ensure the session document exists and is in a ready state
                 const docSnap = await getDoc(scannerSessionDocRef);
                 if (!docSnap.exists() || docSnap.data().status !== 'phoneReady') {
                     if (!docSnap.exists()) {
-                         // Attempt to create the document if it doesn't exist
-                        await setDoc(scannerSessionDocRef, {
+                         await setDoc(scannerSessionDocRef, {
                             status: 'desktopConnecting',
                             requestedBy: 'desktop',
                             createdAt: new Date(),
@@ -1361,21 +1331,18 @@
                         showNotification("جاري إعداد الاتصال بماسح الهاتف. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "info");
                     } else {
                         showNotification("ماسح الهاتف غير جاهز للمسح. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "warning");
-                        console.warn("Phone is not in 'phoneReady' state:", docSnap.data().status);
                     }
-                     // After initial check/setup, update the status to trigger scan on phone
                     await updateDoc(scannerSessionDocRef, {
                         status: 'scanRequested',
                         purpose: purpose,
-                        scannedValue: null, // Clear any previous scanned value
+                        scannedValue: null,
                         lastRequestTime: new Date()
                     });
                 } else {
-                    // If phone is ready, directly request scan
                     await updateDoc(scannerSessionDocRef, {
                         status: 'scanRequested',
                         purpose: purpose,
-                        scannedValue: null, // Clear any previous scanned value
+                        scannedValue: null,
                         lastRequestTime: new Date()
                     });
                 }
@@ -1385,8 +1352,6 @@
             } catch (error) {
                 console.error("Error requesting scan:", error);
                 showNotification("فشل طلب المسح. تأكد من اتصال Firebase.", "error");
-                updateScanFeedbackUI(false, false); // Hide scan UI elements
-                // Also update Firestore to signal error from desktop side if connection is there
                 await updateDoc(scannerSessionDocRef, {
                     status: 'errorFromDesktop',
                     errorMessage: error.message,
@@ -1398,7 +1363,7 @@
         // Listen to the scanner session document for updates from the phone
         function listenToScannerSession() {
             if (scannerSessionUnsubscribe) {
-                scannerSessionUnsubscribe(); // Unsubscribe from previous listener if any
+                scannerSessionUnsubscribe();
             }
 
             scannerSessionUnsubscribe = onSnapshot(scannerSessionDocRef, async (docSnap) => {
@@ -1408,28 +1373,22 @@
 
                     if (data.status === 'phoneReady') {
                         showNotification("ماسح QR بالهاتف متصل وجاهز.", "success");
-                        updateScanFeedbackUI(false, false); // Hide scan UI elements
                     } else if (data.status === 'scanning') {
                         showNotification(`الهاتف يقوم بالمسح لوضع ${data.purpose === 'search' ? 'البحث' : 'إضافة المنتج'}...`, "info");
-                        updateScanFeedbackUI(true, false); // Show spinner, hide prompt
                     } else if (data.status === 'scanned' && data.scannedValue) {
-                        // Phone has scanned a value
                         showNotification(`تم استلام الباركود: ${data.scannedValue}. جاري المعالجة...`, "info");
-                        updateScanFeedbackUI(false, false); // Hide scan UI elements
                         
-                        // Process the scanned value based on the purpose
                         if (data.purpose === 'search') {
                             searchProductInput.value = data.scannedValue;
-                            fetchProducts(); // Trigger live search
+                            fetchProducts();
                         } else if (data.purpose === 'add_new') {
                             productBarcodeInput.value = data.scannedValue;
                             productModal.style.display = 'flex'; // Keep modal open
                         }
                         
-                        // Signal back to the phone that the desktop has processed the scan
                         await updateDoc(scannerSessionDocRef, {
                             status: 'readyForNextScan',
-                            scannedValue: null, // Clear scanned value after processing
+                            scannedValue: null,
                             processedAt: new Date()
                         }).catch(e => console.error("Error updating session status to readyForNextScan:", e));
 
@@ -1437,28 +1396,22 @@
 
                     } else if (data.status === 'closedByPhone') {
                         showNotification("تم قطع الاتصال بماسح QR بالهاتف.", "info");
-                        updateScanFeedbackUI(false, false); // Hide scan UI elements
-                        scannerSessionUnsubscribe(); // Stop listening
+                        scannerSessionUnsubscribe();
                         scannerSessionUnsubscribe = null;
                     } else if (data.status === 'errorFromPhone') {
                         showNotification(`خطأ في ماسح QR بالهاتف: ${data.errorMessage || 'غير معروف'}`, "error");
-                        updateScanFeedbackUI(false, false); // Hide scan UI elements
                     } else if (data.status === 'errorFromDesktop') {
                         showNotification("فشل الاتصال بماسح QR. يرجى التحقق من الإعدادات.", "error");
-                        updateScanFeedbackUI(false, false); // Hide scan UI elements
                     }
 
                 } else {
-                    // Document does not exist (e.g., deleted by phone or never created)
                     showNotification("ماسح QR بالهاتف غير نشط أو انتهت الجلسة. يرجى فتحه.", "warning");
-                    updateScanFeedbackUI(false, false); // Hide scan UI elements
-                    scannerSessionUnsubscribe(); // Stop listening
+                    scannerSessionUnsubscribe();
                     scannerSessionUnsubscribe = null;
                 }
             }, (error) => {
                 console.error("Error listening to scanner session on desktop:", error);
                 showNotification("خطأ في الاتصال بماسح QR. يرجى إعادة تحميل الصفحة.", "error");
-                updateScanFeedbackUI(false, false); // Hide scan UI elements
                 scannerSessionUnsubscribe();
                 scannerSessionUnsubscribe = null;
             });
@@ -1467,17 +1420,11 @@
         // Event listeners for QR buttons
         requestScanForSearchBtn.addEventListener('click', () => requestScan('search'));
         requestScanForNewProductBtn.addEventListener('click', () => {
-            // Check if adding is allowed
-            if (!isAdminModeActive || !isAddActive) {
-                showNotification("لا تملك صلاحية إضافة المنتجات.", "warning");
-                return;
-            }
             // productModal.style.display = 'flex'; // Keep modal open. No need to hide and show.
             requestScan('add_new');
         });
 
         cancelScanRequestBtn.addEventListener('click', async () => {
-            // Cancel pending request by setting status back to phoneReady
             try {
                 await updateDoc(scannerSessionDocRef, {
                     status: 'phoneReady',
@@ -1485,121 +1432,14 @@
                     lastRequestTime: new Date()
                 });
                 showNotification("تم إلغاء طلب المسح.", "info");
-                updateScanFeedbackUI(false, false); // Hide scan UI elements
             } catch (e) {
                 console.error("Error cancelling scan request:", e);
                 showNotification("فشل إلغاء طلب المسح.", "error");
-                updateScanFeedbackUI(false, false); // Hide scan UI elements
             }
         });
 
-
-        // --- Admin Override Logic ---
-        adminOverrideBtn.addEventListener('click', () => {
-            adminPasswordModal.style.display = 'flex';
-            adminPasswordInput.value = '';
-            clearError(adminPasswordError);
-        });
-
-        adminModalClose.addEventListener('click', () => {
-            adminPasswordModal.style.display = 'none';
-        });
-
-        cancelAdminPasswordBtn.addEventListener('click', () => {
-            adminPasswordModal.style.display = 'none';
-        });
-
-        verifyAdminPasswordBtn.addEventListener('click', () => {
-            const enteredPassword = adminPasswordInput.value;
-            if (enteredPassword === ADMIN_PASSWORD) {
-                isAdminModeActive = !isAdminModeActive; // Toggle admin mode
-                localStorage.setItem('isAdminModeActive', isAdminModeActive); // Save state to localStorage
-
-                isAddActive = isAdminModeActive;
-                isEditActive = isAdminModeActive;
-                isDeleteActive = isAdminModeActive;
-                localStorage.setItem('isAddActive', isAddActive);
-                localStorage.setItem('isEditActive', isEditActive);
-                localStorage.setItem('isDeleteActive', isDeleteActive);
-
-
-                adminPasswordModal.style.display = 'none';
-                showNotification(isAdminModeActive ? "تم تفعيل وضع المسؤول بنجاح." : "تم إلغاء تفعيل وضع المسؤول.", "success");
-                updateAdminActionButtonsVisibility(); // Update button visibility
-                fetchProducts(); // Re-render table to reflect changes
-            } else {
-                showError(adminPasswordError, "كلمة المرور غير صحيحة.");
-                showNotification("كلمة المرور غير صحيحة.", "error");
-            }
-        });
-
-        function updateAdminActionButtonsVisibility() {
-            const adminActionButtons = productsTableBody.querySelectorAll('.admin-action-btn');
-            const defaultEditButtons = productsTableBody.querySelectorAll('.edit-btn');
-            const defaultDeleteButtons = productsTableBody.querySelectorAll('.delete-btn');
-
-            if (isAdminModeActive) {
-                // Show admin toggle buttons, hide default edit/delete
-                adminActionButtons.forEach(btn => btn.style.display = 'inline-block');
-                defaultEditButtons.forEach(btn => btn.classList.add('hidden-by-admin'));
-                defaultDeleteButtons.forEach(btn => btn.classList.add('hidden-by-admin'));
-
-                // Update "Add New Product" button state
-                if (isAddActive) {
-                    addProductBtn.classList.add('btn-primary');
-                    addProductBtn.classList.remove('btn-secondary');
-                    addProductBtn.style.opacity = '1';
-                    addProductBtn.style.cursor = 'pointer';
-                } else {
-                     addProductBtn.classList.add('btn-secondary');
-                     addProductBtn.classList.remove('btn-primary');
-                     addProductBtn.style.opacity = '0.7';
-                     addProductBtn.style.cursor = 'not-allowed';
-                }
-
-                 // Visual feedback for admin permissions within the table (toggle buttons)
-                adminActionButtons.forEach(btn => {
-                    if (btn.classList.contains('toggle-edit')) {
-                        if (isEditActive) btn.classList.add('active'); else btn.classList.remove('active');
-                    } else if (btn.classList.contains('toggle-delete')) {
-                        if (isDeleteActive) btn.classList.add('active'); else btn.classList.remove('active');
-                    }
-                });
-
-            } else {
-                // Hide admin toggle buttons and show default edit/delete
-                adminActionButtons.forEach(btn => btn.style.display = 'none');
-                defaultEditButtons.forEach(btn => btn.classList.remove('hidden-by-admin'));
-                defaultDeleteButtons.forEach(btn => btn.classList.remove('hidden-by-admin'));
-                
-                // Ensure Add New Product button is always active (default state for non-admin)
-                addProductBtn.classList.add('btn-primary');
-                addProductBtn.classList.remove('btn-secondary');
-                addProductBtn.style.opacity = '1';
-                addProductBtn.style.cursor = 'pointer';
-            }
-        }
-
-        // Event listener for admin toggle buttons (these will be added to newly created rows)
-        productsTableBody.addEventListener('click', (e) => {
-            if (e.target.classList.contains('toggle-edit')) {
-                // This toggles the _permission state for the entire section_, not just one row
-                // For per-row permission, you'd need more complex state management
-                isEditActive = !isEditActive;
-                localStorage.setItem('isEditActive', isEditActive);
-                showNotification(isEditActive ? "صلاحية التعديل مفعلة." : "صلاحية التعديل معطلة.", "info");
-                updateAdminActionButtonsVisibility(); // Re-render to update visual state
-            } else if (e.target.classList.contains('toggle-delete')) {
-                isDeleteActive = !isDeleteActive;
-                localStorage.setItem('isDeleteActive', isDeleteActive);
-                showNotification(isDeleteActive ? "صلاحية الحذف مفعلة." : "صلاحية الحذف معطلة.", "info");
-                updateAdminActionButtonsVisibility();
-            }
-        });
-        
         // --- Placeholder for Reports Logic (will need actual data from sales etc.) ---
         // Function to update reports (now global for potential use in other pages)
-        // This function would fetch sales data, calculate profits, etc.
         /*
         async function updateReports() {
             // Placeholder values. In a real app, this would query sales and expense data.
@@ -1607,19 +1447,6 @@
             document.getElementById('topSellingProduct').textContent = `كمون حصى`; // Assuming element exists in relevant page
             document.getElementById('estimatedProfit').textContent = `450.00 جنيه`; // Assuming element exists in relevant page
         }
-        */
-
-        // Future: Admin password can be fetched from Firestore and updated in settings.html
-        // For example, in settings.html:
-        /*
-        async function updateAdminPassword(newPassword) {
-            const adminSettingsRef = doc(db, 'settings', 'admin'); // A document for admin settings
-            await updateDoc(adminSettingsRef, { adminPassword: newPassword });
-            ADMIN_PASSWORD = newPassword; // Update local variable
-            showNotification("تم تغيير كلمة مرور المسؤول بنجاح.", "success");
-        }
-        // Then, on app load, fetch ADMIN_PASSWORD from Firestore
-        // This requires Firebase Security Rules to allow only authenticated admins to read/write this.
         */
 
     </script>
