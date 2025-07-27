@@ -38,7 +38,7 @@
             min-height: 100vh;
         }
 
-        /* Sidebar (Copied from Dashboard for consistency) */
+        /* Sidebar Styling */
         .sidebar {
             width: 280px;
             background-color: var(--surface-white);
@@ -157,6 +157,12 @@
             color: var(--text-dark);
         }
 
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Spacing between buttons */
+        }
+
         .action-buttons button {
             padding: 12px 25px;
             border: none;
@@ -169,11 +175,11 @@
             font-family: 'Cairo', sans-serif;
             display: inline-flex;
             align-items: center;
-            margin-right: 15px; /* Adjust spacing */
+            justify-content: center; /* Center content in button */
+            gap: 10px; /* Space between icon and text */
         }
 
         .action-buttons button i {
-            margin-left: 10px;
             font-size: 1.2em;
         }
 
@@ -198,6 +204,25 @@
             transform: translateY(-2px);
         }
 
+        /* Admin Override Button (New Style for top-left button) */
+        .btn-admin-override {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 8px; /* Smaller padding */
+            border-radius: 50%; /* Make it round */
+            font-size: 1.5em; /* Larger icon */
+            box-shadow: none;
+            order: -1; /* Place it at the beginning of flex container */
+        }
+        .btn-admin-override:hover {
+            color: var(--accent-blue);
+            background-color: var(--bg-light);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-elevation-1);
+        }
+
+
         /* Search and Filter Section */
         .filter-section {
             background-color: var(--surface-white);
@@ -218,7 +243,8 @@
             position: relative;
         }
 
-        .filter-section .input-group input {
+        .filter-section .input-group input,
+        .filter-section .input-group select { /* Modified for select */
             width: 100%;
             padding: 12px 18px;
             background-color: var(--bg-light);
@@ -229,9 +255,17 @@
             box-sizing: border-box;
             outline: none;
             transition: all 0.3s ease;
+            -webkit-appearance: none; /* Remove default select arrow */
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23607D8B%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: left 1rem center; /* Adjust for RTL */
+            background-size: 1.5em;
         }
 
-        .filter-section .input-group input:focus {
+        .filter-section .input-group input:focus,
+        .filter-section .input-group select:focus {
             border-color: var(--accent-blue);
             box-shadow: var(--shadow-input-focus);
         }
@@ -240,49 +274,8 @@
             display: none; /* Hide label for search/filter inputs to save space */
         }
         
-        .filter-section .search-button {
-            padding: 12px 20px;
-            background-color: var(--accent-blue);
-            color: var(--surface-white);
-            border: none;
-            border-radius: var(--border-radius-soft);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-size: 1em;
-            font-weight: 600;
-            font-family: 'Cairo', sans-serif;
-            display: flex; /* For icon alignment */
-            align-items: center;
-            justify-content: center;
-            gap: 5px; /* Space between icon and text */
-        }
-        .filter-section .search-button:hover {
-            background-color: #0288D1;
-        }
-        /* No specific icon margin needed here due to gap property */
-
-        /* Added new button for QR search */
-        .filter-section .qr-search-button {
-            padding: 12px 20px;
-            background-color: var(--success-green); /* Example color for QR search */
-            color: var(--surface-white);
-            border: none;
-            border-radius: var(--border-radius-soft);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-size: 1em;
-            font-weight: 600;
-            font-family: 'Cairo', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-        .filter-section .qr-search-button:hover {
-            background-color: #388E3C; /* Darker green on hover */
-        }
-
-
+        /* Removed .filter-section .search-button as it's now live search */
+        
         /* Product Table */
         .product-table-container {
             background-color: var(--surface-white);
@@ -356,14 +349,14 @@
             padding: 30px;
             border-radius: var(--border-radius-soft);
             box-shadow: var(--shadow-elevation-2);
-            width: 90%;
-            max-width: 600px;
+            width: 90%; /* Take more width */
+            max-width: 800px; /* Allow wider on large screens */
+            height: 90vh; /* Take more height */
+            max-height: 90vh; /* Max height to prevent overflow on very large forms */
+            overflow-y: auto; /* Allow scrolling within modal content */
             animation: fadeIn 0.3s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            display: flex; /* Make it a flex container for header/body/footer */
+            flex-direction: column;
         }
 
         .modal-header {
@@ -373,6 +366,7 @@
             margin-bottom: 25px;
             border-bottom: 1px solid #E0E6EB;
             padding-bottom: 15px;
+            flex-shrink: 0; /* Prevent header from shrinking */
         }
 
         .modal-header h2 {
@@ -393,6 +387,12 @@
             color: var(--error-red);
         }
 
+        .modal-body {
+            flex-grow: 1; /* Allow body to take available space */
+            overflow-y: auto; /* Enable scrolling within the body if content is long */
+            padding-bottom: 20px; /* Space before footer */
+        }
+
         .modal-body .input-group {
             margin-bottom: 20px;
         }
@@ -402,10 +402,11 @@
             color: var(--text-dark);
             margin-bottom: 8px;
             font-size: 1em;
+            display: block; /* Ensure label is on its own line */
         }
 
         .modal-body .input-group input,
-        .modal-body .input-group select {
+        .modal-body .input-group select { /* Applied unified style */
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #E0E6EB;
@@ -415,6 +416,13 @@
             background-color: var(--bg-light);
             box-sizing: border-box;
             font-family: 'Cairo', sans-serif;
+            -webkit-appearance: none; /* Remove default select arrow */
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23607D8B%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: left 1rem center; /* Adjust for RTL */
+            background-size: 1.5em;
         }
         .modal-body .input-group input:focus,
         .modal-body .input-group select:focus {
@@ -425,6 +433,7 @@
         .modal-footer {
             margin-top: 30px;
             text-align: left; /* Buttons align to left (end in RTL) */
+            flex-shrink: 0; /* Prevent footer from shrinking */
         }
         .modal-footer button {
             padding: 12px 25px;
@@ -498,6 +507,130 @@
             display: none; /* Hidden by default */
         }
 
+        /* Reports Section */
+        .reports-section {
+            background-color: var(--surface-white);
+            padding: 30px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-elevation-1);
+            margin-top: 30px; /* Space from other sections */
+        }
+        .reports-section h2 {
+            color: var(--text-dark);
+            font-size: 2em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 15px;
+        }
+        .reports-section p {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            line-height: 1.7;
+        }
+        .reports-section .report-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .reports-section .report-card {
+            background-color: var(--bg-light);
+            padding: 15px;
+            border-radius: var(--border-radius-soft);
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .reports-section .report-card .label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+        .reports-section .report-card .value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Notification System */
+        #notification-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px; /* For RTL, notifications from bottom-right */
+            z-index: 2000; /* Above everything */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end; /* Align notifications to the right */
+        }
+
+        .notification {
+            background-color: var(--surface-white);
+            color: var(--text-dark);
+            padding: 15px 20px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-elevation-1);
+            min-width: 250px;
+            max-width: 350px;
+            opacity: 0;
+            transform: translateX(100%); /* Start off-screen to the right */
+            animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 4.5s; /* Slide in, then fade out after 4.5s (total 5s duration) */
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .notification.success {
+            border-right: 5px solid var(--success-green); /* Green border on right */
+        }
+        .notification.error {
+            border-right: 5px solid var(--error-red); /* Red border on right */
+        }
+        .notification.info {
+            border-right: 5px solid var(--accent-blue); /* Blue border on right */
+        }
+        .notification.warning {
+            border-right: 5px solid var(--info-yellow); /* Yellow border on right */
+        }
+
+        .notification i {
+            font-size: 1.5em;
+            color: var(--text-secondary);
+        }
+
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        /* Admin Action Buttons in table actions */
+        .product-table .actions .admin-action-btn {
+            background-color: var(--info-yellow); /* Distinct color for admin actions */
+            color: var(--text-dark);
+            font-size: 0.8em; /* Smaller font for these specific buttons */
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: none; /* Hidden by default */
+        }
+        .product-table .actions .admin-action-btn:hover {
+            background-color: #fdd835; /* Darker yellow on hover */
+        }
+        .product-table .actions .admin-action-btn.active {
+            background-color: var(--success-green);
+            color: var(--surface-white);
+        }
+        .product-table .actions .admin-action-btn.active:hover {
+            background-color: #388E3C;
+        }
+
         /* Responsive adjustments (same as dashboard.html) */
         @media (max-width: 768px) {
             body { flex-direction: column; }
@@ -519,10 +652,24 @@
             .action-buttons button { margin: 5px; }
             .filter-section { flex-direction: column; align-items: stretch; }
             .filter-section .input-group { min-width: auto; width: 100%; }
-            .filter-section .search-button, .filter-section .qr-search-button { width: 100%; margin: 0; }
-            .modal-content { width: 95%; padding: 20px; }
+            /* Removed search button style as it's gone */
+            .modal-content {
+                width: 95%; /* Make modal almost full width on small screens */
+                height: 95vh; /* Make modal almost full height on small screens */
+                padding: 20px;
+            }
             .modal-footer { text-align: center; }
             .modal-footer button { margin: 5px; }
+            #notification-container {
+                bottom: 10px;
+                right: 10px;
+                left: 10px; /* Allow notifications to spread on small screens */
+                align-items: center; /* Center them horizontally */
+            }
+            .notification {
+                min-width: unset;
+                max-width: 90%;
+            }
         }
     </style>
 </head>
@@ -568,6 +715,7 @@
         <div class="page-header">
             <h1>إدارة المخزون</h1>
             <div class="action-buttons">
+                <button class="btn-admin-override" id="adminOverrideBtn" title="صلاحيات المسؤول"><i class="ri-shield-user-line"></i></button>
                 <button class="btn-primary" id="addProductBtn">
                     <i class="ri-add-line"></i>
                     <span>إضافة منتج جديد</span>
@@ -581,20 +729,25 @@
 
         <div class="filter-section">
             <div class="input-group">
-                <input type="text" id="searchProduct" placeholder="البحث بالاسم أو الكود...">
+                <input type="text" id="searchProduct" placeholder="البحث بالاسم أو الكود..." autofocus>
             </div>
             <div class="input-group">
                 <select id="filterCategory">
                     <option value="">كل الفئات</option>
                     <option value="بهارات">بهارات</option>
+                    <option value="حبوب">حبوب</option>
                     <option value="أعشاب">أعشاب</option>
                     <option value="زيوت">زيوت</option>
                     <option value="مكسرات">مكسرات</option>
                     <option value="عسل">عسل</option>
-                    </select>
+                    <option value="تمور">تمور</option>
+                    <option value="بقوليات">بقوليات</option>
+                    <option value="مجففات">مجففات</option>
+                    <option value="عطور وبخور">عطور وبخور</option>
+                    <option value="أخرى">أخرى</option>
+                </select>
             </div>
-            <button class="search-button"><i class="ri-search-line"></i> بحث</button>
-        </div>
+            </div>
 
         <div class="spinner" id="scanSpinner"></div>
         <p class="scan-prompt" id="scanPrompt"></p>
@@ -618,6 +771,26 @@
                     </tbody>
             </table>
         </div>
+
+        <div class="reports-section">
+            <h2>التقارير والإحصائيات</h2>
+            <p>هنا ستظهر تقارير مفصلة عن المبيعات والأرباح وحالة المخزون، مع الأخذ في الاعتبار صلاحيات كل حساب.</p>
+            <div class="report-summary">
+                <div class="report-card">
+                    <div class="label">إجمالي المبيعات اليومية</div>
+                    <div class="value" id="dailySales">0.00 جنيه</div>
+                </div>
+                <div class="report-card">
+                    <div class="label">أعلى المنتجات مبيعًا</div>
+                    <div class="value" id="topSellingProduct">--</div>
+                </div>
+                <div class="report-card">
+                    <div class="label">إجمالي الأرباح المتوقعة</div>
+                    <div class="value" id="estimatedProfit">0.00 جنيه</div>
+                </div>
+                </div>
+        </div>
+
     </main>
 
     <div id="productModal" class="modal">
@@ -638,11 +811,17 @@
                         <select id="productCategory">
                             <option value="">اختر فئة</option>
                             <option value="بهارات">بهارات</option>
+                            <option value="حبوب">حبوب</option>
                             <option value="أعشاب">أعشاب</option>
                             <option value="زيوت">زيوت</option>
                             <option value="مكسرات">مكسرات</option>
                             <option value="عسل">عسل</option>
-                            </select>
+                            <option value="تمور">تمور</option>
+                            <option value="بقوليات">بقوليات</option>
+                            <option value="مجففات">مجففات</option>
+                            <option value="عطور وبخور">عطور وبخور</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
                         <span class="error-message" id="productCategoryError"></span>
                     </div>
                     <div class="input-group">
@@ -655,10 +834,14 @@
                         <select id="productUnit">
                             <option value="جرام">جرام (g)</option>
                             <option value="كيلو جرام">كيلو جرام (kg)</option>
-                            <option value="مليلتر">مليلتر (ml)</option>
-                            <option value="لتر">لتر (L)</option>
                             <option value="قطعة">قطعة</option>
+                            <option value="لتر">لتر (L)</option>
+                            <option value="مليلتر">مليلتر (ml)</option>
                             <option value="عبوة">عبوة</option>
+                            <option value="كوب">كوب</option>
+                            <option value="كيس">كيس</option>
+                            <option value="علبة">علبة</option>
+                            <option value="حبة">حبة</option>
                         </select>
                         <span class="error-message" id="productUnitError"></span>
                     </div>
@@ -684,6 +867,29 @@
             </div>
         </div>
     </div>
+
+    <div id="adminPasswordModal" class="modal">
+        <div class="modal-content" style="max-width: 400px; height: auto;">
+            <div class="modal-header">
+                <h2 id="adminModalTitle">صلاحيات المسؤول</h2>
+                <span class="modal-close" id="adminModalClose">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="adminPassword">كلمة المرور</label>
+                    <input type="password" id="adminPassword" placeholder="أدخل كلمة مرور المسؤول">
+                    <span class="error-message" id="adminPasswordError"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-save" id="verifyAdminPasswordBtn">تأكيد</button>
+                <button type="button" class="btn-cancel" id="cancelAdminPasswordBtn">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-container"></div>
+
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
@@ -722,6 +928,76 @@
 
         let scannerSessionUnsubscribe = null; // To store the unsubscribe function for the Firestore listener
 
+        // Admin Override Elements
+        const adminOverrideBtn = document.getElementById('adminOverrideBtn');
+        const adminPasswordModal = document.getElementById('adminPasswordModal');
+        const adminModalClose = document.getElementById('adminModalClose');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        const adminPasswordError = document.getElementById('adminPasswordError');
+        const verifyAdminPasswordBtn = document.getElementById('verifyAdminPasswordBtn');
+        const cancelAdminPasswordBtn = document.getElementById('cancelAdminPasswordBtn');
+
+        // Admin default password (for client-side verification - NOT SECURE FOR PRODUCTION)
+        let ADMIN_PASSWORD = "010274"; // This should ideally be fetched from Firestore and compared server-side/securely
+
+        let isAdminModeActive = false; // Flag to track admin mode status
+        let isEditActive = false;
+        let isDeleteActive = false;
+        let isAddActive = false; // Add/Edit button (addProductBtn)
+
+        // Notification System
+        const notificationContainer = document.getElementById('notification-container');
+        let lastNotificationMessage = ''; // To prevent duplicate consecutive notifications
+        let notificationTimeoutId = null; // To manage notification timeout
+
+        function showNotification(message, type = 'info') {
+            if (message === lastNotificationMessage) {
+                return; // Prevent duplicate consecutive notifications
+            }
+
+            if (notificationTimeoutId) { // Clear existing timeout if any
+                clearTimeout(notificationTimeoutId);
+            }
+
+            // Clear previous notification visuals instantly if a new one arrives
+            notificationContainer.innerHTML = ''; 
+
+            const notificationDiv = document.createElement('div');
+            notificationDiv.classList.add('notification', type);
+            let iconClass = '';
+            if (type === 'success') iconClass = 'ri-check-line';
+            else if (type === 'error') iconClass = 'ri-error-warning-line';
+            else if (type === 'warning') iconClass = 'ri-alert-line';
+            else iconClass = 'ri-information-line';
+
+            notificationDiv.innerHTML = `<i class="${iconClass}"></i><span>${message}</span>`;
+            
+            notificationContainer.appendChild(notificationDiv);
+
+            // Trigger reflow to restart animation (important for consecutive notifications)
+            void notificationDiv.offsetWidth; 
+            notificationDiv.style.opacity = '1';
+            notificationDiv.style.transform = 'translateX(0)';
+
+
+            lastNotificationMessage = message; // Store last message
+            
+            // Set timeout for fading out
+            notificationTimeoutId = setTimeout(() => {
+                notificationDiv.style.opacity = '0';
+                notificationDiv.style.transform = 'translateX(100%)';
+                notificationTimeoutId = null; // Reset timeout ID
+                // Remove from DOM after animation completes
+                notificationDiv.addEventListener('transitionend', () => {
+                    if (notificationDiv.parentNode) {
+                        notificationDiv.parentNode.removeChild(notificationDiv);
+                    }
+                }, { once: true });
+                lastNotificationMessage = ''; // Clear last message after it fades out
+            }, 5000); // Notification stays for 5 seconds
+        }
+
+
         // Authentication Check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
@@ -737,7 +1013,7 @@
                 window.location.href = 'index.html';
             } catch (error) {
                 console.error("Error signing out:", error);
-                alert("حدث خطأ أثناء تسجيل الخروج. يرجى المحاولة مرة أخرى.");
+                showNotification("حدث خطأ أثناء تسجيل الخروج.", "error");
             }
         });
 
@@ -752,7 +1028,6 @@
         const productsTableBody = document.getElementById('productsTableBody');
         const searchProductInput = document.getElementById('searchProduct');
         const filterCategorySelect = document.getElementById('filterCategory');
-        const searchButton = document.querySelector('.filter-section .search-button');
         const requestScanForSearchBtn = document.getElementById('requestScanForSearchBtn');
         const requestScanForNewProductBtn = document.getElementById('requestScanForNewProduct');
 
@@ -789,10 +1064,15 @@
             clearError(productUnitError);
             clearError(productPricePerUnitError);
             clearError(productBarcodeError);
+            clearError(adminPasswordError); // Clear admin password error too
         }
 
-        // Open Modal
+        // Open Modal (for Add/Edit Product)
         addProductBtn.addEventListener('click', () => {
+            if (!isAdminModeActive || !isAddActive) {
+                showNotification("لا تملك صلاحية إضافة المنتجات.", "warning");
+                return;
+            }
             modalTitle.textContent = 'إضافة منتج جديد';
             productForm.reset();
             clearAllErrors();
@@ -861,30 +1141,40 @@
 
             try {
                 if (editingProductId) {
+                    if (!isAdminModeActive || !isEditActive) {
+                        showNotification("لا تملك صلاحية تعديل المنتجات.", "warning");
+                        return;
+                    }
                     const productRef = doc(db, "products", editingProductId);
                     await updateDoc(productRef, productData);
-                    alert('تم تحديث المنتج بنجاح!');
+                    showNotification('تم تحديث المنتج بنجاح!', "success");
                 } else {
+                    if (!isAdminModeActive || !isAddActive) {
+                        showNotification("لا تملك صلاحية إضافة المنتجات.", "warning");
+                        return;
+                    }
                     await addDoc(productsCol, productData);
-                    alert('تم إضافة المنتج بنجاح!');
+                    showNotification('تم إضافة المنتج بنجاح!', "success");
                 }
                 productModal.style.display = 'none';
                 fetchProducts();
             } catch (e) {
                 console.error("Error adding/updating document: ", e);
-                alert('حدث خطأ أثناء حفظ المنتج. يرجى المحاولة مرة أخرى.');
+                showNotification('حدث خطأ أثناء حفظ المنتج. يرجى المحاولة مرة أخرى.', "error");
             }
         });
 
         // Fetch and Display Products
-        async function fetchProducts(searchQuery = '', categoryFilter = '') {
+        async function fetchProducts() {
             productsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">جاري تحميل المنتجات...</td></tr>';
             
-            let qry = productsCol;
+            const searchQuery = searchProductInput.value.toLowerCase().trim();
+            const categoryFilter = filterCategorySelect.value;
+            
             let products = [];
 
             try {
-                const querySnapshot = await getDocs(qry);
+                const querySnapshot = await getDocs(productsCol);
                 querySnapshot.forEach((doc) => {
                     products.push({ id: doc.id, ...doc.data() });
                 });
@@ -894,17 +1184,18 @@
                 }
 
                 if (searchQuery) {
-                    const lowerCaseQuery = searchQuery.toLowerCase();
                     products = products.filter(product =>
-                        (product.name && product.name.toLowerCase().includes(lowerCaseQuery)) ||
-                        (product.barcode && product.barcode.toLowerCase().includes(lowerCaseQuery))
+                        (product.name && product.name.toLowerCase().includes(searchQuery)) ||
+                        (product.barcode && product.barcode.toLowerCase().includes(searchQuery))
                     );
                 }
 
                 displayProducts(products);
+                updateAdminActionButtonsVisibility(); // Update button visibility after products are displayed
             } catch (e) {
                 console.error("Error fetching products: ", e);
                 productsTableBody.innerHTML = '<tr><td colspan="7" style="color: var(--error-red); text-align: center;">حدث خطأ أثناء تحميل المنتجات.</td></tr>';
+                showNotification("خطأ في تحميل المنتجات.", "error");
             }
         }
 
@@ -932,20 +1223,47 @@
                     <td class="actions">
                         <button title="تعديل" class="edit-btn" data-id="${product.id}"><i class="ri-edit-line"></i></button>
                         <button title="حذف" class="delete-btn" data-id="${product.id}"><i class="ri-delete-bin-line"></i></button>
+                        <button class="admin-action-btn toggle-edit" data-id="${product.id}">تعديل</button>
+                        <button class="admin-action-btn toggle-delete" data-id="${product.id}">حذف</button>
                     </td>
                 `;
             });
 
+            // Add event listeners for edit/delete buttons
             productsTableBody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const productId = e.currentTarget.dataset.id;
+                    if (!isAdminModeActive || !isEditActive) {
+                        showNotification("لا تملك صلاحية تعديل المنتجات.", "warning");
+                        return;
+                    }
                     editProduct(productId);
                 });
             });
             productsTableBody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const productId = e.currentTarget.dataset.id;
+                    if (!isAdminModeActive || !isDeleteActive) {
+                        showNotification("لا تملك صلاحية حذف المنتجات.", "warning");
+                        return;
+                    }
                     deleteProduct(productId);
+                });
+            });
+
+            // Admin Toggle Buttons (for enabling/disabling edit/delete)
+            productsTableBody.querySelectorAll('.admin-action-btn.toggle-edit').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.currentTarget.dataset.id;
+                    // This button acts as a visual indicator of "active" permission for that row
+                    // The actual edit function check `isEditActive`
+                    showNotification(`صلاحية التعديل على المنتج ${productId} مفعلة بشكل مؤقت.`, 'info');
+                });
+            });
+             productsTableBody.querySelectorAll('.admin-action-btn.toggle-delete').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.currentTarget.dataset.id;
+                    showNotification(`صلاحية الحذف على المنتج ${productId} مفعلة بشكل مؤقت.`, 'info');
                 });
             });
         }
@@ -968,11 +1286,11 @@
                     clearAllErrors();
                     productModal.style.display = 'flex';
                 } else {
-                    alert("المنتج غير موجود.");
+                    showNotification("المنتج غير موجود.", "error");
                 }
             } catch (e) {
                 console.error("Error fetching product for edit: ", e);
-                alert("حدث خطأ أثناء جلب بيانات المنتج للتعديل.");
+                showNotification("حدث خطأ أثناء جلب بيانات المنتج للتعديل.", "error");
             }
         }
 
@@ -980,31 +1298,18 @@
             if (confirm('هل أنت متأكد أنك تريد حذف هذا المنتج؟')) {
                 try {
                     await deleteDoc(doc(db, "products", productId));
-                    alert('تم حذف المنتج بنجاح!');
+                    showNotification('تم حذف المنتج بنجاح!', "success");
                     fetchProducts();
                 } catch (e) {
                     console.error("Error removing document: ", e);
-                    alert('حدث خطأ أثناء حذف المنتج. يرجى المحاولة مرة أخرى.');
+                    showNotification('حدث خطأ أثناء حذف المنتج. يرجى المحاولة مرة أخرى.', "error");
                 }
             }
         }
 
-        // Search and Filter Event Listeners
-        searchButton.addEventListener('click', () => {
-            const searchQuery = searchProductInput.value;
-            const categoryFilter = filterCategorySelect.value;
-            fetchProducts(searchQuery, categoryFilter);
-        });
-
-        searchProductInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                searchButton.click();
-            }
-        });
-
-        filterCategorySelect.addEventListener('change', () => {
-            searchButton.click(); // Trigger search on category change
-        });
+        // Live Search and Filter Event Listeners
+        searchProductInput.addEventListener('input', fetchProducts); // Live search on input
+        filterCategorySelect.addEventListener('change', fetchProducts); // Live filter on category change
 
 
         // Initial fetch on page load
@@ -1054,9 +1359,9 @@
                             scannedValue: null,
                             lastRequestTime: new Date()
                         });
-                        updateScanFeedbackUI(true, true, "جاري إعداد الاتصال. يرجى التأكد من فتح صفحة الماسح على الهاتف.", true);
+                        showNotification("جاري إعداد الاتصال. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "info");
                     } else {
-                        updateScanFeedbackUI(false, true, "الهاتف غير جاهز للمسح. يرجى التأكد من فتح صفحة الماسح على الهاتف.", true);
+                        showNotification("الهاتف غير جاهز للمسح. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "warning");
                         console.warn("Phone is not in 'phoneReady' state:", docSnap.data().status);
                     }
                      // After initial check/setup, update the status to trigger scan on phone
@@ -1081,6 +1386,7 @@
             } catch (error) {
                 console.error("Error requesting scan:", error);
                 updateScanFeedbackUI(false, true, "فشل طلب المسح. تأكد من اتصال Firebase.", true);
+                showNotification("فشل طلب المسح. تأكد من اتصال Firebase.", "error");
                 // Also update Firestore to signal error from desktop side if connection is there
                 await updateDoc(scannerSessionDocRef, {
                     status: 'errorFromDesktop',
@@ -1103,16 +1409,18 @@
 
                     if (data.status === 'phoneReady') {
                         updateScanFeedbackUI(false, true, "الهاتف متصل وجاهز لاستقبال طلبات المسح.", false);
+                        showNotification("ماسح QR بالهاتف متصل وجاهز.", "success");
                     } else if (data.status === 'scanning') {
                         updateScanFeedbackUI(true, true, `الهاتف يقوم بالمسح لوضع ${data.purpose === 'search' ? 'البحث' : 'إضافة المنتج'}...`, true);
                     } else if (data.status === 'scanned' && data.scannedValue) {
                         // Phone has scanned a value
                         updateScanFeedbackUI(false, true, `تم استلام الباركود: ${data.scannedValue}. جاري المعالجة...`, false);
+                        showNotification(`تم استلام الباركود: ${data.scannedValue}.`, "info");
                         
                         // Process the scanned value based on the purpose
                         if (data.purpose === 'search') {
                             searchProductInput.value = data.scannedValue;
-                            fetchProducts(data.scannedValue, filterCategorySelect.value);
+                            fetchProducts(); // Trigger live search
                         } else if (data.purpose === 'add_new') {
                             productBarcodeInput.value = data.scannedValue;
                             productModal.style.display = 'flex'; // Reopen modal if it was closed
@@ -1129,25 +1437,30 @@
 
                     } else if (data.status === 'closedByPhone') {
                         updateScanFeedbackUI(false, true, "تم قطع الاتصال بالماسح على الهاتف.", false);
+                        showNotification("تم قطع الاتصال بماسح QR بالهاتف.", "info");
                         scannerSessionUnsubscribe(); // Stop listening
                         scannerSessionUnsubscribe = null;
                     } else if (data.status === 'errorFromPhone') {
                         updateScanFeedbackUI(false, true, `حدث خطأ على الهاتف: ${data.errorMessage || 'غير معروف'}`, false);
+                        showNotification(`خطأ في ماسح QR بالهاتف: ${data.errorMessage || 'غير معروف'}`, "error");
                         // Consider resetting the session here or providing a "retry" option
                     } else if (data.status === 'errorFromDesktop') {
                          // Desktop detected an error, likely on initial setup
                         updateScanFeedbackUI(false, true, "فشل الاتصال بالماسح. يرجى التأكد من الإعدادات.", false);
+                        showNotification("فشل الاتصال بماسح QR. يرجى التحقق من الإعدادات.", "error");
                     }
 
                 } else {
                     // Document does not exist (e.g., deleted by phone or never created)
                     updateScanFeedbackUI(false, true, "جلسة الماسح غير نشطة أو انتهت. يرجى التأكد من فتح صفحة الماسح على الهاتف.", false);
+                    showNotification("ماسح QR بالهاتف غير نشط. يرجى فتحه.", "warning");
                     scannerSessionUnsubscribe(); // Stop listening
                     scannerSessionUnsubscribe = null;
                 }
             }, (error) => {
                 console.error("Error listening to scanner session on desktop:", error);
                 updateScanFeedbackUI(false, true, "خطأ في الاتصال بجلسة الماسح. يرجى إعادة تحميل الصفحة.", false);
+                showNotification("خطأ في الاتصال بماسح QR. يرجى إعادة تحميل الصفحة.", "error");
                 scannerSessionUnsubscribe();
                 scannerSessionUnsubscribe = null;
             });
@@ -1156,8 +1469,13 @@
         // Event listeners for QR buttons
         requestScanForSearchBtn.addEventListener('click', () => requestScan('search'));
         requestScanForNewProductBtn.addEventListener('click', () => {
+            // Check if adding is allowed
+            if (!isAdminModeActive || !isAddActive) {
+                showNotification("لا تملك صلاحية إضافة المنتجات.", "warning");
+                return;
+            }
             // Close modal temporarily to show scan prompt, will reopen after scan
-            productModal.style.display = 'none'; 
+            productModal.style.display = 'none';
             requestScan('add_new');
         });
 
@@ -1170,12 +1488,133 @@
                     lastRequestTime: new Date() // Update time to make sure phone listener reacts
                 });
                 updateScanFeedbackUI(false, true, "تم إلغاء طلب المسح. الهاتف جاهز.", false);
+                showNotification("تم إلغاء طلب المسح.", "info");
             } catch (e) {
                 console.error("Error cancelling scan request:", e);
                 updateScanFeedbackUI(false, true, "فشل إلغاء الطلب.", false);
+                showNotification("فشل إلغاء طلب المسح.", "error");
             }
         });
 
+
+        // --- Admin Override Logic ---
+        adminOverrideBtn.addEventListener('click', () => {
+            adminPasswordModal.style.display = 'flex';
+            adminPasswordInput.value = '';
+            clearError(adminPasswordError);
+        });
+
+        adminModalClose.addEventListener('click', () => {
+            adminPasswordModal.style.display = 'none';
+        });
+
+        cancelAdminPasswordBtn.addEventListener('click', () => {
+            adminPasswordModal.style.display = 'none';
+        });
+
+        verifyAdminPasswordBtn.addEventListener('click', () => {
+            const enteredPassword = adminPasswordInput.value;
+            if (enteredPassword === ADMIN_PASSWORD) {
+                isAdminModeActive = !isAdminModeActive; // Toggle admin mode
+                isAddActive = isAdminModeActive; // Default: all permissions active if admin mode
+                isEditActive = isAdminModeActive;
+                isDeleteActive = isAdminModeActive;
+
+                adminPasswordModal.style.display = 'none';
+                showNotification(isAdminModeActive ? "تم تفعيل وضع المسؤول بنجاح." : "تم إلغاء تفعيل وضع المسؤول.", "success");
+                updateAdminActionButtonsVisibility(); // Update button visibility
+            } else {
+                showError(adminPasswordError, "كلمة المرور غير صحيحة.");
+                showNotification("كلمة المرور غير صحيحة.", "error");
+            }
+        });
+
+        function updateAdminActionButtonsVisibility() {
+            const adminActionButtons = productsTableBody.querySelectorAll('.admin-action-btn');
+            const editButtons = productsTableBody.querySelectorAll('.edit-btn');
+            const deleteButtons = productsTableBody.querySelectorAll('.delete-btn');
+
+            if (isAdminModeActive) {
+                // Show admin toggle buttons and hide default edit/delete
+                adminActionButtons.forEach(btn => btn.style.display = 'inline-block');
+                editButtons.forEach(btn => btn.style.display = 'none');
+                deleteButtons.forEach(btn => btn.style.display = 'none');
+
+                // Update the "Add New Product" button's initial state
+                if (isAddActive) {
+                    addProductBtn.classList.add('btn-primary');
+                    addProductBtn.classList.remove('btn-secondary');
+                    addProductBtn.style.opacity = '1';
+                    addProductBtn.style.cursor = 'pointer';
+                } else {
+                     addProductBtn.classList.add('btn-secondary');
+                     addProductBtn.classList.remove('btn-primary');
+                     addProductBtn.style.opacity = '0.7';
+                     addProductBtn.style.cursor = 'not-allowed';
+                }
+
+                 // Visual feedback for admin permissions within the table (toggle buttons)
+                adminActionButtons.forEach(btn => {
+                    if (btn.classList.contains('toggle-edit')) {
+                        if (isEditActive) btn.classList.add('active'); else btn.classList.remove('active');
+                    } else if (btn.classList.contains('toggle-delete')) {
+                        if (isDeleteActive) btn.classList.add('active'); else btn.classList.remove('active');
+                    }
+                });
+
+
+            } else {
+                // Hide admin toggle buttons and show default edit/delete
+                adminActionButtons.forEach(btn => btn.style.display = 'none');
+                editButtons.forEach(btn => btn.style.display = 'inline-block');
+                deleteButtons.forEach(btn => btn.style.display = 'inline-block');
+                
+                // Ensure Add New Product button is always active (default state for non-admin)
+                addProductBtn.classList.add('btn-primary');
+                addProductBtn.classList.remove('btn-secondary');
+                addProductBtn.style.opacity = '1';
+                addProductBtn.style.cursor = 'pointer';
+            }
+        }
+
+        // Event listener for admin toggle buttons (these will be added to newly created rows)
+        productsTableBody.addEventListener('click', (e) => {
+            if (e.target.classList.contains('toggle-edit')) {
+                // This toggles the _permission state for the entire section_, not just one row
+                // For per-row permission, you'd need more complex state management
+                isEditActive = !isEditActive;
+                showNotification(isEditActive ? "تم تفعيل صلاحية التعديل للمنتجات." : "تم إلغاء تفعيل صلاحية التعديل للمنتجات.", "info");
+                updateAdminActionButtonsVisibility(); // Re-render to update visual state
+            } else if (e.target.classList.contains('toggle-delete')) {
+                isDeleteActive = !isDeleteActive;
+                showNotification(isDeleteActive ? "تم تفعيل صلاحية الحذف للمنتجات." : "تم إلغاء تفعيل صلاحية الحذف للمنتجات.", "info");
+                updateAdminActionButtonsVisibility();
+            }
+        });
+        
+        // --- Placeholder for Reports Logic (will need actual data from sales etc.) ---
+        function updateReports() {
+            // This is a placeholder. Real data would come from sales collections etc.
+            document.getElementById('dailySales').textContent = `1500.00 جنيه`;
+            document.getElementById('topSellingProduct').textContent = `كمون حصى`;
+            document.getElementById('estimatedProfit').textContent = `450.00 جنيه`;
+        }
+
+        // Call updateReports on load and potentially after sales/inventory changes
+        document.addEventListener('DOMContentLoaded', updateReports);
+
+        // Future: Admin password can be fetched from Firestore and updated in settings.html
+        // For example, in settings.html:
+        /*
+        async function updateAdminPassword(newPassword) {
+            const adminSettingsRef = doc(db, 'settings', 'admin'); // A document for admin settings
+            await updateDoc(adminSettingsRef, { adminPassword: newPassword });
+            ADMIN_PASSWORD = newPassword; // Update local variable
+            showNotification("تم تغيير كلمة مرور المسؤول بنجاح.", "success");
+        }
+        // Then, on app load, fetch ADMIN_PASSWORD from Firestore
+        // This requires Firebase Security Rules to allow only authenticated admins to read/write this.
+        */
 
     </script>
 </body>
