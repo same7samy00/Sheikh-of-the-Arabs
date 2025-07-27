@@ -4,483 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إدارة المخزون - شيخ العرب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
-    <style>
-        :root {
-            /* Color Palette */
-            --bg-light: #F0F4F8; /* Light blueish white background */
-            --surface-white: #FFFFFF; /* Pure white for cards/elements */
-            --text-dark: #2C3E50; /* Dark blueish black for primary text */
-            --text-secondary: #607D8B; /* Medium blueish gray for secondary text */
-            --accent-blue: #03A9F4; /* Light Blue for primary actions/highlights */
-            --error-red: #FF5252; /* Red for errors/warnings */
-            --success-green: #4CAF50; /* Green for success */
-            --info-yellow: #FFC107; /* Yellow for specific info/warnings */
-
-            --border-radius-soft: 12px;
-
-            /* Light Shadows */
-            --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for elements */
-            --shadow-elevation-2: 0 8px 20px rgba(0, 0, 0, 0.12); /* Slightly stronger for hover/active */
-            --shadow-input-focus: 0 0 0 3px rgba(3, 169, 244, 0.3); /* Blue ring for focus */
-
-            /* Smaller overall scaling */
-            --base-font-size: 0.95em;
-            --padding-base: 12px;
-            --margin-base: 15px;
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            direction: rtl;
-            text-align: right;
-            display: flex;
-            min-height: 100vh;
-            font-size: var(--base-font-size);
-        }
-
-        /* Sidebar Styling */
-        .sidebar {
-            width: 260px; /* Consistent size */
-            background-color: var(--surface-white);
-            box-shadow: var(--shadow-elevation-1);
-            padding: 25px 15px; /* Consistent padding */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-radius: 0 var(--border-radius-soft) var(--border-radius-soft) 0;
-            flex-shrink: 0;
-        }
-
-        .logo {
-            font-family: 'Cairo', sans-serif;
-            font-size: 2.2em; /* Consistent size */
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 40px; /* Consistent margin */
-            text-align: center;
-            line-height: 1.2;
-            padding-bottom: 8px; /* Consistent padding */
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            width: 100%;
-        }
-        .logo span {
-            color: var(--accent-blue);
-        }
-
-        .nav-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-        }
-
-        .nav-item {
-            margin-bottom: 8px; /* Consistent margin */
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 12px 18px; /* Consistent padding */
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 1em; /* Consistent font size */
-            font-weight: 600;
-            border-radius: var(--border-radius-soft);
-            transition: all 0.3s ease;
-        }
-
-        .nav-link i {
-            font-size: 1.3em; /* Consistent size */
-            margin-left: 12px; /* Consistent margin */
-            color: var(--text-secondary);
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            background-color: var(--bg-light);
-            color: var(--accent-blue);
-        }
-
-        .nav-link:hover i {
-            color: var(--accent-blue);
-        }
-
-        .nav-link.active {
-            background-color: var(--accent-blue);
-            color: var(--surface-white);
-            box-shadow: var(--shadow-elevation-1);
-        }
-
-        .nav-link.active i {
-            color: var(--surface-white);
-        }
-
-        .nav-item.logout {
-            margin-top: auto;
-            width: 100%;
-        }
-
-        .nav-link.logout-btn {
-            background-color: var(--error-red);
-            color: var(--surface-white);
-            justify-content: center;
-            margin-top: 15px; /* Consistent margin */
-        }
-
-        .nav-link.logout-btn i {
-            color: var(--surface-white);
-        }
-
-        .nav-link.logout-btn:hover {
-            background-color: #D32F2F;
-            color: var(--surface-white);
-        }
-
-        /* Main Content Styling */
-        .main-content {
-            flex-grow: 1;
-            padding: 25px 30px; /* Consistent padding */
-            overflow-y: auto;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px; /* Consistent margin */
-        }
-
-        .page-header h1 {
-            font-size: 2.2em; /* Consistent size */
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        /* Action Buttons Styling */
-        .action-buttons {
-            display: flex;
-            align-items: center;
-            gap: 12px; /* Consistent gap */
-        }
-
-        .action-buttons .btn-primary,
-        .action-buttons .btn-secondary { /* Apply to both button types */
-            padding: 10px 20px; /* Consistent padding */
-            border: none;
-            border-radius: var(--border-radius-soft);
-            font-size: 0.95em; /* Consistent font size */
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-elevation-1);
-            font-family: 'Cairo', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px; /* Consistent gap */
-            text-decoration: none; /* For link buttons */
-            color: var(--surface-white); /* Default color for primary */
-        }
-        .action-buttons .btn-primary {
-            background-color: var(--accent-blue);
-        }
-        .action-buttons .btn-primary:hover {
-            background-color: #0288D1;
-            box-shadow: var(--shadow-elevation-2);
-            transform: translateY(-2px);
-        }
-        .action-buttons .btn-secondary {
-            background-color: var(--surface-white);
-            color: var(--text-dark);
-            border: 1px solid #E0E6EB;
-        }
-        .action-buttons .btn-secondary:hover {
-            background-color: var(--bg-light);
-            box-shadow: var(--shadow-elevation-2);
-            transform: translateY(-2px);
-        }
-        .action-buttons .btn-primary:hover,
-        .action-buttons .btn-secondary:hover {
-             text-decoration: none;
-        }
-
-        /* Search and Filter Section (Consistent sizing) */
-        .filter-section {
-            background-color: var(--surface-white);
-            padding: 20px;
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1);
-            margin-bottom: 25px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .filter-section .input-group {
-            flex: 1;
-            min-width: 200px;
-            margin-bottom: 0;
-            position: relative;
-        }
-
-        .filter-section .input-group input,
-        .filter-section .input-group select {
-            width: 100%;
-            padding: 10px 15px;
-            background-color: var(--bg-light);
-            border: 1px solid #E0E6EB;
-            border-radius: var(--border-radius-soft);
-            color: var(--text-dark);
-            font-size: 0.95em;
-            box-sizing: border-box;
-            outline: none;
-            transition: all 0.3s ease;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23607D8B%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: left 0.8rem center;
-            background-size: 1.2em;
-        }
-        /* Remove default clear button for search input in WebKit browsers */
-        input[type="search"]::-webkit-search-cancel-button {
-            -webkit-appearance: none;
-        }
-
-        /* Remove arrows from number inputs (global for all inputs) */
-        input::-webkit-inner-spin-button,
-        input::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-
-        .filter-section .input-group input:focus,
-        .filter-section .input-group select:focus {
-            border-color: var(--accent-blue);
-            box-shadow: var(--shadow-input-focus);
-        }
-
-        .filter-section .input-group label {
-            display: none;
-        }
-        
-        /* Product Table (Consistent sizing) */
-        .product-table-container {
-            background-color: var(--surface-white);
-            padding: 15px;
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1);
-            overflow-x: auto;
-        }
-
-        .product-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: right;
-        }
-
-        .product-table th, .product-table td {
-            padding: 12px 10px;
-            font-size: 0.9em;
-            border-bottom: 1px solid #E0E6EB;
-            color: var(--text-dark);
-        }
-
-        .product-table th {
-            background-color: var(--bg-light);
-            font-weight: 700;
-            color: var(--text-dark);
-            white-space: nowrap;
-        }
-
-        .product-table tbody tr:hover {
-            background-color: var(--bg-light);
-        }
-
-        .product-table .actions button {
-            background: none;
-            border: none;
-            color: var(--accent-blue);
-            font-size: 1.1em;
-            cursor: pointer;
-            margin-right: 8px;
-            transition: color 0.3s ease;
-        }
-        .product-table .actions button:hover {
-            color: #0288D1;
-        }
-        .product-table .actions button.delete-btn {
-            color: var(--error-red);
-        }
-        .product-table .actions button.delete-btn:hover {
-            color: #D32F2F;
-        }
-
-
-        /* Scan Feedback UI (Completely hidden visually) */
-        .spinner, .scan-prompt, #cancelScanRequestBtn {
-            display: none !important;
-        }
-
-
-        /* Notification System (Consistent sizing and positioning) */
-        #notification-container {
-            position: fixed;
-            bottom: 20px;
-            left: 20px; /* Bottom-left in LTR, so bottom-right for RTL user */
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: flex-start; /* Aligns to left */
-        }
-
-        .notification {
-            background-color: var(--surface-white);
-            color: var(--text-dark);
-            padding: 12px 18px;
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1);
-            min-width: 200px;
-            max-width: 300px;
-            opacity: 0;
-            transform: translateX(-100%); /* Slides in from left */
-            animation: slideIn 0.5s forwards;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 0.9em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .notification.success { border-left: 5px solid var(--success-green); }
-        .notification.error { border-left: 5px solid var(--error-red); }
-        .notification.info { border-left: 5px solid var(--accent-blue); }
-        .notification.warning { border-left: 5px solid var(--info-yellow); }
-
-        .notification i {
-            font-size: 1.3em;
-            color: var(--text-secondary);
-            flex-shrink: 0;
-        }
-        .notification span {
-            flex-grow: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .notification .confirm-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: flex-end; /* Align buttons to the left (end in RTL) */
-            width: 100%;
-            flex-shrink: 0;
-        }
-        .notification .confirm-buttons button {
-            background-color: var(--accent-blue);
-            color: var(--surface-white);
-            border: none;
-            padding: 8px 15px;
-            border-radius: var(--border-radius-soft);
-            cursor: pointer;
-            font-size: 0.85em;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-        }
-        .notification .confirm-buttons button.cancel { background-color: var(--text-secondary); }
-        .notification .confirm-buttons button:hover { opacity: 0.9; }
-
-        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-100%); } }
-
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar {
-                width: 100%; height: auto; padding: 20px;
-                border-radius: var(--border-radius-soft) var(--border-radius-soft) 0 0;
-                flex-direction: row; justify-content: space-around; flex-wrap: wrap;
-                font-size: 1em;
-            }
-            .logo { display: none; }
-            .nav-list { display: flex; flex-wrap: wrap; justify-content: center; width: 100%; }
-            .nav-item { margin: 5px; }
-            .nav-link { padding: 10px 15px; font-size: 0.9em; flex-direction: column; text-align: center; }
-            .nav-link i { margin: 0 0 5px 0; }
-            .nav-item.logout { margin-top: 10px; width: auto; }
-            .main-content { padding: 20px; }
-            .page-header { flex-direction: column; align-items: flex-end; }
-            .page-header h1 { margin-bottom: 20px; font-size: 2em; }
-            .action-buttons { width: 100%; display: flex; justify-content: space-around; flex-wrap: wrap; }
-            .action-buttons .btn-primary, .action-buttons .btn-secondary {
-                 margin: 5px;
-            }
-            .filter-section { flex-direction: column; align-items: stretch; }
-            .filter-section .input-group { min-width: auto; width: 100%; }
-            #notification-container {
-                bottom: 10px;
-                left: 10px;
-                right: 10px;
-                align-items: center;
-            }
-            .notification {
-                min-width: unset;
-                max-width: 90%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <aside class="sidebar">
-        <div class="logo">
-            شيخ <span>العرب</span>
-        </div>
+        <div class="logo">شيخ <span>العرب</span></div>
         <ul class="nav-list">
-            <li class="nav-item">
-                <a href="dashboard.html" class="nav-link">
-                    <i class="ri-dashboard-line"></i>
-                    <span>الصفحة الرئيسية</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="inventory.html" class="nav-link active"> <i class="ri-box-3-line"></i>
-                    <span>إدارة المخزون</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="pos.html" class="nav-link">
-                    <i class="ri-shopping-cart-line"></i>
-                    <span>نقطة البيع</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="settings.html" class="nav-link">
-                    <i class="ri-settings-3-line"></i>
-                    <span>الإعدادات</span>
-                </a>
-            </li>
-            <li class="nav-item logout">
-                <a href="#" id="logoutButton" class="nav-link logout-btn">
-                    <i class="ri-logout-box-line"></i>
-                    <span>تسجيل الخروج</span>
-                </a>
-            </li>
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="ri-dashboard-line"></i><span>الصفحة الرئيسية</span></a></li>
+            <li class="nav-item"><a href="inventory.html" class="nav-link active"><i class="ri-box-3-line"></i><span>إدارة المخزون</span></a></li>
+            <li class="nav-item"><a href="pos.html" class="nav-link"><i class="ri-shopping-cart-line"></i><span>نقطة البيع</span></a></li>
+            <li class="nav-item"><a href="settings.html" class="nav-link"><i class="ri-settings-3-line"></i><span>الإعدادات</span></a></li>
+            <li class="nav-item logout"><a href="#" id="logoutButton" class="nav-link logout-btn"><i class="ri-logout-box-line"></i><span>تسجيل الخروج</span></a></li>
         </ul>
     </aside>
 
@@ -488,14 +24,8 @@
         <div class="page-header">
             <h1>إدارة المخزون</h1>
             <div class="action-buttons">
-                <a href="add_product.html" class="btn-primary" id="addProductLink">
-                    <i class="ri-add-line"></i>
-                    <span>إضافة منتج جديد</span>
-                </a>
-                <button class="btn-secondary" id="requestScanForSearchBtn">
-                    <i class="ri-qr-code-line"></i>
-                    <span>طلب مسح QR للبحث</span>
-                </button>
+                <a href="add_product.html" class="btn btn-primary"><i class="ri-add-line"></i><span>إضافة منتج</span></a>
+                <button class="btn btn-secondary" id="requestScanForSearchBtn"><i class="ri-qr-code-line"></i><span>مسح للبحث</span></button>
             </div>
         </div>
 
@@ -521,441 +51,137 @@
             </div>
         </div>
 
-        <div class="product-table-container">
-            <table class="product-table">
+        <div class="table-container">
+            <table class="data-table">
                 <thead>
                     <tr>
                         <th>الكود</th>
                         <th>اسم المنتج</th>
                         <th>الفئة</th>
                         <th>الكمية المتاحة</th>
-                        <th>سعر الوحدة (جنيه)</th>
+                        <th>السعر (جنيه)</th>
                         <th>الحالة</th>
                         <th>الإجراءات</th>
                     </tr>
-</thead>
+                </thead>
                 <tbody id="productsTableBody">
-                    </tbody>
+                    <tr><td colspan="7" class="table-placeholder">جاري تحميل المنتجات...</td></tr>
+                </tbody>
             </table>
         </div>
     </main>
 
     <div id="notification-container"></div>
-
+    <script src="shared.js" type="module"></script>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-        import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+        import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { db, showNotification, showConfirmation, listenToScannerSession, requestScan } from './shared.js';
 
-        // ************* Firebase Configuration (MUST MATCH ALL PAGES) *************
-        const firebaseConfig = {
-            apiKey: "AIzaSyC5ls-rPdJ65x5BoMGwAOpdcPtD585C2ys",
-            authDomain: "pharmacy-inventory-bf04a.firebaseapp.com",
-            projectId: "pharmacy-inventory-bf04a",
-            storageBucket: "pharmacy-inventory-bf04a.firebasestorage.app",
-            messagingSenderId: "937788650384",
-            appId: "1:937788650384:web:6451225d00e648f3a0b915",
-            measurementId: "G-ZGC9EQ55SL"
-        };
-        // *************************************************************************
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const productsCol = collection(db, "products");
-        const scannerSessionsCol = collection(db, "scannerSessions");
-        const analytics = getAnalytics(app);
-
-        // ************* SHARED SCANNER SESSION ID (MUST MATCH QR SCANNER PAGE AND ADD_PRODUCT PAGE) *************
-        const SHARED_SCANNER_SESSION_ID = "YOUR_STORE_UNIQUE_SCANNER_ID_12345";
-        const scannerSessionDocRef = doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID);
-        // ****************************************************************************************************
-
-        let scannerSessionUnsubscribe = null;
-
-        // Notification System
-        const notificationContainer = document.getElementById('notification-container');
-        let lastNotificationMessage = ''; // To prevent duplicate consecutive notifications
-        let notificationTimeoutId = null; // To manage notification timeout
-
-        function showNotification(message, type = 'info', duration = 5000) {
-            // Check if the exact same message was shown recently to prevent spam
-            if (message === lastNotificationMessage && notificationContainer.firstChild) {
-                return;
-            }
-
-            // Clear any previous notification visuals instantly if a new one arrives
-            if (notificationContainer.firstChild) {
-                notificationContainer.innerHTML = '';
-            }
-            
-            // Clear existing timeout if a new notification arrives quickly
-            if (notificationTimeoutId) {
-                clearTimeout(notificationTimeoutId);
-            }
-
-            const notificationDiv = document.createElement('div');
-            notificationDiv.classList.add('notification', type);
-            let iconClass = '';
-            if (type === 'success') iconClass = 'ri-check-line';
-            else if (type === 'error') iconClass = 'ri-error-warning-line';
-            else if (type === 'warning') iconClass = 'ri-alert-line';
-            else iconClass = 'ri-information-line';
-
-            notificationDiv.innerHTML = `<i class="${iconClass}"></i><span>${message}</span>`;
-            
-            notificationContainer.appendChild(notificationDiv);
-
-            // Trigger reflow to restart animation (important for consecutive notifications)
-            void notificationDiv.offsetWidth;
-            notificationDiv.style.opacity = '1';
-            notificationDiv.style.transform = 'translateX(0)';
-
-            lastNotificationMessage = message; // Store last message
-
-            // Set timeout for fading out
-            notificationTimeoutId = setTimeout(() => {
-                notificationDiv.style.opacity = '0';
-                notificationDiv.style.transform = 'translateX(-100%)'; // Slide out to the left
-                notificationTimeoutId = null; // Reset timeout ID
-                // Remove from DOM after animation completes
-                notificationDiv.addEventListener('transitionend', () => {
-                    if (notificationDiv.parentNode) {
-                        notificationDiv.parentNode.removeChild(notificationDiv);
-                    }
-                }, { once: true });
-                lastNotificationMessage = ''; // Clear last message after it fades out
-            }, duration); // Notification stays for 'duration' milliseconds
-        }
-
-        // Custom confirmation notification
-        function showConfirmation(message, onConfirm, onCancel) {
-            // Ensure no other notifications are present
-            if (notificationContainer.firstChild) {
-                notificationContainer.innerHTML = '';
-            }
-            if (notificationTimeoutId) {
-                clearTimeout(notificationTimeoutId);
-                notificationTimeoutId = null;
-            }
-
-            const notificationDiv = document.createElement('div');
-            notificationDiv.classList.add('notification', 'warning'); // Confirmation is a type of warning
-            notificationDiv.innerHTML = `
-                <i class="ri-question-fill"></i>
-                <span>${message}</span>
-                <div class="confirm-buttons">
-                    <button class="confirm-yes">نعم</button>
-                    <button class="confirm-cancel">إلغاء</button>
-                </div>
-            `;
-            
-            notificationContainer.appendChild(notificationDiv);
-
-            void notificationDiv.offsetWidth; // Trigger reflow
-            notificationDiv.style.opacity = '1';
-            notificationDiv.style.transform = 'translateX(0)';
-
-            const confirmYesBtn = notificationDiv.querySelector('.confirm-yes');
-            const confirmCancelBtn = notificationDiv.querySelector('.confirm-cancel');
-
-            const removeNotification = () => {
-                notificationDiv.style.opacity = '0';
-                notificationDiv.style.transform = 'translateX(-100%)';
-                notificationDiv.addEventListener('transitionend', () => {
-                    if (notificationDiv.parentNode) {
-                        notificationDiv.parentNode.removeChild(notificationDiv);
-                    }
-                }, { once: true });
-                lastNotificationMessage = ''; // Clear last message after action
-            };
-
-            confirmYesBtn.addEventListener('click', () => {
-                onConfirm();
-                removeNotification();
-            });
-
-            confirmCancelBtn.addEventListener('click', () => {
-                if (onCancel) onCancel();
-                removeNotification();
-            });
-
-            // Confirmation notifications will not auto-hide, user must click.
-        }
-
-
-        // Authentication Check
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = 'index.html';
-            }
-        });
-
-        // Logout Functionality
-        document.getElementById('logoutButton').addEventListener('click', async (e) => {
-            e.preventDefault();
-            showConfirmation("هل أنت متأكد أنك تريد تسجيل الخروج؟",
-                async () => { // On Confirm
-                    try {
-                        await signOut(auth);
-                        showNotification("تم تسجيل الخروج بنجاح.", "info");
-                        window.location.href = 'index.html';
-                    } catch (error) {
-                        console.error("Error signing out:", error);
-                        showNotification("حدث خطأ أثناء تسجيل الخروج. يرجى المحاولة مرة أخرى.", "error");
-                    }
-                },
-                () => { // On Cancel
-                    showNotification("تم إلغاء عملية تسجيل الخروج.", "info");
-                }
-            );
-        });
-
-        // Inventory Management Logic (Only display and filter products)
         const productsTableBody = document.getElementById('productsTableBody');
-        const searchProductInput = document.getElementById('searchProduct');
-        const filterCategorySelect = document.getElementById('filterCategory');
-        const requestScanForSearchBtn = document.getElementById('requestScanForSearchBtn');
+        const searchInput = document.getElementById('searchProduct');
+        const categorySelect = document.getElementById('filterCategory');
+        let allProducts = [];
 
-        // Fetch and Display Products
         async function fetchProducts() {
-            productsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">جاري تحميل المنتجات...</td></tr>';
-            
-            const searchQuery = searchProductInput.value.toLowerCase().trim();
-            const categoryFilter = filterCategorySelect.value;
-            
-            let products = [];
-
+            productsTableBody.innerHTML = '<tr><td colspan="7" class="table-placeholder">جاري تحميل المنتجات...</td></tr>';
             try {
-                const querySnapshot = await getDocs(productsCol);
-                querySnapshot.forEach((doc) => {
-                    products.push({ id: doc.id, ...doc.data() });
-                });
-
-                if (categoryFilter) {
-                    products = products.filter(product => product.category === categoryFilter);
-                }
-
-                if (searchQuery) {
-                    products = products.filter(product =>
-                        (product.name && product.name.toLowerCase().includes(searchQuery)) ||
-                        (product.barcode && product.barcode.toLowerCase().includes(searchQuery))
-                    );
-                }
-
-                displayProducts(products);
+                const querySnapshot = await getDocs(collection(db, "products"));
+                allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderProducts();
             } catch (e) {
                 console.error("Error fetching products: ", e);
-                productsTableBody.innerHTML = '<tr><td colspan="7" style="color: var(--error-red); text-align: center;">حدث خطأ أثناء تحميل المنتجات.</td></tr>';
+                productsTableBody.innerHTML = '<tr><td colspan="7" class="table-placeholder error">حدث خطأ أثناء تحميل المنتجات.</td></tr>';
                 showNotification("خطأ في تحميل المنتجات.", "error");
             }
         }
 
-        function displayProducts(products) {
+        function renderProducts() {
+            const searchQuery = searchInput.value.toLowerCase().trim();
+            const categoryFilter = categorySelect.value;
+
+            let filteredProducts = allProducts;
+
+            if (categoryFilter) {
+                filteredProducts = filteredProducts.filter(p => p.category === categoryFilter);
+            }
+
+            if (searchQuery) {
+                filteredProducts = filteredProducts.filter(p =>
+                    (p.name && p.name.toLowerCase().includes(searchQuery)) ||
+                    (p.barcode && p.barcode.toLowerCase().includes(searchQuery))
+                );
+            }
+
             productsTableBody.innerHTML = '';
-            if (products.length === 0) {
-                productsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-secondary);">لا توجد منتجات لعرضها.</td></tr>';
+            if (filteredProducts.length === 0) {
+                productsTableBody.innerHTML = '<tr><td colspan="7" class="table-placeholder">لا توجد منتجات تطابق البحث.</td></tr>';
                 return;
             }
 
-            products.forEach(product => {
+            filteredProducts.forEach(product => {
                 const row = productsTableBody.insertRow();
-                let statusColor = '';
-                if (product.status === 'متوفر') statusColor = 'var(--success-green)';
-                else if (product.status === 'قليل المخزون') statusColor = 'var(--info-yellow)';
-                else if (product.status === 'نفد المخزون') statusColor = 'var(--error-red)';
+                const status = product.status || 'متوفر';
+                let statusClass = '';
+                if (status === 'قليل المخزون') statusClass = 'status-warning';
+                else if (status === 'نفد المخزون') statusClass = 'status-danger';
+                else statusClass = 'status-success';
 
                 row.innerHTML = `
                     <td>${product.barcode || 'N/A'}</td>
                     <td>${product.name}</td>
                     <td>${product.category}</td>
                     <td>${product.quantity} ${product.unit}</td>
-                    <td>${parseFloat(product.pricePerUnit).toFixed(2)} جنيه</td>
-                    <td style="color: ${statusColor}; font-weight: 600;">${product.status}</td>
+                    <td>${(product.pricePerUnit || 0).toFixed(2)}</td>
+                    <td><span class="status-badge ${statusClass}">${status}</span></td>
                     <td class="actions">
-                        <button title="تعديل" class="edit-btn" data-id="${product.id}"><i class="ri-edit-line"></i></button>
-                        <button title="حذف" class="delete-btn" data-id="${product.id}"><i class="ri-delete-bin-line"></i></button>
+                        <button title="تعديل" class="action-btn edit-btn" data-id="${product.id}"><i class="ri-edit-line"></i></button>
+                        <button title="حذف" class="action-btn delete-btn" data-id="${product.id}"><i class="ri-delete-bin-line"></i></button>
                     </td>
                 `;
             });
-
-            // Add event listeners for edit/delete buttons
-            productsTableBody.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const productId = e.currentTarget.dataset.id;
-                    // Redirect to add_product.html for editing
-                    window.location.href = `add_product.html?id=${productId}`;
-                });
-            });
-            productsTableBody.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const productId = e.currentTarget.dataset.id;
-                    deleteProduct(productId);
-                });
-            });
         }
-
-        async function deleteProduct(productId) {
-            showConfirmation('هل أنت متأكد أنك تريد حذف هذا المنتج؟',
-                async () => { // On Confirm
+        
+        productsTableBody.addEventListener('click', (e) => {
+            const editBtn = e.target.closest('.edit-btn');
+            const deleteBtn = e.target.closest('.delete-btn');
+            
+            if (editBtn) {
+                window.location.href = `add_product.html?id=${editBtn.dataset.id}`;
+            }
+            
+            if (deleteBtn) {
+                const productId = deleteBtn.dataset.id;
+                showConfirmation('هل أنت متأكد أنك تريد حذف هذا المنتج؟', async () => {
                     try {
                         await deleteDoc(doc(db, "products", productId));
-                        showNotification('تم حذف المنتج بنجاح!', "success");
-                        fetchProducts();
-                    } catch (e) {
-                        console.error("Error removing document: ", e);
-                        showNotification('حدث خطأ أثناء حذف المنتج. يرجى المحاولة مرة أخرى.', "error");
+                        showNotification('تم حذف المنتج بنجاح!', 'success');
+                        fetchProducts(); // Refetch all products
+                    } catch (err) {
+                        console.error("Error deleting document: ", err);
+                        showNotification('فشل حذف المنتج.', 'error');
                     }
-                },
-                () => { // On Cancel
-                    showNotification("تم إلغاء عملية الحذف.", "info");
-                }
-            );
-        }
-
-        // Live Search and Filter Event Listeners
-        searchProductInput.addEventListener('input', fetchProducts);
-        filterCategorySelect.addEventListener('change', fetchProducts);
-
-
-        // Initial fetch on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchProducts();
-
-            // Dynamic Active Tab Logic
-            const navLinks = document.querySelectorAll('.nav-link');
-            const currentPath = window.location.pathname.split('/').pop();
-
-            navLinks.forEach(link => {
-                const linkPath = link.getAttribute('href');
-                if (linkPath === currentPath) {
-                    link.classList.add('active');
-                }
-            });
-
-            // Start listening to the scanner session on page load
-            listenToScannerSession();
+                });
+            }
         });
 
-        // --- QR Scanner Integration (using Firestore for communication) ---
-
-        // Request a scan from the phone
-        async function requestScan(purpose) {
-            showNotification(`جاري طلب المسح لوضع ${purpose === 'search' ? 'البحث عن منتج' : 'إضافة باركود منتج جديد'} من الهاتف...`, "info");
-
-            try {
-                // Get current status of the scanner session
-                const docSnap = await getDoc(scannerSessionDocRef);
-
-                // If document does not exist or phone is not ready, initialize/update it
-                if (!docSnap.exists() || docSnap.data().status !== 'phoneReady') {
-                    // If document doesn't exist, create it with 'desktopConnecting' status
-                    if (!docSnap.exists()) {
-                         await setDoc(scannerSessionDocRef, {
-                            status: 'desktopConnecting', // Desktop initiates connection
-                            requestedBy: 'desktop',
-                            createdAt: new Date(),
-                            purpose: purpose,
-                            scannedValue: null,
-                            lastRequestTime: new Date()
-                        });
-                        showNotification("جاري إعداد الاتصال بماسح الهاتف. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "info");
-                    } else {
-                        // If document exists but phone not ready, just notify
-                        showNotification("ماسح الهاتف غير جاهز للمسح. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "warning");
-                    }
-                    // After initial check/setup, update the status to scanRequested to trigger phone scanner
-                    await updateDoc(scannerSessionDocRef, {
-                        status: 'scanRequested', // This tells the phone to start scanning
-                        purpose: purpose,
-                        scannedValue: null,
-                        lastRequestTime: new Date()
-                    });
-                } else {
-                    // If phone is already ready, just send the scan request
-                    await updateDoc(scannerSessionDocRef, {
-                        status: 'scanRequested',
-                        purpose: purpose,
-                        scannedValue: null,
-                        lastRequestTime: new Date()
-                    });
-                }
-
-                console.log(`Scan request sent for purpose: ${purpose}`);
-
-            } catch (error) {
-                console.error("Error requesting scan:", error);
-                showNotification("فشل طلب المسح. تأكد من اتصال Firebase.", "error");
-                await updateDoc(scannerSessionDocRef, { // Signal error back to Firestore
-                    status: 'errorFromDesktop',
-                    errorMessage: error.message,
-                    errorTime: new Date()
-                }).catch(e => console.error("Error signaling errorFromDesktop status:", e));
+        searchInput.addEventListener('input', renderProducts);
+        categorySelect.addEventListener('change', renderProducts);
+        
+        document.getElementById('requestScanForSearchBtn').addEventListener('click', () => {
+            requestScan('search');
+        });
+        
+        // Listen to scanner and populate search input
+        listenToScannerSession((scannedValue, purpose) => {
+            if (purpose === 'search' && scannedValue) {
+                searchInput.value = scannedValue;
+                renderProducts();
+                showNotification(`تم البحث عن: ${scannedValue}`, 'success');
             }
-        }
+        });
 
-        // Listen to the scanner session document for updates from the phone
-        function listenToScannerSession() {
-            if (scannerSessionUnsubscribe) {
-                scannerSessionUnsubscribe(); // Unsubscribe from previous listener if any
-            }
-
-            scannerSessionUnsubscribe = onSnapshot(scannerSessionDocRef, async (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    console.log("Scanner session data (inventory):", data);
-
-                    if (data.status === 'phoneReady') {
-                        showNotification("ماسح QR بالهاتف متصل وجاهز.", "success");
-                    } else if (data.status === 'scanning') {
-                        showNotification(`الهاتف يقوم بالمسح لوضع ${data.purpose === 'search' ? 'البحث' : 'إضافة المنتج'}...`, "info");
-                    } else if (data.status === 'scanned' && data.scannedValue) {
-                        showNotification(`تم استلام الباركود: ${data.scannedValue}. جاري المعالجة...`, "info");
-                        
-                        if (data.purpose === 'search') {
-                            searchProductInput.value = data.scannedValue;
-                            fetchProducts(); // Trigger live search in inventory
-                        } else if (data.purpose === 'add_new') {
-                            // If purpose is add_new, the user is likely on add_product.html.
-                            // The add_product.html will listen for this scan too.
-                            showNotification("تم مسح باركود لمنتج جديد. يرجى الذهاب لصفحة إضافة المنتج.", "info");
-                        }
-                        
-                        // Signal back to the phone that the desktop has processed the scan
-                        await updateDoc(scannerSessionDocRef, {
-                            status: 'readyForNextScan',
-                            scannedValue: null, // Clear scanned value after processing
-                            processedAt: new Date()
-                        }).catch(e => console.error("Error updating session status to readyForNextScan:", e));
-
-                        showNotification("تمت المعالجة. الهاتف جاهز لطلب مسح جديد.", "success");
-
-                    } else if (data.status === 'closedByPhone') {
-                        showNotification("تم قطع الاتصال بماسح QR بالهاتف.", "info");
-                        scannerSessionUnsubscribe();
-                        scannerSessionUnsubscribe = null;
-                    } else if (data.status === 'errorFromPhone') {
-                        showNotification(`خطأ في ماسح QR بالهاتف: ${data.errorMessage || 'غير معروف'}`, "error");
-                    } else if (data.status === 'errorFromDesktop') {
-                        showNotification("فشل الاتصال بماسح QR. يرجى التحقق من الإعدادات.", "error");
-                    }
-
-                } else {
-                    showNotification("ماسح QR بالهاتف غير نشط أو انتهت الجلسة. يرجى فتحه.", "warning");
-                    scannerSessionUnsubscribe();
-                    scannerSessionUnsubscribe = null;
-                }
-            }, (error) => {
-                console.error("Error listening to scanner session on desktop:", error);
-                showNotification("خطأ في الاتصال بماسح QR. يرجى إعادة تحميل الصفحة.", "error");
-                scannerSessionUnsubscribe();
-                scannerSessionUnsubscribe = null;
-            });
-        }
-
-        // Event listeners for QR buttons
-        requestScanForSearchBtn.addEventListener('click', () => requestScan('search'));
+        // Initial Load
+        fetchProducts();
     </script>
 </body>
 </html>
