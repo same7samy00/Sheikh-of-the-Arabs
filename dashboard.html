@@ -330,7 +330,7 @@
                 <div class="card">
                     <i class="ri-currency-line icon" style="color: var(--success-green);"></i>
                     <div class="title">إجمالي قيمة المخزون</div>
-                    <div class="value" id="totalInventoryValue">0.00 ريال</div>
+                    <div class="value" id="totalInventoryValue">0.00 جنيه</div>
                 </div>
             </div>
 
@@ -340,12 +340,12 @@
                     <li class="product-list-item">
                         <span class="name">منتج تجريبي 1</span>
                         <span class="quantity">100 جرام</span>
-                        <span class="price">5.00 ريال</span>
+                        <span class="price">5.00 جنيه</span>
                     </li>
                     <li class="product-list-item">
                         <span class="name">منتج تجريبي 2</span>
                         <span class="quantity">50 قطعة</span>
-                        <span class="price">12.50 ريال</span>
+                        <span class="price">12.50 جنيه</span>
                     </li>
                 </ul>
             </div>
@@ -453,7 +453,7 @@
 
                 totalProductsElement.textContent = totalProductsCount;
                 lowStockProductsElement.textContent = lowStockCount;
-                totalInventoryValueElement.textContent = `${totalInventoryValue.toFixed(2)} ريال`;
+                totalInventoryValueElement.textContent = `${totalInventoryValue.toFixed(2)} جنيه`;
 
                 // Display latest products (sorted by createdAt, if available, otherwise by updateAt)
                 // Filter out null/undefined createdAt and sort
@@ -491,7 +491,7 @@
                 li.innerHTML = `
                     <span class="name">${product.name}</span>
                     <span class="quantity">${product.quantity} ${product.unit}</span>
-                    <span class="price">${product.pricePerUnit.toFixed(2)} ريال</span>
+                    <span class="price">${product.pricePerUnit.toFixed(2)} جنيه</span>
                 `;
                 listElement.appendChild(li);
             });
