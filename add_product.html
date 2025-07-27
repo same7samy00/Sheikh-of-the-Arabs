@@ -84,7 +84,6 @@
         import { getFirestore, collection, addDoc, doc, updateDoc, getDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
         import { db, showNotification, listenToScannerSession, requestScan } from './shared.js';
 
-        // ... (The script is the same as the one provided in the previous response with duplicate checking logic)
         const pageTitle = document.getElementById('pageTitle');
         const saveBtn = document.getElementById('saveProductBtn');
         const urlParams = new URLSearchParams(window.location.search);
@@ -138,7 +137,7 @@
                 showNotification("اسم المنتج هذا موجود بالفعل.", "error");
                 fields.name.error.textContent = "اسم المنتج هذا موجود بالفعل.";
                 saveBtn.disabled = false;
-                saveBtn.textContent = 'حفظ المنتج';
+                saveBtn.textContent = editingProductId ? 'حفظ التعديلات' : 'حفظ المنتج';
                 return;
             }
 
@@ -147,11 +146,10 @@
                 showNotification("هذا الباركود موجود بالفعل لمنتج آخر.", "error");
                 fields.barcode.error.textContent = "هذا الباركود موجود بالفعل لمنتج آخر.";
                 saveBtn.disabled = false;
-                saveBtn.textContent = 'حفظ المنتج';
+                saveBtn.textContent = editingProductId ? 'حفظ التعديلات' : 'حفظ المنتج';
                 return;
             }
             
-            // ... (rest of the save logic)
             const quantity = parseFloat(fields.quantity.input.value);
             let status = 'متوفر';
             if (quantity <= 0) status = 'نفد المخزون';
@@ -183,11 +181,38 @@
                 console.error("Error saving product: ", e);
                 showNotification('فشل حفظ المنتج.', 'error');
                 saveBtn.disabled = false;
-                saveBtn.textContent = 'حفظ المنتج';
+                saveBtn.textContent = editingProductId ? 'حفظ التعديلات' : 'حفظ المنتج';
             }
         }
+        
+        // --- FIX: This function now correctly loads data for editing ---
+        async function loadProductForEdit() {
+            if (!editingProductId) return;
+            
+            pageTitle.textContent = 'تعديل المنتج';
+            saveBtn.textContent = 'حفظ التعديلات';
 
-        async function loadProductForEdit() { /* ... same as before ... */ }
+            try {
+                const docRef = doc(db, "products", editingProductId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const product = docSnap.data();
+                    fields.name.input.value = product.name || '';
+                    fields.category.input.value = product.category || '';
+                    fields.quantity.input.value = product.quantity === undefined ? '' : product.quantity;
+                    fields.unit.input.value = product.unit || 'جرام';
+                    fields.pricePerUnit.input.value = product.pricePerUnit === undefined ? '' : product.pricePerUnit;
+                    fields.barcode.input.value = product.barcode || '';
+                } else {
+                    showNotification("المنتج غير موجود.", "error");
+                    setTimeout(() => window.location.href = 'inventory.html', 1500);
+                }
+            } catch (e) {
+                console.error("Error loading product:", e);
+                showNotification("خطأ في تحميل بيانات المنتج.", "error");
+            }
+        }
 
         saveBtn.addEventListener('click', saveProduct);
         document.getElementById('requestScanForNewProduct').addEventListener('click', () => requestScan('add_new'));
@@ -198,6 +223,7 @@
             }
         });
         
+        // Initial call to load data when the page opens for editing
         loadProductForEdit();
     </script>
 </body>
