@@ -251,12 +251,35 @@
             font-size: 1em;
             font-weight: 600;
             font-family: 'Cairo', sans-serif;
+            display: flex; /* For icon alignment */
+            align-items: center;
+            justify-content: center;
+            gap: 5px; /* Space between icon and text */
         }
         .filter-section .search-button:hover {
             background-color: #0288D1;
         }
-        .filter-section .search-button i {
-            margin: 0; /* Remove margin for single icon */
+        /* No specific icon margin needed here due to gap property */
+
+        /* Added new button for QR search */
+        .filter-section .qr-search-button {
+            padding: 12px 20px;
+            background-color: var(--success-green); /* Example color for QR search */
+            color: var(--surface-white);
+            border: none;
+            border-radius: var(--border-radius-soft);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+            font-weight: 600;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .filter-section .qr-search-button:hover {
+            background-color: #388E3C; /* Darker green on hover */
         }
 
 
@@ -470,7 +493,7 @@
             .action-buttons button { margin: 5px; }
             .filter-section { flex-direction: column; align-items: stretch; }
             .filter-section .input-group { min-width: auto; width: 100%; }
-            .filter-section .search-button { width: 100%; margin: 0; }
+            .filter-section .search-button, .filter-section .qr-search-button { width: 100%; margin: 0; }
             .modal-content { width: 95%; padding: 20px; }
             .modal-footer { text-align: center; }
             .modal-footer button { margin: 5px; }
@@ -521,9 +544,9 @@
                     <i class="ri-add-line"></i>
                     <span>إضافة منتج جديد</span>
                 </button>
-                <button class="btn-secondary" id="scanQrBtn">
+                <button class="btn-secondary" id="scanQrForSearchBtn">
                     <i class="ri-qr-code-line"></i>
-                    <span>مسح QR لإضافة منتج</span>
+                    <span>مسح QR للبحث</span>
                 </button>
             </div>
         </div>
@@ -552,50 +575,14 @@
                         <th>الكود</th>
                         <th>اسم المنتج</th>
                         <th>الفئة</th>
-                        <th>الكمية المتاحة (جرام/وحدة)</th>
-                        <th>سعر الوحدة (ريال/جرام)</th>
+                        <th>الكمية المتاحة</th>
+                        <th>سعر الوحدة (ريال)</th>
                         <th>الحالة</th>
                         <th>الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody id="productsTableBody">
-                    <tr>
-                        <td>PROD001</td>
-                        <td>كمون حصى</td>
-                        <td>بهارات</td>
-                        <td>5000 جرام</td>
-                        <td>0.50</td>
-                        <td style="color: var(--success-green); font-weight: 600;">متوفر</td>
-                        <td class="actions">
-                            <button title="تعديل"><i class="ri-edit-line"></i></button>
-                            <button title="حذف" class="delete-btn"><i class="ri-delete-bin-line"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>PROD002</td>
-                        <td>زيت حبة البركة</td>
-                        <td>زيوت</td>
-                        <td>500 مل</td>
-                        <td>25.00</td>
-                        <td style="color: var(--success-green); font-weight: 600;">متوفر</td>
-                        <td class="actions">
-                            <button title="تعديل"><i class="ri-edit-line"></i></button>
-                            <button title="حذف" class="delete-btn"><i class="ri-delete-bin-line"></i></button>
-                        </td>
-                    </tr>
-                     <tr>
-                        <td>PROD003</td>
-                        <td>جوز الهند مبشور</td>
-                        <td>مكسرات</td>
-                        <td>1500 جرام</td>
-                        <td>0.75</td>
-                        <td style="color: var(--info-yellow); font-weight: 600;">قليل المخزون</td>
-                        <td class="actions">
-                            <button title="تعديل"><i class="ri-edit-line"></i></button>
-                            <button title="حذف" class="delete-btn"><i class="ri-delete-bin-line"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </main>
@@ -626,7 +613,7 @@
                         <span class="error-message" id="productCategoryError"></span>
                     </div>
                     <div class="input-group">
-                        <label for="productQuantity">الكمية المتاحة (بالجرام أو الوحدة)</label>
+                        <label for="productQuantity">الكمية المتاحة</label>
                         <input type="number" id="productQuantity" min="0" step="0.01" required>
                         <span class="error-message" id="productQuantityError"></span>
                     </div>
@@ -666,11 +653,9 @@
     </div>
 
     <script type="module">
-        // Firebase Configuration (same as index.html and dashboard.html)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        // Import Firestore for database operations
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
         const firebaseConfig = {
@@ -685,18 +670,18 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app); // Get Firestore instance
-        const productsCol = collection(db, "products"); // Reference to 'products' collection
+        const db = getFirestore(app);
+        const productsCol = collection(db, "products");
         const analytics = getAnalytics(app);
 
-        // --- Authentication Check (copied from dashboard.html) ---
+        // Authentication Check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = 'index.html';
             }
         });
 
-        // --- Logout Functionality (copied from dashboard.html) ---
+        // Logout Functionality
         document.getElementById('logoutButton').addEventListener('click', async (e) => {
             e.preventDefault();
             try {
@@ -708,7 +693,7 @@
             }
         });
 
-        // --- Inventory Management Logic ---
+        // Inventory Management Logic
         const addProductBtn = document.getElementById('addProductBtn');
         const productModal = document.getElementById('productModal');
         const modalClose = document.querySelector('.modal-close');
@@ -720,12 +705,11 @@
         const searchProductInput = document.getElementById('searchProduct');
         const filterCategorySelect = document.getElementById('filterCategory');
         const searchButton = document.querySelector('.filter-section .search-button');
-        const scanQrBtn = document.getElementById('scanQrBtn');
+        const scanQrForSearchBtn = document.getElementById('scanQrForSearchBtn'); // New button for QR search
         const scanQrForNewProductBtn = document.getElementById('scanQrForNewProduct');
 
-        let editingProductId = null; // To store product ID if editing
+        let editingProductId = null;
 
-        // Form fields for modal
         const productNameInput = document.getElementById('productName');
         const productCategorySelect = document.getElementById('productCategory');
         const productQuantityInput = document.getElementById('productQuantity');
@@ -733,7 +717,6 @@
         const productPricePerUnitInput = document.getElementById('productPricePerUnit');
         const productBarcodeInput = document.getElementById('productBarcode');
 
-        // Error message elements
         const productNameError = document.getElementById('productNameError');
         const productCategoryError = document.getElementById('productCategoryError');
         const productQuantityError = document.getElementById('productQuantityError');
@@ -763,7 +746,7 @@
         // Open Modal
         addProductBtn.addEventListener('click', () => {
             modalTitle.textContent = 'إضافة منتج جديد';
-            productForm.reset(); // Clear form fields
+            productForm.reset();
             clearAllErrors();
             editingProductId = null;
             productModal.style.display = 'flex';
@@ -806,31 +789,40 @@
                 return;
             }
 
+            // Determine product status based on quantity and unit
+            let status = 'متوفر';
+            if (unit === 'جرام' && quantity <= 100 && quantity > 0) { // Example: less than 100g is low stock
+                status = 'قليل المخزون';
+            } else if (quantity === 0) {
+                status = 'نفد المخزون';
+            } else if (unit !== 'جرام' && quantity <= 5 && quantity > 0) { // Example: less than 5 units is low stock for non-gram items
+                 status = 'قليل المخزون';
+            }
+
+
             const productData = {
                 name,
                 category,
                 quantity,
                 unit,
                 pricePerUnit,
-                barcode: barcode || null, // Store null if empty
-                status: quantity > 100 || (quantity > 0 && unit !== 'جرام') ? 'متوفر' : (quantity > 0 ? 'قليل المخزون' : 'نفد المخزون'), // Example status logic
-                createdAt: editingProductId ? undefined : new Date(), // Set creation date only for new products
+                barcode: barcode || null,
+                status: status,
+                createdAt: editingProductId ? undefined : new Date(),
                 updatedAt: new Date()
             };
 
             try {
                 if (editingProductId) {
-                    // Update existing product
                     const productRef = doc(db, "products", editingProductId);
                     await updateDoc(productRef, productData);
                     alert('تم تحديث المنتج بنجاح!');
                 } else {
-                    // Add new product
                     await addDoc(productsCol, productData);
                     alert('تم إضافة المنتج بنجاح!');
                 }
                 productModal.style.display = 'none';
-                fetchProducts(); // Refresh product list
+                fetchProducts();
             } catch (e) {
                 console.error("Error adding/updating document: ", e);
                 alert('حدث خطأ أثناء حفظ المنتج. يرجى المحاولة مرة أخرى.');
@@ -840,25 +832,23 @@
         // Fetch and Display Products
         async function fetchProducts(searchQuery = '', categoryFilter = '') {
             productsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">جاري تحميل المنتجات...</td></tr>';
+            
             let qry = productsCol;
-
-            if (searchQuery) {
-                // For client-side search, fetch all and filter in JS
-                // For more robust search, might need Firebase client-side search or Algolia/Elasticsearch
-                // For now, simple client-side filtering for demonstration
-            }
-            if (categoryFilter) {
-                qry = query(qry, where("category", "==", categoryFilter));
-            }
+            let products = [];
 
             try {
+                // Fetch all products first to allow client-side searching by name/barcode
                 const querySnapshot = await getDocs(qry);
-                let products = [];
                 querySnapshot.forEach((doc) => {
                     products.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Client-side search filtering if query exists
+                // Apply category filter if selected
+                if (categoryFilter) {
+                    products = products.filter(product => product.category === categoryFilter);
+                }
+
+                // Apply search query filter (name or barcode)
                 if (searchQuery) {
                     const lowerCaseQuery = searchQuery.toLowerCase();
                     products = products.filter(product =>
@@ -875,7 +865,7 @@
         }
 
         function displayProducts(products) {
-            productsTableBody.innerHTML = ''; // Clear existing rows
+            productsTableBody.innerHTML = '';
             if (products.length === 0) {
                 productsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-secondary);">لا توجد منتجات لعرضها.</td></tr>';
                 return;
@@ -893,7 +883,7 @@
                     <td>${product.name}</td>
                     <td>${product.category}</td>
                     <td>${product.quantity} ${product.unit}</td>
-                    <td>${parseFloat(product.pricePerUnit).toFixed(2)} ريال</td>
+                    <td>${parseFloat(product.pricePerUnit).toFixed(2)}</td>
                     <td style="color: ${statusColor}; font-weight: 600;">${product.status}</td>
                     <td class="actions">
                         <button title="تعديل" class="edit-btn" data-id="${product.id}"><i class="ri-edit-line"></i></button>
@@ -902,7 +892,6 @@
                 `;
             });
 
-            // Add event listeners for edit/delete buttons
             productsTableBody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const productId = e.currentTarget.dataset.id;
@@ -931,7 +920,7 @@
                     productUnitSelect.value = product.unit;
                     productPricePerUnitInput.value = product.pricePerUnit;
                     productBarcodeInput.value = product.barcode || '';
-                    editingProductId = productId; // Set ID for update
+                    editingProductId = productId;
                     clearAllErrors();
                     productModal.style.display = 'flex';
                 } else {
@@ -943,13 +932,12 @@
             }
         }
 
-
         async function deleteProduct(productId) {
             if (confirm('هل أنت متأكد أنك تريد حذف هذا المنتج؟')) {
                 try {
                     await deleteDoc(doc(db, "products", productId));
                     alert('تم حذف المنتج بنجاح!');
-                    fetchProducts(); // Refresh list
+                    fetchProducts();
                 } catch (e) {
                     console.error("Error removing document: ", e);
                     alert('حدث خطأ أثناء حذف المنتج. يرجى المحاولة مرة أخرى.');
@@ -964,40 +952,63 @@
             fetchProducts(searchQuery, categoryFilter);
         });
 
-        // Trigger search when pressing Enter in search input
         searchProductInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 searchButton.click();
             }
         });
 
+        filterCategorySelect.addEventListener('change', () => {
+            searchButton.click(); // Trigger search on category change
+        });
+
+
         // Initial fetch on page load
         document.addEventListener('DOMContentLoaded', () => {
             fetchProducts();
+
+            // Dynamic Active Tab Logic (copied here for consistency)
+            const navLinks = document.querySelectorAll('.nav-link');
+            const currentPath = window.location.pathname.split('/').pop();
+
+            navLinks.forEach(link => {
+                const linkPath = link.getAttribute('href');
+                if (linkPath === currentPath) {
+                    link.classList.add('active');
+                }
+            });
         });
 
         // --- QR Scanner Integration ---
-        scanQrBtn.addEventListener('click', () => {
-            // Redirect to the QR scanner page for searching existing products
-            window.location.href = 'qr_scanner.html?mode=search';
+        // Open QR scanner for search
+        scanQrForSearchBtn.addEventListener('click', () => {
+            const qrScannerWindow = window.open('qr_scanner.html?mode=search', '_blank', 'width=500,height=600');
+            // Listen for messages from the QR scanner window
+            window.addEventListener('message', (event) => {
+                if (event.origin !== window.location.origin) {
+                    return; // Ensure the message is from the same origin
+                }
+                if (event.data && event.data.type === 'qrScanned' && event.data.value) {
+                    searchProductInput.value = event.data.value;
+                    fetchProducts(event.data.value, filterCategorySelect.value); // Perform search immediately
+                    qrScannerWindow.close(); // Close scanner window after successful scan
+                }
+            }, { once: true }); // Listen only once to prevent multiple handlers
         });
 
+        // Open QR scanner for new product barcode
         scanQrForNewProductBtn.addEventListener('click', () => {
-            // Redirect to the QR scanner page for adding new product's QR
-            // The QR scanner page will return the scanned value to this modal
-            window.location.href = 'qr_scanner.html?mode=add_new';
-        });
-
-        // Handle scanned QR code result passed back from qr_scanner.html
-        window.addEventListener('message', (event) => {
-            if (event.origin !== window.location.origin) {
-                // Ensure the message is from the same origin for security
-                return;
-            }
-            if (event.data && event.data.type === 'qrScanned' && event.data.value) {
-                productBarcodeInput.value = event.data.value;
-                productModal.style.display = 'flex'; // Re-open modal if closed
-            }
+            const qrScannerWindow = window.open('qr_scanner.html?mode=add_new', '_blank', 'width=500,height=600');
+            // Listen for messages from the QR scanner window
+            window.addEventListener('message', (event) => {
+                if (event.origin !== window.location.origin) {
+                    return;
+                }
+                if (event.data && event.data.type === 'qrScanned' && event.data.value) {
+                    productBarcodeInput.value = event.data.value;
+                    qrScannerWindow.close();
+                }
+            }, { once: true });
         });
 
     </script>
