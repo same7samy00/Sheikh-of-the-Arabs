@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماسح QR / الباركود - شيخ العرب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <style>
+        :root {
+            --bg-light: #F0F4F8;
+            --surface-white: #FFFFFF;
+            --text-dark: #2C3E50;
+            --text-secondary: #607D8B;
+            --accent-blue: #03A9F4;
+            --error-red: #FF5252;
+            --success-green: #4CAF50;
+            --border-radius-soft: 12px;
+            --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            direction: rtl;
+            text-align: center;
+        }
+
+        .scanner-container {
+            background-color: var(--surface-white);
+            padding: 30px;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-elevation-1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: var(--text-dark);
+            font-size: 2em;
+            margin-bottom: 25px;
+        }
+
+        #qr-reader {
+            width: 100%;
+            max-width: 400px; /* Adjust as needed */
+            margin: 0 auto 20px auto;
+        }
+
+        #qr-reader video {
+            width: 100% !important;
+            height: auto !important;
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-elevation-1);
+        }
+
+        #qr-reader__dashboard_section_csr span { /* Hide default 'Scan an Item' text */
+            display: none;
+        }
+        #qr-reader__dashboard_section_csr button { /* Style the camera controls */
+            background-color: var(--accent-blue);
+            color: var(--surface-white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius-soft);
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1em;
+            margin: 5px;
+            transition: background-color 0.3s ease;
+        }
+        #qr-reader__dashboard_section_csr button:hover {
+            background-color: #0288D1;
+        }
+        #qr-reader__dashboard_section_csr button:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .result-message {
+            margin-top: 20px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .result-message.success {
+            color: var(--success-green);
+        }
+        .result-message.error {
+            color: var(--error-red);
+        }
+
+        .btn-close {
+            background-color: var(--error-red);
+            color: var(--surface-white);
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius-soft);
+            cursor: pointer;
+            margin-top: 20px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .btn-close:hover {
+            background-color: #D32F2F;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanner-container">
+        <h1>مسح QR / الباركود</h1>
+        <div id="qr-reader" style="width: 100%;"></div>
+        <div id="qr-reader-results" class="result-message"></div>
+        <button class="btn-close" id="closeScannerBtn">إغلاق</button>
+    </div>
+
+    <script>
+        const qrCodeReader = new Html5Qrcode("qr-reader");
+        const qrCodeResults = document.getElementById('qr-reader-results');
+        const closeScannerBtn = document.getElementById('closeScannerBtn');
+
+        let scanMode = 'search'; // Default mode, can be 'add_new' or 'pos'
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('mode')) {
+                scanMode = urlParams.get('mode');
+            }
+
+            startScanner();
+
+            closeScannerBtn.addEventListener('click', () => {
+                qrCodeReader.stop().then(() => {
+                    console.log("QR Code scanning stopped.");
+                    window.close(); // Close the pop-up window
+                }).catch((err) => {
+                    console.error("Error stopping QR Code scanning:", err);
+                    window.close();
+                });
+            });
+        });
+
+        const onScanSuccess = (decodedText, decodedResult) => {
+            qrCodeResults.textContent = `تم المسح بنجاح: ${decodedText}`;
+            qrCodeResults.classList.add('success');
+            console.log(`Code matched = ${decodedText}`, decodedResult);
+
+            // Send the scanned value back to the opener window
+            if (window.opener) {
+                window.opener.postMessage({ type: 'qrScanned', value: decodedText, mode: scanMode }, window.location.origin);
+            }
+
+            // Stop the scanner after a successful scan
+            qrCodeReader.stop().then(() => {
+                console.log("Scanner stopped after successful scan.");
+                window.close(); // Close the pop-up window
+            }).catch((err) => {
+                console.error("Error stopping QR Code scanning after success:", err);
+                window.close();
+            });
+        };
+
+        const onScanFailure = (error) => {
+            // console.warn(`QR Code scanning error = ${error}`); // Keep this for debugging, but don't show to user constantly
+            qrCodeResults.textContent = 'جاري البحث عن كود...';
+            qrCodeResults.classList.remove('success', 'error');
+        };
+
+        const startScanner = () => {
+            // Use facing mode "environment" to try to get the back camera
+            qrCodeReader.start({ facingMode: "environment" }, {
+                fps: 10,
+                qrbox: { width: 250, height: 250 }
+            }, onScanSuccess, onScanFailure)
+            .catch(err => {
+                console.error(`Unable to start scanning: ${err}`);
+                qrCodeResults.textContent = 'لا يمكن الوصول إلى الكاميرا. يرجى التأكد من السماح بالوصول.';
+                qrCodeResults.classList.add('error');
+            });
+        };
+
+        // Handle window closing by the user
+        window.addEventListener('beforeunload', () => {
+            if (qrCodeReader && qrCodeReader.is=Started()) { // Check if scanner is running
+                qrCodeReader.stop().then(() => {
+                    console.log("QR Code scanning stopped on window close.");
+                }).catch((err) => {
+                    console.warn("Error stopping scanner on beforeunload:", err);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
