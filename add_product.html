@@ -23,7 +23,7 @@
             --shadow-elevation-2: 0 8px 20px rgba(0, 0, 0, 0.12);
             --shadow-input-focus: 0 0 0 3px rgba(3, 169, 244, 0.3);
 
-            --base-font-size: 0.95em;
+            --base-font-size: 0.95em; /* Inherit from inventory.html */
         }
 
         body {
@@ -36,15 +36,15 @@
             text-align: right;
             display: flex;
             min-height: 100vh;
-            font-size: var(--base-font-size);
-            align-items: center;
-            justify-content: center;
+            font-size: var(--base-font-size); /* Apply base font size */
+            align-items: center; /* Center form content vertically */
+            justify-content: center; /* Center form content horizontally */
         }
 
         /* Container for the form, taking full screen but with padding */
         .form-container-wrapper {
-            background-color: var(--surface-white); /* White background for the form itself */
-            padding: 25px;
+            background-color: var(--surface-white);
+            padding: 25px; /* Consistent padding */
             border-radius: var(--border-radius-soft);
             box-shadow: var(--shadow-elevation-2);
             width: 95%; /* Take most of the screen width */
@@ -60,22 +60,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* Consistent margin */
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 12px;
-            flex-shrink: 0; /* Prevent header from shrinking */
+            padding-bottom: 12px; /* Consistent padding */
+            flex-shrink: 0;
         }
 
         .header h2 {
             margin: 0;
-            font-size: 1.6em;
+            font-size: 1.6em; /* Consistent font size */
             color: var(--text-dark);
             font-weight: 700;
         }
 
         .close-btn {
             color: var(--text-secondary);
-            font-size: 1.8em;
+            font-size: 1.8em; /* Consistent font size */
             font-weight: bold;
             cursor: pointer;
             transition: color 0.3s ease;
@@ -85,34 +85,35 @@
         }
 
         .form-body {
-            flex-grow: 1; /* Allow form content to take available space */
-            overflow-y: auto; /* Allow scrolling within the form body */
-            padding-bottom: 15px; /* Space before footer */
-            display: grid; /* Use grid for layout */
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive columns */
-            gap: 20px; /* Spacing between grid items */
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-bottom: 15px; /* Consistent padding */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Consistent column layout */
+            gap: 20px; /* Consistent gap */
         }
 
         .input-group {
-            margin-bottom: 0; /* Managed by grid gap */
+            margin-bottom: 0;
         }
 
         .input-group label {
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 5px;
-            font-size: 0.95em;
+            margin-bottom: 5px; /* Consistent margin */
+            font-size: 0.95em; /* Consistent font size */
             display: block;
         }
 
         .input-group input,
         .input-group select {
             width: 100%;
-            padding: 10px 15px;
+            padding: 10px 15px; /* Consistent padding */
+            background-color: var(--bg-light);
             border: 1px solid #E0E6EB;
             border-radius: var(--border-radius-soft);
             color: var(--text-dark);
-            font-size: 0.95em;
+            font-size: 0.95em; /* Consistent font size */
             box-sizing: border-box;
             outline: none;
             transition: all 0.3s ease;
@@ -134,11 +135,11 @@
             box-shadow: var(--shadow-input-focus);
         }
 
-        /* Barcode input with side icon button (modified for standard button style) */
-        .form-body .input-group.barcode-input-group { /* Specific class for barcode input group */
+        /* Barcode input with side icon button (Consistent styling) */
+        .form-body .input-group.barcode-input-group {
             grid-column: 1 / -1;
             display: flex;
-            align-items: flex-end; /* Align input and button to bottom */
+            align-items: flex-end;
             gap: 10px;
             position: relative;
         }
@@ -148,8 +149,8 @@
         .form-body .input-group.barcode-input-group button {
             flex-shrink: 0;
             width: auto;
-            padding: 8px 12px; /* Smaller padding for icon button */
-            font-size: 1.2em; /* Icon size */
+            padding: 8px 12px;
+            font-size: 1.2em;
             margin-top: 0;
             border-radius: var(--border-radius-soft);
             background-color: var(--accent-blue); /* Primary action color for QR button */
@@ -164,7 +165,7 @@
             transform: translateY(-2px);
         }
         .form-body .input-group.barcode-input-group button span {
-            display: none; /* Hide text, only show icon on desktop */
+            display: none;
         }
         .form-body .input-group.barcode-input-group .error-message {
             position: absolute;
@@ -180,7 +181,7 @@
             flex-shrink: 0;
         }
         .form-footer button,
-        .form-footer .btn-cancel-link { /* Apply general button style to link */
+        .form-footer .btn-cancel-link { /* Consistent button styling for save/cancel */
             padding: 10px 20px;
             border: none;
             border-radius: var(--border-radius-soft);
@@ -191,10 +192,10 @@
             box-shadow: var(--shadow-elevation-1);
             font-family: 'Cairo', sans-serif;
             margin-left: 12px;
-            text-decoration: none; /* For link */
-            display: inline-flex; /* For link */
-            align-items: center; /* For link */
-            justify-content: center; /* For link */
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .form-footer .btn-save {
             background-color: var(--accent-blue);
@@ -204,7 +205,7 @@
             background-color: #0288D1;
             box-shadow: var(--shadow-elevation-2);
         }
-        .form-footer .btn-cancel-link { /* Using a specific class for the link-button */
+        .form-footer .btn-cancel-link {
             background-color: var(--text-secondary);
             color: var(--surface-white);
         }
@@ -228,7 +229,7 @@
             opacity: 1;
         }
 
-        /* Notification System (Copied from inventory.html) */
+        /* Notification System (Consistent with inventory.html) */
         #notification-container {
             position: fixed;
             bottom: 20px;
@@ -278,7 +279,7 @@
             text-overflow: ellipsis;
         }
 
-        .notification .confirm-buttons {
+        .notification .confirm-buttons { /* Not used in add_product, but here for consistency */
             display: flex;
             gap: 10px;
             margin-top: 10px;
@@ -303,7 +304,7 @@
         @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
         @keyframes fadeOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-100%); } }
 
-        /* Responsive adjustments */
+        /* Responsive adjustments (Consistent with inventory.html) */
         @media (max-width: 768px) {
             body {
                 align-items: flex-start;
@@ -329,7 +330,7 @@
                 font-size: 1em;
             }
             .form-body .input-group.barcode-input-group button span {
-                display: inline; /* Show text again for barcode button on small screens */
+                display: inline;
             }
             #notification-container {
                 bottom: 10px;
@@ -455,7 +456,7 @@
         const saveProductBtn = document.getElementById('saveProductBtn');
         const requestScanForNewProductBtn = document.getElementById('requestScanForNewProduct');
 
-        // Form fields for modal
+        // Form fields
         const productNameInput = document.getElementById('productName');
         const productCategorySelect = document.getElementById('productCategory');
         const productQuantityInput = document.getElementById('productQuantity');
@@ -471,7 +472,7 @@
         const productPricePerUnitError = document.getElementById('productPricePerUnitError');
         const productBarcodeError = document.getElementById('productBarcodeError');
 
-        // Notification System (Copied from inventory.html)
+        // Notification System
         const notificationContainer = document.getElementById('notification-container');
         let lastNotificationMessage = '';
         let notificationTimeoutId = null;
@@ -592,7 +593,7 @@
                     await addDoc(productsCol, productData);
                     showNotification('تم إضافة المنتج بنجاح!', "success");
                 }
-                window.location.href = 'inventory.html'; // Redirect back to inventory after save
+                window.location.href = 'inventory.html';
             } catch (e) {
                 console.error("Error saving product: ", e);
                 showNotification('حدث خطأ أثناء حفظ المنتج. يرجى المحاولة مرة أخرى.', "error");
@@ -746,7 +747,7 @@
         // Basic authentication check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                window.location.href = 'index.html'; // Redirect to login if not authenticated
+                window.location.href = 'index.html';
             }
         });
     </script>
