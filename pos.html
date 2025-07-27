@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نقطة البيع - شيخ العرب</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">شيخ <span>العرب</span></div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="ri-dashboard-line"></i><span>الصفحة الرئيسية</span></a></li>
+            <li class="nav-item"><a href="inventory.html" class="nav-link"><i class="ri-box-3-line"></i><span>إدارة المخزون</span></a></li>
+            <li class="nav-item"><a href="pos.html" class="nav-link active"><i class="ri-shopping-cart-line"></i><span>نقطة البيع</span></a></li>
+            <li class="nav-item"><a href="settings.html" class="nav-link"><i class="ri-settings-3-line"></i><span>الإعدادات</span></a></li>
+            <li class="nav-item logout"><a href="#" id="logoutButton" class="nav-link logout-btn"><i class="ri-logout-box-line"></i><span>تسجيل الخروج</span></a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="pos-container">
+            <div class="pos-left">
+                <div id="product-search-area">
+                    <input type="search" id="productSearchInput" placeholder="البحث بالاسم أو امسح الكود...">
+                    <button class="btn btn-secondary" id="requestScanBtn"><i class="ri-qr-code-line"></i></button>
+                </div>
+                <div id="product-grid">
+                    </div>
+            </div>
+
+            <div class="pos-right">
+                <div id="cart-area">
+                    <div id="cart-header">الفاتورة</div>
+                    <table id="cart-items-table">
+                        <tbody id="cart-items">
+                             </tbody>
+                    </table>
+                    <div id="cart-summary">
+                        <div class="summary-row">
+                            <span>المجموع الفرعي</span>
+                            <span id="subtotal">0.00 جنيه</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>ضريبة (14%)</span>
+                            <span id="tax">0.00 جنيه</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>الإجمالي</span>
+                            <span id="total">0.00 جنيه</span>
+                        </div>
+                    </div>
+                    <div id="pos-actions">
+                        <button class="btn btn-secondary" id="clearSaleBtn">إلغاء الفاتورة</button>
+                        <button class="btn btn-primary" id="checkoutBtn" disabled>الدفع</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="weight-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="weight-modal-title">إدخال الوزن</h2>
+                <button class="modal-close-btn" data-target="weight-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>الرجاء إدخال الوزن بالجرام للمنتج: <strong id="product-prompt-name" class="product-prompt-name"></strong></p>
+                <div class="input-group">
+                    <label for="weightInput">الوزن (جرام)</label>
+                    <input type="number" id="weightInput" min="1" placeholder="مثال: 150">
+                </div>
+                <button class="btn btn-primary" id="confirmWeightBtn">إضافة للسلة</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="payment-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>إتمام الدفع</h2>
+                <button class="modal-close-btn" data-target="payment-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>المبلغ الإجمالي</label>
+                    <input type="text" id="totalAmountToPay" disabled style="font-weight: bold; color: var(--accent-blue);">
+                </div>
+                <div class="input-group">
+                    <label for="amountTendered">المبلغ المدفوع</label>
+                    <input type="number" id="amountTendered" placeholder="أدخل المبلغ الذي دفعه العميل">
+                </div>
+                <div class="input-group">
+                    <label>الباقي</label>
+                    <input type="text" id="changeDue" disabled>
+                </div>
+                <button class="btn btn-primary" id="confirmPaymentBtn">تأكيد الدفع وإنهاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="receipt-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>الفاتورة</h2>
+                <button class="modal-close-btn" data-target="receipt-modal">&times;</button>
+            </div>
+            <div id="receipt-content">
+                </div>
+            <div id="receipt-modal-actions" style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-secondary" id="printReceiptBtn" style="width: 100%;"><i class="ri-printer-line"></i> طباعة</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="notification-container"></div>
+    <script src="shared.js" type="module"></script>
+    <script type="module">
+        import { collection, getDocs, doc, writeBatch } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { db, showNotification, requestScan, listenToScannerSession, showConfirmation } from './shared.js';
+
+        let allProducts = [];
+        let cart = [];
+        const TAX_RATE = 0.14;
+        const WEIGHT_UNITS = ['جرام', 'كيلو جرام'];
+
+        // --- DOM Elements ---
+        const productGrid = document.getElementById('product-grid');
+        const searchInput = document.getElementById('productSearchInput');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const subtotalEl = document.getElementById('subtotal');
+        const taxEl = document.getElementById('tax');
+        const totalEl = document.getElementById('total');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const modals = {
+            weight: document.getElementById('weight-modal'),
+            payment: document.getElementById('payment-modal'),
+            receipt: document.getElementById('receipt-modal'),
+        };
+
+        // --- Core Functions ---
+        
+        // Fetches all products from Firestore and renders them.
+        async function initializePOS() {
+            productGrid.innerHTML = '<div class="list-item-placeholder">جاري تحميل المنتجات...</div>';
+            try {
+                const querySnapshot = await getDocs(collection(db, "products"));
+                allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderProductGrid(allProducts);
+            } catch (error) {
+                console.error("Error initializing POS:", error);
+                productGrid.innerHTML = '<div class="list-item-placeholder error">فشل تحميل المنتجات.</div>';
+                showNotification("فشل تحميل المنتجات", "error");
+            }
+        }
+
+        // Renders product cards in the left panel.
+        function renderProductGrid(productsToRender) {
+            productGrid.innerHTML = '';
+            if (productsToRender.length === 0) {
+                 productGrid.innerHTML = '<div class="list-item-placeholder">لا توجد منتجات.</div>';
+                 return;
+            }
+            productsToRender.forEach(p => {
+                if (p.quantity > 0) { // Only show products in stock
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.dataset.id = p.id;
+                    card.innerHTML = `
+                        <div class="product-card-name">${p.name}</div>
+                        <div class="product-card-price">${p.pricePerUnit.toFixed(2)} جنيه / ${p.unit}</div>
+                    `;
+                    card.addEventListener('click', () => handleProductSelection(p.id));
+                    productGrid.appendChild(card);
+                }
+            });
+        }
+        
+        // Handles what happens when a product is clicked or scanned.
+        function handleProductSelection(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product || product.quantity <= 0) {
+                showNotification("المنتج غير متوفر أو نفد من المخزون.", "warning");
+                return;
+            }
+
+            if (WEIGHT_UNITS.includes(product.unit)) {
+                openWeightModal(product);
+            } else {
+                addItemToCart(product, 1);
+            }
+        }
+
+        // Adds or updates an item in the cart array.
+        function addItemToCart(product, quantity) {
+            const existingItem = cart.find(item => item.id === product.id);
+
+            // For non-weight items, we increment quantity. For weight items, we overwrite.
+            if (existingItem && !WEIGHT_UNITS.includes(product.unit)) {
+                existingItem.quantity += quantity;
+            } else {
+                 if (existingItem) { // If user adds same weighted item, replace old one
+                    const index = cart.indexOf(existingItem);
+                    cart.splice(index, 1);
+                }
+                cart.push({ ...product, quantity: quantity });
+            }
+            showNotification(`تمت إضافة "${product.name}"`, 'success');
+            renderCart();
+        }
+
+        // Renders the cart items in the right panel.
+        function renderCart() {
+            cartItemsContainer.innerHTML = '';
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<tr><td colspan="4" class="table-placeholder">السلة فارغة</td></tr>';
+            } else {
+                cart.forEach(item => {
+                    const tr = document.createElement('tr');
+                    const isWeight = WEIGHT_UNITS.includes(item.unit);
+                    const subtotal = calculateItemSubtotal(item);
+                    
+                    tr.innerHTML = `
+                        <td class="cart-item-name">${item.name}</td>
+                        <td class="cart-item-qty">
+                            ${isWeight ? '' : `<button class="qty-btn" data-id="${item.id}" data-change="-1">-</button>`}
+                            <span class="qty-value">${item.quantity} ${isWeight ? 'جرام' : ''}</span>
+                            ${isWeight ? '' : `<button class="qty-btn" data-id="${item.id}" data-change="1">+</button>`}
+                        </td>
+                        <td>${subtotal.toFixed(2)}</td>
+                        <td><button class="action-btn delete-btn" data-id="${item.id}"><i class="ri-close-circle-line"></i></button></td>
+                    `;
+                    cartItemsContainer.appendChild(tr);
+                });
+            }
+            updateSummary();
+            addCartEventListeners();
+        }
+
+        // Calculates subtotal for a single cart item, handling weight conversion.
+        function calculateItemSubtotal(item) {
+            if (item.unit === 'كيلو جرام') {
+                return (item.pricePerUnit / 1000) * item.quantity; // Price per gram * quantity in grams
+            }
+            // For items priced per gram or per piece
+            return item.pricePerUnit * item.quantity;
+        }
+
+        // Updates the summary (Subtotal, Tax, Total).
+        function updateSummary() {
+            const subtotal = cart.reduce((acc, item) => acc + calculateItemSubtotal(item), 0);
+            const tax = subtotal * TAX_RATE;
+            const total = subtotal + tax;
+
+            subtotalEl.textContent = `${subtotal.toFixed(2)} جنيه`;
+            taxEl.textContent = `${tax.toFixed(2)} جنيه`;
+            totalEl.textContent = `${total.toFixed(2)} جنيه`;
+            
+            checkoutBtn.disabled = cart.length === 0;
+        }
+
+        // Adds event listeners to buttons inside the cart.
+        function addCartEventListeners() {
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const productId = btn.dataset.id;
+                    cart = cart.filter(item => item.id !== productId);
+                    renderCart();
+                });
+            });
+            document.querySelectorAll('.qty-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const productId = btn.dataset.id;
+                    const change = parseInt(btn.dataset.change, 10);
+                    const item = cart.find(i => i.id === productId);
+                    if (item) {
+                        item.quantity += change;
+                        if (item.quantity <= 0) {
+                            cart = cart.filter(i => i.id !== productId);
+                        }
+                        renderCart();
+                    }
+                });
+            });
+        }
+        
+        // --- Modal Handling ---
+        function openModal(modal) { modal.classList.add('show'); }
+        function closeModal(modal) { modal.classList.remove('show'); }
+
+        function openWeightModal(product) {
+            document.getElementById('product-prompt-name').textContent = product.name;
+            const weightInput = document.getElementById('weightInput');
+            weightInput.value = '';
+            openModal(modals.weight);
+            weightInput.focus();
+
+            // Store product temporarily for the confirm button
+            modals.weight.dataset.productId = product.id;
+        }
+        
+        document.getElementById('confirmWeightBtn').addEventListener('click', () => {
+            const productId = modals.weight.dataset.productId;
+            const product = allProducts.find(p => p.id === productId);
+            const weight = parseFloat(document.getElementById('weightInput').value);
+
+            if (product && weight > 0) {
+                if(weight > product.quantity) {
+                    showNotification(`الكمية المتاحة هي ${product.quantity} جرام فقط`, "error");
+                    return;
+                }
+                addItemToCart(product, weight);
+                closeModal(modals.weight);
+            } else {
+                showNotification("الرجاء إدخال وزن صحيح", "error");
+            }
+        });
+
+        document.querySelectorAll('.modal-close-btn').forEach(btn => {
+            btn.addEventListener('click', () => closeModal(document.getElementById(btn.dataset.target)));
+        });
+
+        // --- Checkout and Payment Logic ---
+        checkoutBtn.addEventListener('click', () => {
+            const total = cart.reduce((acc, item) => acc + calculateItemSubtotal(item), 0) * (1 + TAX_RATE);
+            document.getElementById('totalAmountToPay').value = total.toFixed(2) + ' جنيه';
+            document.getElementById('amountTendered').value = '';
+            document.getElementById('changeDue').value = '';
+            openModal(modals.payment);
+            document.getElementById('amountTendered').focus();
+        });
+
+        document.getElementById('amountTendered').addEventListener('input', (e) => {
+            const total = parseFloat(document.getElementById('totalAmountToPay').value);
+            const tendered = parseFloat(e.target.value);
+            const change = tendered - total;
+            document.getElementById('changeDue').value = change >= 0 ? change.toFixed(2) + ' جنيه' : '';
+        });
+
+        document.getElementById('confirmPaymentBtn').addEventListener('click', async () => {
+            const tendered = parseFloat(document.getElementById('amountTendered').value);
+            const total = parseFloat(document.getElementById('totalAmountToPay').value);
+            if (isNaN(tendered) || tendered < total) {
+                showNotification("المبلغ المدفوع غير كافٍ", "error");
+                return;
+            }
+            
+            // 1. Update stock in Firestore
+            const batch = writeBatch(db);
+            let stockError = false;
+            for (const item of cart) {
+                const productRef = doc(db, "products", item.id);
+                const currentProductData = allProducts.find(p => p.id === item.id);
+                const newQuantity = currentProductData.quantity - item.quantity;
+                if (newQuantity < 0) {
+                    stockError = true;
+                    showNotification(`لا توجد كمية كافية من "${item.name}"`, "error");
+                    break;
+                }
+                batch.update(productRef, { quantity: newQuantity });
+            }
+
+            if (stockError) return;
+
+            try {
+                await batch.commit();
+                showNotification("تمت عملية البيع بنجاح!", "success");
+                
+                // 2. Show receipt and clear everything
+                generateReceipt();
+                openModal(modals.receipt);
+                closeModal(modals.payment);
+                clearSale();
+                initializePOS(); // Refresh product list to reflect new stock
+            } catch (error) {
+                console.error("Error finalizing sale: ", error);
+                showNotification("فشل تحديث المخزون.", "error");
+            }
+        });
+
+        function clearSale() {
+            cart = [];
+            renderCart();
+        }
+        
+        document.getElementById('clearSaleBtn').addEventListener('click', () => {
+            if (cart.length > 0) {
+                showConfirmation("هل أنت متأكد من إلغاء هذه الفاتورة؟", clearSale);
+            }
+        });
+
+        // --- Receipt ---
+        function generateReceipt() {
+            const now = new Date();
+            const receiptContent = document.getElementById('receipt-content');
+            let itemsHtml = '';
+            cart.forEach(item => {
+                const subtotal = calculateItemSubtotal(item);
+                itemsHtml += `<tr><td>${item.quantity} ${WEIGHT_UNITS.includes(item.unit) ? 'g' : ''} ${item.name}</td><td>${subtotal.toFixed(2)}</td></tr>`;
+            });
+
+            receiptContent.innerHTML = `
+                <h3>شيخ العرب للعطارة</h3>
+                <p>${now.toLocaleDateString('ar-EG')} - ${now.toLocaleTimeString('ar-EG')}</p>
+                <hr>
+                <table>
+                    <thead><tr><th>المنتج</th><th>السعر</th></tr></thead>
+                    <tbody>${itemsHtml}</tbody>
+                </table>
+                <hr>
+                <p><strong>المجموع الفرعي:</strong> ${subtotalEl.textContent}</p>
+                <p><strong>الضريبة:</strong> ${taxEl.textContent}</p>
+                <p><strong>الإجمالي:</strong> ${totalEl.textContent}</p>
+                <hr>
+                <p>شكراً لزيارتكم!</p>
+            `;
+        }
+        document.getElementById('printReceiptBtn').addEventListener('click', () => window.print());
+
+        // --- Event Listeners and Initial Load ---
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query) || (p.barcode && p.barcode.includes(query)));
+            renderProductGrid(filtered);
+        });
+        
+        document.getElementById('requestScanBtn').addEventListener('click', () => requestScan('pos_add'));
+
+        listenToScannerSession((scannedValue, purpose) => {
+            if (purpose === 'pos_add' && scannedValue) {
+                const product = allProducts.find(p => p.barcode === scannedValue);
+                if (product) {
+                    handleProductSelection(product.id);
+                } else {
+                    showNotification("منتج غير موجود بهذا الكود.", "error");
+                }
+            }
+        });
+
+        initializePOS();
+    </script>
+</body>
+</html>
