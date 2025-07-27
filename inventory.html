@@ -544,12 +544,14 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="pos.html" class="nav-link"> <i class="ri-shopping-cart-line"></i>
+                <a href="pos.html" class="nav-link">
+                    <i class="ri-shopping-cart-line"></i>
                     <span>نقطة البيع</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="settings.html" class="nav-link"> <i class="ri-settings-3-line"></i>
+                <a href="settings.html" class="nav-link">
+                    <i class="ri-settings-3-line"></i>
                     <span>الإعدادات</span>
                 </a>
             </li>
@@ -570,9 +572,9 @@
                     <i class="ri-add-line"></i>
                     <span>إضافة منتج جديد</span>
                 </button>
-                <button class="btn-secondary" id="scanQrForSearchBtn">
+                <button class="btn-secondary" id="requestScanForSearchBtn">
                     <i class="ri-qr-code-line"></i>
-                    <span>مسح QR للبحث</span>
+                    <span>طلب مسح QR للبحث</span>
                 </button>
             </div>
         </div>
@@ -596,6 +598,8 @@
 
         <div class="spinner" id="scanSpinner"></div>
         <p class="scan-prompt" id="scanPrompt"></p>
+        <button class="btn-secondary" id="cancelScanRequestBtn" style="display: none; margin-top: 15px;"><i class="ri-close-line"></i> إلغاء طلب المسح</button>
+
 
         <div class="product-table-container">
             <table class="product-table">
@@ -667,9 +671,9 @@
                         <label for="productBarcode">كود المنتج / QR (اختياري)</label>
                         <input type="text" id="productBarcode" placeholder="امسح أو أدخل الكود">
                         <span class="error-message" id="productBarcodeError"></span>
-                         <button type="button" class="btn-secondary" id="scanQrForNewProduct" style="margin-top: 10px; width: 100%; display: flex; justify-content: center; align-items: center;">
+                         <button type="button" class="btn-secondary" id="requestScanForNewProduct" style="margin-top: 10px; width: 100%; display: flex; justify-content: center; align-items: center;">
                             <i class="ri-qr-code-line"></i>
-                            <span>مسح QR</span>
+                            <span>طلب مسح QR</span>
                         </button>
                     </div>
                 </form>
@@ -684,35 +688,39 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
+        // ************* Firebase Configuration (MUST MATCH QR SCANNER PAGE) *************
         const firebaseConfig = {
-            apiKey: "AIzaSyBtJaifspNzKeht9mOmZGvVU1IOvmnyrwQ",
-            authDomain: "sheikh-of-the-arabs.firebaseapp.com",
-            projectId: "sheikh-of-the-arabs",
-            storageBucket: "sheikh-of-the-arabs.firebasestorage.app",
-            messagingSenderId: "64212176848",
-            appId: "1:64212176848:web:8a02363e1be4e706fdb3d5",
-            measurementId: "G-HV2WKFZ32B"
+            apiKey: "AIzaSyC5ls-rPdJ65x5BoMGwAOpdcPtD585C2ys", // <--- هذا يجب أن يتطابق مع qr_scanner.html
+            authDomain: "pharmacy-inventory-bf04a.firebaseapp.com", // <--- هذا يجب أن يتطابق مع qr_scanner.html
+            projectId: "pharmacy-inventory-bf04a", // <--- هذا يجب أن يتطابق مع qr_scanner.html
+            storageBucket: "pharmacy-inventory-bf04a.firebasestorage.app",
+            messagingSenderId: "937788650384",
+            appId: "1:937788650384:web:6451225d00e648f3a0b915",
+            measurementId: "G-ZGC9EQ55SL"
         };
+        // *********************************************************************************
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const productsCol = collection(db, "products");
-        const scanRequestsCol = collection(db, "scanRequests");
+        const scannerSessionsCol = collection(db, "scannerSessions"); // New collection for scanner communication
         const analytics = getAnalytics(app);
+
+        // ************* SHARED SCANNER SESSION ID (MUST MATCH QR SCANNER PAGE) *************
+        const SHARED_SCANNER_SESSION_ID = "YOUR_STORE_UNIQUE_SCANNER_ID_12345"; // <--- هذا يجب أن يتطابق مع qr_scanner.html
+        const scannerSessionDocRef = doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID);
+        // ************************************************************************************
 
         // UI elements for scan feedback
         const scanSpinner = document.getElementById('scanSpinner');
         const scanPrompt = document.getElementById('scanPrompt');
+        const cancelScanRequestBtn = document.getElementById('cancelScanRequestBtn');
 
-        // Function to generate a unique ID for the current session/request
-        function generateSessionId() {
-            return 'pc_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        }
-        const currentPCSessionId = generateSessionId(); // Unique ID for this browser tab
+        let scannerSessionUnsubscribe = null; // To store the unsubscribe function for the Firestore listener
 
         // Authentication Check
         onAuthStateChanged(auth, (user) => {
@@ -745,8 +753,8 @@
         const searchProductInput = document.getElementById('searchProduct');
         const filterCategorySelect = document.getElementById('filterCategory');
         const searchButton = document.querySelector('.filter-section .search-button');
-        const scanQrForSearchBtn = document.getElementById('scanQrForSearchBtn');
-        const scanQrForNewProductBtn = document.getElementById('scanQrForNewProduct');
+        const requestScanForSearchBtn = document.getElementById('requestScanForSearchBtn');
+        const requestScanForNewProductBtn = document.getElementById('requestScanForNewProduct');
 
         let editingProductId = null;
 
@@ -823,7 +831,6 @@
             if (isNaN(quantity) || quantity < 0) { showError(productQuantityError, 'الرجاء إدخال كمية صحيحة.'); isValid = false; }
             if (!unit) { showError(productUnitError, 'الرجاء اختيار وحدة القياس.'); isValid = false; }
             if (isNaN(pricePerUnit) || pricePerUnit < 0) { showError(productPricePerUnitError, 'الرجاء إدخال سعر صحيح لكل وحدة.'); isValid = false; }
-            // Barcode can be empty if optional
 
             if (!isValid) {
                 return;
@@ -1014,63 +1021,161 @@
                     link.classList.add('active');
                 }
             });
+
+            // Start listening to the scanner session on page load
+            listenToScannerSession();
         });
 
         // --- QR Scanner Integration (using Firestore for communication) ---
-        async function requestScan(mode) {
-            scanSpinner.style.display = 'block';
-            scanPrompt.textContent = `يرجى مسح الكود من تطبيق الماسح على الهاتف لوضع ${mode === 'search' ? 'البحث' : 'إضافة المنتج'}...`;
-            scanPrompt.style.display = 'block';
 
-            // Create a new scan request in Firestore
-            const scanRequestRef = await addDoc(scanRequestsCol, {
-                requestedBy: currentPCSessionId,
-                mode: mode,
-                status: 'pending',
-                timestamp: new Date()
-            });
+        // Function to update the UI for scan request feedback
+        function updateScanFeedbackUI(showSpinner, showPrompt, promptMessage = '', showCancelBtn = false) {
+            scanSpinner.style.display = showSpinner ? 'block' : 'none';
+            scanPrompt.textContent = promptMessage;
+            scanPrompt.style.display = showPrompt ? 'block' : 'none';
+            cancelScanRequestBtn.style.display = showCancelBtn ? 'inline-flex' : 'none'; // Use inline-flex for button
+        }
 
-            // Listen for changes on this specific scan request document
-            const unsubscribe = onSnapshot(doc(db, "scanRequests", scanRequestRef.id), (docSnapshot) => {
-                if (docSnapshot.exists()) {
-                    const data = docSnapshot.data();
-                    if (data.status === 'scanned' && data.scannedValue && data.requestedBy === currentPCSessionId) {
-                        scanSpinner.style.display = 'none';
-                        scanPrompt.style.display = 'none';
-                        alert('تم المسح بنجاح!');
+        // Request a scan from the phone
+        async function requestScan(purpose) {
+            updateScanFeedbackUI(true, true, `جاري طلب المسح لوضع ${purpose === 'search' ? 'البحث عن منتج' : 'إضافة باركود منتج جديد'} من الهاتف...`, true);
 
-                        if (mode === 'search') {
+            try {
+                // Ensure the session document exists and is in a ready state
+                const docSnap = await getDoc(scannerSessionDocRef);
+                if (!docSnap.exists() || docSnap.data().status !== 'phoneReady') {
+                    if (!docSnap.exists()) {
+                         // Attempt to create the document if it doesn't exist
+                        await setDoc(scannerSessionDocRef, {
+                            status: 'desktopConnecting',
+                            requestedBy: 'desktop',
+                            createdAt: new Date(),
+                            purpose: purpose,
+                            scannedValue: null,
+                            lastRequestTime: new Date()
+                        });
+                        updateScanFeedbackUI(true, true, "جاري إعداد الاتصال. يرجى التأكد من فتح صفحة الماسح على الهاتف.", true);
+                    } else {
+                        updateScanFeedbackUI(false, true, "الهاتف غير جاهز للمسح. يرجى التأكد من فتح صفحة الماسح على الهاتف.", true);
+                        console.warn("Phone is not in 'phoneReady' state:", docSnap.data().status);
+                    }
+                     // After initial check/setup, update the status to trigger scan on phone
+                    await updateDoc(scannerSessionDocRef, {
+                        status: 'scanRequested',
+                        purpose: purpose,
+                        scannedValue: null, // Clear any previous scanned value
+                        lastRequestTime: new Date()
+                    });
+                } else {
+                    // If phone is ready, directly request scan
+                    await updateDoc(scannerSessionDocRef, {
+                        status: 'scanRequested',
+                        purpose: purpose,
+                        scannedValue: null, // Clear any previous scanned value
+                        lastRequestTime: new Date()
+                    });
+                }
+
+                console.log(`Scan request sent for purpose: ${purpose}`);
+
+            } catch (error) {
+                console.error("Error requesting scan:", error);
+                updateScanFeedbackUI(false, true, "فشل طلب المسح. تأكد من اتصال Firebase.", true);
+                // Also update Firestore to signal error from desktop side if connection is there
+                await updateDoc(scannerSessionDocRef, {
+                    status: 'errorFromDesktop',
+                    errorMessage: error.message,
+                    errorTime: new Date()
+                }).catch(e => console.error("Error signaling errorFromDesktop status:", e));
+            }
+        }
+
+        // Listen to the scanner session document for updates from the phone
+        function listenToScannerSession() {
+            if (scannerSessionUnsubscribe) {
+                scannerSessionUnsubscribe(); // Unsubscribe from previous listener if any
+            }
+
+            scannerSessionUnsubscribe = onSnapshot(scannerSessionDocRef, async (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    console.log("Scanner session data:", data);
+
+                    if (data.status === 'phoneReady') {
+                        updateScanFeedbackUI(false, true, "الهاتف متصل وجاهز لاستقبال طلبات المسح.", false);
+                    } else if (data.status === 'scanning') {
+                        updateScanFeedbackUI(true, true, `الهاتف يقوم بالمسح لوضع ${data.purpose === 'search' ? 'البحث' : 'إضافة المنتج'}...`, true);
+                    } else if (data.status === 'scanned' && data.scannedValue) {
+                        // Phone has scanned a value
+                        updateScanFeedbackUI(false, true, `تم استلام الباركود: ${data.scannedValue}. جاري المعالجة...`, false);
+                        
+                        // Process the scanned value based on the purpose
+                        if (data.purpose === 'search') {
                             searchProductInput.value = data.scannedValue;
                             fetchProducts(data.scannedValue, filterCategorySelect.value);
-                        } else if (mode === 'add_new') {
+                        } else if (data.purpose === 'add_new') {
                             productBarcodeInput.value = data.scannedValue;
-                            productModal.style.display = 'flex'; // Ensure modal is open
+                            productModal.style.display = 'flex'; // Reopen modal if it was closed
                         }
                         
-                        // Clean up the request after processing
-                        deleteDoc(scanRequestRef);
-                        unsubscribe(); // Stop listening
+                        // Signal back to the phone that the desktop has processed the scan
+                        await updateDoc(scannerSessionDocRef, {
+                            status: 'readyForNextScan',
+                            scannedValue: null, // Clear scanned value after processing
+                            processedAt: new Date()
+                        }).catch(e => console.error("Error updating session status to readyForNextScan:", e));
 
-                    } else if (data.status === 'error' && data.requestedBy === currentPCSessionId) {
-                        scanSpinner.style.display = 'none';
-                        scanPrompt.textContent = 'حدث خطأ أثناء المسح على الهاتف. يرجى المحاولة مرة أخرى.';
-                        scanPrompt.style.color = 'var(--error-red)';
-                        
-                        // Allow user to try again or close. Keep the request in Firestore for debugging.
-                        // deleteDoc(scanRequestRef); // Optional: delete on error as well
-                        unsubscribe(); // Stop listening
+                        updateScanFeedbackUI(false, true, "تمت المعالجة. الهاتف جاهز لطلب مسح جديد.", false);
+
+                    } else if (data.status === 'closedByPhone') {
+                        updateScanFeedbackUI(false, true, "تم قطع الاتصال بالماسح على الهاتف.", false);
+                        scannerSessionUnsubscribe(); // Stop listening
+                        scannerSessionUnsubscribe = null;
+                    } else if (data.status === 'errorFromPhone') {
+                        updateScanFeedbackUI(false, true, `حدث خطأ على الهاتف: ${data.errorMessage || 'غير معروف'}`, false);
+                        // Consider resetting the session here or providing a "retry" option
+                    } else if (data.status === 'errorFromDesktop') {
+                         // Desktop detected an error, likely on initial setup
+                        updateScanFeedbackUI(false, true, "فشل الاتصال بالماسح. يرجى التأكد من الإعدادات.", false);
                     }
+
+                } else {
+                    // Document does not exist (e.g., deleted by phone or never created)
+                    updateScanFeedbackUI(false, true, "جلسة الماسح غير نشطة أو انتهت. يرجى التأكد من فتح صفحة الماسح على الهاتف.", false);
+                    scannerSessionUnsubscribe(); // Stop listening
+                    scannerSessionUnsubscribe = null;
                 }
+            }, (error) => {
+                console.error("Error listening to scanner session on desktop:", error);
+                updateScanFeedbackUI(false, true, "خطأ في الاتصال بجلسة الماسح. يرجى إعادة تحميل الصفحة.", false);
+                scannerSessionUnsubscribe();
+                scannerSessionUnsubscribe = null;
             });
         }
 
         // Event listeners for QR buttons
-        scanQrForSearchBtn.addEventListener('click', () => requestScan('search'));
-        scanQrForNewProductBtn.addEventListener('click', () => {
+        requestScanForSearchBtn.addEventListener('click', () => requestScan('search'));
+        requestScanForNewProductBtn.addEventListener('click', () => {
             // Close modal temporarily to show scan prompt, will reopen after scan
             productModal.style.display = 'none'; 
             requestScan('add_new');
         });
+
+        cancelScanRequestBtn.addEventListener('click', async () => {
+            // Cancel pending request by setting status back to phoneReady
+            try {
+                await updateDoc(scannerSessionDocRef, {
+                    status: 'phoneReady',
+                    scannedValue: null,
+                    lastRequestTime: new Date() // Update time to make sure phone listener reacts
+                });
+                updateScanFeedbackUI(false, true, "تم إلغاء طلب المسح. الهاتف جاهز.", false);
+            } catch (e) {
+                console.error("Error cancelling scan request:", e);
+                updateScanFeedbackUI(false, true, "فشل إلغاء الطلب.", false);
+            }
+        });
+
 
     </script>
 </body>
