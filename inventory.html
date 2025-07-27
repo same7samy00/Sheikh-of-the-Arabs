@@ -46,10 +46,10 @@
 
         /* Sidebar Styling */
         .sidebar {
-            width: 260px;
+            width: 260px; /* Consistent size */
             background-color: var(--surface-white);
             box-shadow: var(--shadow-elevation-1);
-            padding: 25px 15px;
+            padding: 25px 15px; /* Consistent padding */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -59,13 +59,13 @@
 
         .logo {
             font-family: 'Cairo', sans-serif;
-            font-size: 2.2em;
+            font-size: 2.2em; /* Consistent size */
             font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 40px;
+            margin-bottom: 40px; /* Consistent margin */
             text-align: center;
             line-height: 1.2;
-            padding-bottom: 8px;
+            padding-bottom: 8px; /* Consistent padding */
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             width: 100%;
         }
@@ -81,24 +81,24 @@
         }
 
         .nav-item {
-            margin-bottom: 8px;
+            margin-bottom: 8px; /* Consistent margin */
         }
 
         .nav-link {
             display: flex;
             align-items: center;
-            padding: 12px 18px;
+            padding: 12px 18px; /* Consistent padding */
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 1em;
+            font-size: 1em; /* Consistent font size */
             font-weight: 600;
             border-radius: var(--border-radius-soft);
             transition: all 0.3s ease;
         }
 
         .nav-link i {
-            font-size: 1.3em;
-            margin-left: 12px;
+            font-size: 1.3em; /* Consistent size */
+            margin-left: 12px; /* Consistent margin */
             color: var(--text-secondary);
             transition: color 0.3s ease;
         }
@@ -131,7 +131,11 @@
             background-color: var(--error-red);
             color: var(--surface-white);
             justify-content: center;
-            margin-top: 15px;
+            margin-top: 15px; /* Consistent margin */
+        }
+
+        .nav-link.logout-btn i {
+            color: var(--surface-white);
         }
 
         .nav-link.logout-btn:hover {
@@ -142,7 +146,7 @@
         /* Main Content Styling */
         .main-content {
             flex-grow: 1;
-            padding: 25px 30px;
+            padding: 25px 30px; /* Consistent padding */
             overflow-y: auto;
         }
 
@@ -150,28 +154,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 25px; /* Consistent margin */
         }
 
         .page-header h1 {
-            font-size: 2.2em;
+            font-size: 2.2em; /* Consistent size */
             font-weight: 700;
             color: var(--text-dark);
         }
 
-        /* Action Buttons Styling (Updated for general purpose) */
+        /* Action Buttons Styling */
         .action-buttons {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 12px; /* Consistent gap */
         }
 
         .action-buttons .btn-primary,
         .action-buttons .btn-secondary { /* Apply to both button types */
-            padding: 10px 20px;
+            padding: 10px 20px; /* Consistent padding */
             border: none;
             border-radius: var(--border-radius-soft);
-            font-size: 0.95em;
+            font-size: 0.95em; /* Consistent font size */
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -180,7 +184,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 8px; /* Consistent gap */
             text-decoration: none; /* For link buttons */
             color: var(--surface-white); /* Default color for primary */
         }
@@ -207,7 +211,7 @@
              text-decoration: none;
         }
 
-        /* Search and Filter Section */
+        /* Search and Filter Section (Consistent sizing) */
         .filter-section {
             background-color: var(--surface-white);
             padding: 20px;
@@ -270,7 +274,7 @@
             display: none;
         }
         
-        /* Product Table */
+        /* Product Table (Consistent sizing) */
         .product-table-container {
             background-color: var(--surface-white);
             padding: 15px;
@@ -287,8 +291,8 @@
 
         .product-table th, .product-table td {
             padding: 12px 10px;
-            border-bottom: 1px solid #E0E6EB;
             font-size: 0.9em;
+            border-bottom: 1px solid #E0E6EB;
             color: var(--text-dark);
         }
 
@@ -329,16 +333,16 @@
         }
 
 
-        /* Notification System */
+        /* Notification System (Consistent sizing and positioning) */
         #notification-container {
             position: fixed;
             bottom: 20px;
-            left: 20px; /* For RTL, this is bottom-right for the user */
+            left: 20px; /* Bottom-left in LTR, so bottom-right for RTL user */
             z-index: 2000;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            align-items: flex-start; /* Align notifications to the left */
+            align-items: flex-start; /* Aligns to left */
         }
 
         .notification {
@@ -350,7 +354,7 @@
             min-width: 200px;
             max-width: 300px;
             opacity: 0;
-            transform: translateX(-100%); /* Start off-screen to the left */
+            transform: translateX(-100%); /* Slides in from left */
             animation: slideIn 0.5s forwards;
             position: relative;
             display: flex;
@@ -358,7 +362,7 @@
             gap: 8px;
             font-weight: 600;
             font-size: 0.9em;
-            white-space: nowrap; /* Keep text on one line if possible */
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -914,7 +918,6 @@
                             fetchProducts(); // Trigger live search in inventory
                         } else if (data.purpose === 'add_new') {
                             // If purpose is add_new, the user is likely on add_product.html.
-                            // We don't interact with add_product.html directly from here.
                             // The add_product.html will listen for this scan too.
                             showNotification("تم مسح باركود لمنتج جديد. يرجى الذهاب لصفحة إضافة المنتج.", "info");
                         }
