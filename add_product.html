@@ -4,363 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إضافة/تعديل منتج - شيخ العرب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
-    <style>
-        :root {
-            /* Color Palette (Matching inventory.html) */
-            --bg-light: #F0F4F8;
-            --surface-white: #FFFFFF;
-            --text-dark: #2C3E50;
-            --text-secondary: #607D8B;
-            --accent-blue: #03A9F4;
-            --error-red: #FF5252;
-            --success-green: #4CAF50;
-            --info-yellow: #FFC107;
-
-            --border-radius-soft: 12px;
-            --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-elevation-2: 0 8px 20px rgba(0, 0, 0, 0.12);
-            --shadow-input-focus: 0 0 0 3px rgba(3, 169, 244, 0.3);
-
-            --base-font-size: 0.95em; /* Inherit from inventory.html */
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            direction: rtl;
-            text-align: right;
-            display: flex;
-            min-height: 100vh;
-            font-size: var(--base-font-size); /* Apply base font size */
-            align-items: center; /* Center form content vertically */
-            justify-content: center; /* Center form content horizontally */
-        }
-
-        /* Container for the form, taking full screen but with padding */
-        .form-container-wrapper {
-            background-color: var(--surface-white);
-            padding: 25px; /* Consistent padding */
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-2);
-            width: 95%; /* Take most of the screen width */
-            max-width: 900px; /* Limit max width on very large screens */
-            height: 95vh; /* Take most of the screen height */
-            max-height: 95vh; /* Limit max height */
-            overflow-y: auto; /* Allow scrolling if content is long */
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px; /* Consistent margin */
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 12px; /* Consistent padding */
-            flex-shrink: 0;
-        }
-
-        .header h2 {
-            margin: 0;
-            font-size: 1.6em; /* Consistent font size */
-            color: var(--text-dark);
-            font-weight: 700;
-        }
-
-        .close-btn {
-            color: var(--text-secondary);
-            font-size: 1.8em; /* Consistent font size */
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        .close-btn:hover {
-            color: var(--error-red);
-        }
-
-        .form-body {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding-bottom: 15px; /* Consistent padding */
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Consistent column layout */
-            gap: 20px; /* Consistent gap */
-        }
-
-        .input-group {
-            margin-bottom: 0;
-        }
-
-        .input-group label {
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 5px; /* Consistent margin */
-            font-size: 0.95em; /* Consistent font size */
-            display: block;
-        }
-
-        .input-group input,
-        .input-group select {
-            width: 100%;
-            padding: 10px 15px; /* Consistent padding */
-            background-color: var(--bg-light);
-            border: 1px solid #E0E6EB;
-            border-radius: var(--border-radius-soft);
-            color: var(--text-dark);
-            font-size: 0.95em; /* Consistent font size */
-            box-sizing: border-box;
-            outline: none;
-            transition: all 0.3s ease;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23607D8B%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: left 0.8rem center;
-            background-size: 1.2em;
-        }
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input:focus, select:focus {
-            border-color: var(--accent-blue);
-            box-shadow: var(--shadow-input-focus);
-        }
-
-        /* Barcode input with side icon button (Consistent styling) */
-        .form-body .input-group.barcode-input-group {
-            grid-column: 1 / -1;
-            display: flex;
-            align-items: flex-end;
-            gap: 10px;
-            position: relative;
-        }
-        .form-body .input-group.barcode-input-group input {
-            flex-grow: 1;
-        }
-        .form-body .input-group.barcode-input-group button {
-            flex-shrink: 0;
-            width: auto;
-            padding: 8px 12px;
-            font-size: 1.2em;
-            margin-top: 0;
-            border-radius: var(--border-radius-soft);
-            background-color: var(--accent-blue); /* Primary action color for QR button */
-            color: var(--surface-white);
-            border: none;
-            box-shadow: var(--shadow-elevation-1);
-            transition: all 0.3s ease;
-        }
-        .form-body .input-group.barcode-input-group button:hover {
-            background-color: #0288D1;
-            box-shadow: var(--shadow-elevation-2);
-            transform: translateY(-2px);
-        }
-        .form-body .input-group.barcode-input-group button span {
-            display: none;
-        }
-        .form-body .input-group.barcode-input-group .error-message {
-            position: absolute;
-            bottom: -20px;
-            left: 0;
-            width: 100%;
-            text-align: right;
-        }
-
-        .form-footer {
-            margin-top: 20px;
-            text-align: left;
-            flex-shrink: 0;
-        }
-        .form-footer button,
-        .form-footer .btn-cancel-link { /* Consistent button styling for save/cancel */
-            padding: 10px 20px;
-            border: none;
-            border-radius: var(--border-radius-soft);
-            font-size: 0.95em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-elevation-1);
-            font-family: 'Cairo', sans-serif;
-            margin-left: 12px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .form-footer .btn-save {
-            background-color: var(--accent-blue);
-            color: var(--surface-white);
-        }
-        .form-footer .btn-save:hover {
-            background-color: #0288D1;
-            box-shadow: var(--shadow-elevation-2);
-        }
-        .form-footer .btn-cancel-link {
-            background-color: var(--text-secondary);
-            color: var(--surface-white);
-        }
-        .form-footer .btn-cancel-link:hover {
-            background-color: #4A6572;
-        }
-
-        .error-message {
-            color: var(--error-red);
-            font-size: 0.8em;
-            margin-top: 4px;
-            text-align: right;
-            display: block;
-            font-weight: 400;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .error-message.show {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* Notification System (Consistent with inventory.html) */
-        #notification-container {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: flex-start;
-        }
-
-        .notification {
-            background-color: var(--surface-white);
-            color: var(--text-dark);
-            padding: 12px 18px;
-            border-radius: var(--border-radius-soft);
-            box-shadow: var(--shadow-elevation-1);
-            min-width: 200px;
-            max-width: 300px;
-            opacity: 0;
-            transform: translateX(-100%);
-            animation: slideIn 0.5s forwards;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 0.9em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .notification.success { border-left: 5px solid var(--success-green); }
-        .notification.error { border-left: 5px solid var(--error-red); }
-        .notification.info { border-left: 5px solid var(--accent-blue); }
-        .notification.warning { border-left: 5px solid var(--info-yellow); }
-
-        .notification i {
-            font-size: 1.3em;
-            color: var(--text-secondary);
-            flex-shrink: 0;
-        }
-        .notification span {
-            flex-grow: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .notification .confirm-buttons { /* Not used in add_product, but here for consistency */
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: flex-end;
-            width: 100%;
-            flex-shrink: 0;
-        }
-        .notification .confirm-buttons button {
-            background-color: var(--accent-blue);
-            color: var(--surface-white);
-            border: none;
-            padding: 8px 15px;
-            border-radius: var(--border-radius-soft);
-            cursor: pointer;
-            font-size: 0.85em;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-        }
-        .notification .confirm-buttons button.cancel { background-color: var(--text-secondary); }
-        .notification .confirm-buttons button:hover { opacity: 0.9; }
-
-        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-100%); } }
-
-        /* Responsive adjustments (Consistent with inventory.html) */
-        @media (max-width: 768px) {
-            body {
-                align-items: flex-start;
-                justify-content: flex-start;
-                padding: 10px;
-            }
-            .form-container-wrapper {
-                width: 98%;
-                height: 98vh;
-                padding: 15px;
-            }
-            .form-body {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            .form-body .input-group.barcode-input-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .form-body .input-group.barcode-input-group button {
-                width: 100%;
-                padding: 10px 15px;
-                font-size: 1em;
-            }
-            .form-body .input-group.barcode-input-group button span {
-                display: inline;
-            }
-            #notification-container {
-                bottom: 10px;
-                left: 10px;
-                right: 10px;
-                align-items: center;
-            }
-            .notification {
-                min-width: unset;
-                max-width: 90%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="form-container-wrapper">
-        <div class="header">
+<body class="form-page-body">
+    <div class="form-container">
+        <div class="form-header">
             <h2 id="pageTitle">إضافة منتج جديد</h2>
-            <a href="inventory.html" class="close-btn">&times;</a>
+            <a href="inventory.html" class="close-btn" title="إغلاق">&times;</a>
         </div>
-        <form id="productForm" class="form-body">
+        <form id="productForm" class="form-body" novalidate>
             <div class="input-group">
                 <label for="productName">اسم المنتج</label>
-                <input type="text" id="productName" required autocomplete="off">
+                <input type="text" id="productName" required>
                 <span class="error-message" id="productNameError"></span>
             </div>
             <div class="input-group">
                 <label for="productCategory">الفئة</label>
-                <select id="productCategory">
-                    <option value="">اختر فئة</option>
+                <select id="productCategory" required>
+                    <option value="" disabled selected>اختر فئة...</option>
                     <option value="بهارات">بهارات</option>
                     <option value="حبوب">حبوب</option>
                     <option value="أعشاب">أعشاب</option>
@@ -376,380 +39,163 @@
                 <span class="error-message" id="productCategoryError"></span>
             </div>
             <div class="input-group">
-                <label for="productQuantity">الكمية المتاحة</label>
-                <input type="number" id="productQuantity" min="0" step="0.01" required autocomplete="off">
+                <label for="productQuantity">الكمية</label>
+                <input type="number" id="productQuantity" min="0" step="any" required>
                 <span class="error-message" id="productQuantityError"></span>
             </div>
             <div class="input-group">
                 <label for="productUnit">وحدة القياس</label>
-                <select id="productUnit">
-                    <option value="جرام">جرام (g)</option>
-                    <option value="كيلو جرام">كيلو جرام (kg)</option>
+                <select id="productUnit" required>
+                    <option value="جرام">جرام</option>
+                    <option value="كيلو جرام">كيلو جرام</option>
                     <option value="قطعة">قطعة</option>
-                    <option value="لتر">لتر (L)</option>
-                    <option value="مليلتر">مليلتر (ml)</option>
+                    <option value="لتر">لتر</option>
+                    <option value="مليلتر">مليلتر</option>
                     <option value="عبوة">عبوة</option>
-                    <option value="كوب">كوب</option>
-                    <option value="كيس">كيس</option>
-                    <option value="علبة">علبة</option>
-                    <option value="حبة">حبة</option>
                 </select>
-                <span class="error-message" id="productUnitError"></span>
+                 <span class="error-message" id="productUnitError"></span>
             </div>
             <div class="input-group">
                 <label for="productPricePerUnit">سعر الوحدة (جنيه)</label>
-                <input type="number" id="productPricePerUnit" min="0" step="0.01" required autocomplete="off">
+                <input type="number" id="productPricePerUnit" min="0" step="any" required>
                 <span class="error-message" id="productPricePerUnitError"></span>
             </div>
-            <div class="input-group barcode-input-group">
-                <label for="productBarcode">كود المنتج / QR (اختياري)</label>
-                <input type="text" id="productBarcode" placeholder="امسح أو أدخل الكود" autocomplete="off">
-                <button type="button" id="requestScanForNewProduct">
-                    <i class="ri-qr-code-line"></i>
-                    <span>مسح QR</span>
-                </button>
-                <span class="error-message" id="productBarcodeError"></span>
+            <div class="input-group barcode-group">
+                <label for="productBarcode">كود المنتج (Barcode/QR)</label>
+                <div class="input-with-button">
+                    <input type="text" id="productBarcode" placeholder="أدخل الكود أو امسحه">
+                    <button type="button" class="btn btn-icon" id="requestScanForNewProduct" title="مسح QR"><i class="ri-qr-code-line"></i></button>
+                </div>
+                 <span class="error-message" id="productBarcodeError"></span>
             </div>
         </form>
         <div class="form-footer">
-            <button type="button" class="btn-save" id="saveProductBtn">حفظ المنتج</button>
-            <a href="inventory.html" class="btn-cancel-link">إلغاء</a>
+            <button type="button" class="btn btn-primary" id="saveProductBtn">حفظ المنتج</button>
+            <a href="inventory.html" class="btn btn-secondary">إلغاء</a>
         </div>
     </div>
 
     <div id="notification-container"></div>
-
+    <script src="shared.js" type="module"></script>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, updateDoc, getDoc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { db, showNotification, listenToScannerSession, requestScan } from './shared.js';
 
-        // ************* Firebase Configuration (MUST MATCH ALL PAGES) *************
-        const firebaseConfig = {
-            apiKey: "AIzaSyC5ls-rPdJ65x5BoMGwAOpdcPtD585C2ys",
-            authDomain: "pharmacy-inventory-bf04a.firebaseapp.com",
-            projectId: "pharmacy-inventory-bf04a",
-            storageBucket: "pharmacy-inventory-bf04a.firebasestorage.app",
-            messagingSenderId: "937788650384",
-            appId: "1:937788650384:web:6451225d00e648f3a0b915",
-            measurementId: "G-ZGC9EQ55SL"
-        };
-        // *************************************************************************
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const productsCol = collection(db, "products");
-        const scannerSessionsCol = collection(db, "scannerSessions");
-
-        // ************* SHARED SCANNER SESSION ID (MUST MATCH QR SCANNER PAGE AND INVENTORY PAGE) *************
-        const SHARED_SCANNER_SESSION_ID = "YOUR_STORE_UNIQUE_SCANNER_ID_12345";
-        const scannerSessionDocRef = doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID);
-        // ****************************************************************************************************
-
-        let editingProductId = null;
-        let scannerSessionUnsubscribe = null;
-
-        // DOM Elements
         const pageTitle = document.getElementById('pageTitle');
-        const productForm = document.getElementById('productForm');
-        const saveProductBtn = document.getElementById('saveProductBtn');
-        const requestScanForNewProductBtn = document.getElementById('requestScanForNewProduct');
+        const form = document.getElementById('productForm');
+        const saveBtn = document.getElementById('saveProductBtn');
+        const urlParams = new URLSearchParams(window.location.search);
+        const editingProductId = urlParams.get('id');
 
-        // Form fields
-        const productNameInput = document.getElementById('productName');
-        const productCategorySelect = document.getElementById('productCategory');
-        const productQuantityInput = document.getElementById('productQuantity');
-        const productUnitSelect = document.getElementById('productUnit');
-        const productPricePerUnitInput = document.getElementById('productPricePerUnit');
-        const productBarcodeInput = document.getElementById('productBarcode');
+        const fields = {
+            name: { input: document.getElementById('productName'), error: document.getElementById('productNameError'), msg: 'اسم المنتج مطلوب.' },
+            category: { input: document.getElementById('productCategory'), error: document.getElementById('productCategoryError'), msg: 'الفئة مطلوبة.' },
+            quantity: { input: document.getElementById('productQuantity'), error: document.getElementById('productQuantityError'), msg: 'أدخل كمية صحيحة.' },
+            pricePerUnit: { input: document.getElementById('productPricePerUnit'), error: document.getElementById('productPricePerUnitError'), msg: 'أدخل سعرًا صحيحًا.' },
+            unit: { input: document.getElementById('productUnit'), error: document.getElementById('productUnitError'), msg: 'وحدة القياس مطلوبة.' },
+            barcode: { input: document.getElementById('productBarcode'), error: document.getElementById('productBarcodeError'), msg: '' }
+        };
 
-        // Error message elements
-        const productNameError = document.getElementById('productNameError');
-        const productCategoryError = document.getElementById('productCategoryError');
-        const productQuantityError = document.getElementById('productQuantityError');
-        const productUnitError = document.getElementById('productUnitError');
-        const productPricePerUnitError = document.getElementById('productPricePerUnitError');
-        const productBarcodeError = document.getElementById('productBarcodeError');
-
-        // Notification System
-        const notificationContainer = document.getElementById('notification-container');
-        let lastNotificationMessage = '';
-        let notificationTimeoutId = null;
-
-        function showNotification(message, type = 'info', duration = 5000) {
-            if (message === lastNotificationMessage && notificationContainer.firstChild) {
-                return;
-            }
-            if (notificationContainer.firstChild) {
-                notificationContainer.innerHTML = '';
-            }
-            if (notificationTimeoutId) {
-                clearTimeout(notificationTimeoutId);
-            }
-
-            const notificationDiv = document.createElement('div');
-            notificationDiv.classList.add('notification', type);
-            let iconClass = '';
-            if (type === 'success') iconClass = 'ri-check-line';
-            else if (type === 'error') iconClass = 'ri-error-warning-line';
-            else if (type === 'warning') iconClass = 'ri-alert-line';
-            else iconClass = 'ri-information-line';
-
-            notificationDiv.innerHTML = `<i class="${iconClass}"></i><span>${message}</span>`;
-            notificationContainer.appendChild(notificationDiv);
-
-            void notificationDiv.offsetWidth;
-            notificationDiv.style.opacity = '1';
-            notificationDiv.style.transform = 'translateX(0)';
-
-            lastNotificationMessage = message;
-            notificationTimeoutId = setTimeout(() => {
-                notificationDiv.style.opacity = '0';
-                notificationDiv.style.transform = 'translateX(-100%)';
-                notificationTimeoutId = null;
-                notificationDiv.addEventListener('transitionend', () => {
-                    if (notificationDiv.parentNode) {
-                        notificationDiv.parentNode.removeChild(notificationDiv);
-                    }
-                }, { once: true });
-                lastNotificationMessage = '';
-            }, duration);
-        }
-
-        function showError(element, message) {
-            element.textContent = message;
-            element.classList.add('show');
-        }
-
-        function clearError(element) {
-            element.textContent = '';
-            element.classList.remove('show');
-        }
-
-        function clearAllErrors() {
-            clearError(productNameError);
-            clearError(productCategoryError);
-            clearError(productQuantityError);
-            clearError(productUnitError);
-            clearError(productPricePerUnitError);
-            clearError(productBarcodeError);
-        }
-
-        // --- Product Form Logic ---
-        saveProductBtn.addEventListener('click', async () => {
-            clearAllErrors();
-
-            const name = productNameInput.value.trim();
-            const category = productCategorySelect.value;
-            const quantity = parseFloat(productQuantityInput.value);
-            const unit = productUnitSelect.value;
-            const pricePerUnit = parseFloat(productPricePerUnitInput.value);
-            const barcode = productBarcodeInput.value.trim();
-
+        function validateForm() {
             let isValid = true;
+            Object.values(fields).forEach(f => f.error.textContent = '');
+            
+            if (!fields.name.input.value.trim()) {
+                fields.name.error.textContent = fields.name.msg;
+                isValid = false;
+            }
+            if (!fields.category.input.value) {
+                fields.category.error.textContent = fields.category.msg;
+                isValid = false;
+            }
+            if (fields.quantity.input.value === '' || isNaN(parseFloat(fields.quantity.input.value)) || parseFloat(fields.quantity.input.value) < 0) {
+                 fields.quantity.error.textContent = fields.quantity.msg;
+                isValid = false;
+            }
+            if (fields.pricePerUnit.input.value === '' || isNaN(parseFloat(fields.pricePerUnit.input.value)) || parseFloat(fields.pricePerUnit.input.value) < 0) {
+                 fields.pricePerUnit.error.textContent = fields.pricePerUnit.msg;
+                isValid = false;
+            }
+            return isValid;
+        }
 
-            if (!name) { showError(productNameError, 'الرجاء إدخال اسم المنتج.'); isValid = false; }
-            if (!category) { showError(productCategoryError, 'الرجاء اختيار فئة.'); isValid = false; }
-            if (isNaN(quantity) || quantity < 0) { showError(productQuantityError, 'الرجاء إدخال كمية صحيحة.'); isValid = false; }
-            if (!unit) { showError(productUnitError, 'الرجاء اختيار وحدة القياس.'); isValid = false; }
-            if (isNaN(pricePerUnit) || pricePerUnit < 0) { showError(productPricePerUnitError, 'الرجاء إدخال سعر صحيح لكل وحدة.'); isValid = false; }
-
-            if (!isValid) {
-                showNotification("الرجاء إكمال البيانات المطلوبة بشكل صحيح.", "warning");
+        async function saveProduct() {
+            if (!validateForm()) {
+                showNotification("يرجى ملء الحقول المطلوبة.", "warning");
                 return;
             }
 
+            const quantity = parseFloat(fields.quantity.input.value);
             let status = 'متوفر';
-            if (unit === 'جرام' && quantity <= 100 && quantity > 0) {
-                status = 'قليل المخزون';
-            } else if (quantity === 0) {
-                status = 'نفد المخزون';
-            } else if (unit !== 'جرام' && quantity <= 5 && quantity > 0) {
-                 status = 'قليل المخزون';
-            }
+            if (quantity === 0) status = 'نفد المخزون';
+            else if (quantity <= 10) status = 'قليل المخزون';
 
             const productData = {
-                name,
-                category,
-                quantity,
-                unit,
-                pricePerUnit,
-                barcode: barcode || null,
+                name: fields.name.input.value.trim(),
+                category: fields.category.input.value,
+                quantity: quantity,
+                unit: fields.unit.input.value,
+                pricePerUnit: parseFloat(fields.pricePerUnit.input.value),
+                barcode: fields.barcode.input.value.trim() || null,
                 status: status,
                 updatedAt: new Date()
             };
-
-            if (!editingProductId) {
-                productData.createdAt = new Date();
-            }
 
             try {
                 if (editingProductId) {
                     const productRef = doc(db, "products", editingProductId);
                     await updateDoc(productRef, productData);
-                    showNotification('تم تحديث المنتج بنجاح!', "success");
+                    showNotification('تم تحديث المنتج بنجاح!', 'success');
                 } else {
-                    await addDoc(productsCol, productData);
-                    showNotification('تم إضافة المنتج بنجاح!', "success");
+                    productData.createdAt = new Date();
+                    await addDoc(collection(db, "products"), productData);
+                    showNotification('تم إضافة المنتج بنجاح!', 'success');
                 }
-                window.location.href = 'inventory.html';
+                setTimeout(() => window.location.href = 'inventory.html', 1500);
             } catch (e) {
                 console.error("Error saving product: ", e);
-                showNotification('حدث خطأ أثناء حفظ المنتج. يرجى المحاولة مرة أخرى.', "error");
+                showNotification('فشل حفظ المنتج.', 'error');
             }
-        });
-
-        // Load Product for Editing
-        async function loadProductForEdit(productId) {
+        }
+        
+        async function loadProductForEdit() {
+            if (!editingProductId) return;
+            pageTitle.textContent = 'تعديل المنتج';
+            saveBtn.textContent = 'حفظ التعديلات';
             try {
-                const docRef = doc(db, "products", productId);
+                const docRef = doc(db, "products", editingProductId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const product = docSnap.data();
-                    pageTitle.textContent = 'تعديل المنتج';
-                    productNameInput.value = product.name;
-                    productCategorySelect.value = product.category;
-                    productQuantityInput.value = product.quantity;
-                    productUnitSelect.value = product.unit;
-                    productPricePerUnitInput.value = product.pricePerUnit;
-                    productBarcodeInput.value = product.barcode || '';
-                    editingProductId = productId;
+                    fields.name.input.value = product.name;
+                    fields.category.input.value = product.category;
+                    fields.quantity.input.value = product.quantity;
+                    fields.unit.input.value = product.unit;
+                    fields.pricePerUnit.input.value = product.pricePerUnit;
+                    fields.barcode.input.value = product.barcode || '';
                 } else {
                     showNotification("المنتج غير موجود.", "error");
                     window.location.href = 'inventory.html';
                 }
             } catch (e) {
-                console.error("Error loading product for edit: ", e);
-                showNotification("حدث خطأ أثناء جلب بيانات المنتج للتعديل.", "error");
-                window.location.href = 'inventory.html';
+                showNotification("خطأ في تحميل بيانات المنتج.", "error");
             }
         }
 
-        // --- Initialization and Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
-            if (productId) {
-                loadProductForEdit(productId);
-            }
-
-            listenToScannerSession();
+        saveBtn.addEventListener('click', saveProduct);
+        document.getElementById('requestScanForNewProduct').addEventListener('click', () => {
+            requestScan('add_new');
         });
 
-        // --- QR Scanner Integration (using Firestore for communication) ---
-        async function requestScan(purpose) {
-            showNotification(`جاري طلب المسح لوضع ${purpose === 'search' ? 'البحث عن منتج' : 'إضافة باركود منتج جديد'} من الهاتف...`, "info");
-
-            try {
-                const docSnap = await getDoc(scannerSessionDocRef);
-                if (!docSnap.exists() || docSnap.data().status !== 'phoneReady') {
-                    if (!docSnap.exists()) {
-                         await setDoc(scannerSessionDocRef, {
-                            status: 'desktopConnecting',
-                            requestedBy: 'desktop',
-                            createdAt: new Date(),
-                            purpose: purpose,
-                            scannedValue: null,
-                            lastRequestTime: new Date()
-                        });
-                        showNotification("جاري إعداد الاتصال بماسح الهاتف. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "info");
-                    } else {
-                        showNotification("ماسح الهاتف غير جاهز للمسح. يرجى التأكد من فتح صفحة الماسح على الهاتف.", "warning");
-                    }
-                    await updateDoc(scannerSessionDocRef, {
-                        status: 'scanRequested',
-                        purpose: purpose,
-                        scannedValue: null,
-                        lastRequestTime: new Date()
-                    });
-                } else {
-                    await updateDoc(scannerSessionDocRef, {
-                        status: 'scanRequested',
-                        purpose: purpose,
-                        scannedValue: null,
-                        lastRequestTime: new Date()
-                    });
-                }
-                console.log(`Scan request sent for purpose: ${purpose}`);
-
-            } catch (error) {
-                console.error("Error requesting scan:", error);
-                showNotification("فشل طلب المسح. تأكد من اتصال Firebase.", "error");
-                await updateDoc(scannerSessionDocRef, {
-                    status: 'errorFromDesktop',
-                    errorMessage: error.message,
-                    errorTime: new Date()
-                }).catch(e => console.error("Error signaling errorFromDesktop status:", e));
-            }
-        }
-
-        // Listen to the scanner session document for updates from the phone
-        function listenToScannerSession() {
-            if (scannerSessionUnsubscribe) {
-                scannerSessionUnsubscribe();
-            }
-
-            scannerSessionUnsubscribe = onSnapshot(scannerSessionDocRef, async (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    console.log("Scanner session data (add_product):", data);
-
-                    if (data.status === 'phoneReady') {
-                        showNotification("ماسح QR بالهاتف متصل وجاهز.", "success");
-                    } else if (data.status === 'scanning') {
-                        showNotification(`الهاتف يقوم بالمسح لوضع ${data.purpose === 'search' ? 'البحث' : 'إضافة المنتج'}...`, "info");
-                    } else if (data.status === 'scanned' && data.scannedValue) {
-                        showNotification(`تم استلام الباركود: ${data.scannedValue}. جاري المعالجة...`, "info");
-                        
-                        if (data.purpose === 'add_new') { // Ensure this page handles only its purpose
-                            productBarcodeInput.value = data.scannedValue;
-                            productBarcodeInput.focus();
-                        } else {
-                            showNotification("تم مسح باركود ليس لإضافة منتج. يرجى العودة للصفحة المناسبة.", "info");
-                        }
-                        
-                        await updateDoc(scannerSessionDocRef, {
-                            status: 'readyForNextScan',
-                            scannedValue: null,
-                            processedAt: new Date()
-                        }).catch(e => console.error("Error updating session status to readyForNextScan:", e));
-
-                        showNotification("تمت المعالجة. الهاتف جاهز لطلب مسح جديد.", "success");
-
-                    } else if (data.status === 'closedByPhone') {
-                        showNotification("تم قطع الاتصال بماسح QR بالهاتف.", "info");
-                        scannerSessionUnsubscribe();
-                        scannerSessionUnsubscribe = null;
-                    } else if (data.status === 'errorFromPhone') {
-                        showNotification(`خطأ في ماسح QR بالهاتف: ${data.errorMessage || 'غير معروف'}`, "error");
-                    } else if (data.status === 'errorFromDesktop') {
-                        showNotification("فشل الاتصال بماسح QR. يرجى التحقق من الإعدادات.", "error");
-                    }
-
-                } else {
-                    showNotification("ماسح QR بالهاتف غير نشط أو انتهت الجلسة. يرجى فتحه.", "warning");
-                    scannerSessionUnsubscribe();
-                    scannerSessionUnsubscribe = null;
-                }
-            }, (error) => {
-                console.error("Error listening to scanner session:", error);
-                showNotification("خطأ في الاتصال بماسح QR. يرجى إعادة تحميل الصفحة.", "error");
-                scannerSessionUnsubscribe();
-                scannerSessionUnsubscribe = null;
-            });
-        }
-
-        // Event listener for QR button in add_product form
-        requestScanForNewProductBtn.addEventListener('click', () => requestScan('add_new'));
-
-        // Basic authentication check
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = 'index.html';
+        listenToScannerSession((scannedValue, purpose) => {
+            if (purpose === 'add_new' && scannedValue) {
+                fields.barcode.input.value = scannedValue;
+                showNotification(`تم استلام الباركود: ${scannedValue}`, 'success');
             }
         });
+
+        // Initial Load
+        loadProductForEdit();
     </script>
 </body>
 </html>
