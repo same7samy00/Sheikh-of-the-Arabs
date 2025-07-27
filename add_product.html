@@ -37,20 +37,21 @@
             display: flex;
             min-height: 100vh;
             font-size: var(--base-font-size);
-            align-items: center; /* Center modal-like content */
+            align-items: center;
             justify-content: center;
         }
 
-        .container {
-            background-color: var(--surface-white);
+        /* Container for the form, taking full screen but with padding */
+        .form-container-wrapper {
+            background-color: var(--surface-white); /* White background for the form itself */
             padding: 25px;
             border-radius: var(--border-radius-soft);
             box-shadow: var(--shadow-elevation-2);
-            width: 95%; /* Wider on all screens */
-            max-width: 900px; /* Max width on large screens */
-            height: 95vh; /* Taller on all screens */
-            max-height: 95vh;
-            overflow-y: auto;
+            width: 95%; /* Take most of the screen width */
+            max-width: 900px; /* Limit max width on very large screens */
+            height: 95vh; /* Take most of the screen height */
+            max-height: 95vh; /* Limit max height */
+            overflow-y: auto; /* Allow scrolling if content is long */
             display: flex;
             flex-direction: column;
         }
@@ -62,7 +63,7 @@
             margin-bottom: 20px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             padding-bottom: 12px;
-            flex-shrink: 0;
+            flex-shrink: 0; /* Prevent header from shrinking */
         }
 
         .header h2 {
@@ -84,12 +85,12 @@
         }
 
         .form-body {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding-bottom: 15px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            flex-grow: 1; /* Allow form content to take available space */
+            overflow-y: auto; /* Allow scrolling within the form body */
+            padding-bottom: 15px; /* Space before footer */
+            display: grid; /* Use grid for layout */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive columns */
+            gap: 20px; /* Spacing between grid items */
         }
 
         .input-group {
@@ -110,11 +111,11 @@
             padding: 10px 15px;
             border: 1px solid #E0E6EB;
             border-radius: var(--border-radius-soft);
-            font-size: 0.95em;
             color: var(--text-dark);
-            background-color: var(--bg-light);
+            font-size: 0.95em;
             box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
@@ -133,38 +134,39 @@
             box-shadow: var(--shadow-input-focus);
         }
 
-        /* Barcode input with side icon button */
-        .form-body .input-group:last-of-type {
+        /* Barcode input with side icon button (modified for standard button style) */
+        .form-body .input-group.barcode-input-group { /* Specific class for barcode input group */
             grid-column: 1 / -1;
             display: flex;
-            align-items: flex-end;
+            align-items: flex-end; /* Align input and button to bottom */
             gap: 10px;
             position: relative;
         }
-        .form-body .input-group:last-of-type input {
+        .form-body .input-group.barcode-input-group input {
             flex-grow: 1;
         }
-        .form-body .input-group:last-of-type button { /* Styling the button beside barcode */
+        .form-body .input-group.barcode-input-group button {
             flex-shrink: 0;
             width: auto;
-            padding: 8px 12px;
-            font-size: 1.2em;
+            padding: 8px 12px; /* Smaller padding for icon button */
+            font-size: 1.2em; /* Icon size */
             margin-top: 0;
             border-radius: var(--border-radius-soft);
-            background-color: var(--surface-white); /* Secondary button style */
-            color: var(--text-dark);
-            border: 1px solid #E0E6EB;
+            background-color: var(--accent-blue); /* Primary action color for QR button */
+            color: var(--surface-white);
+            border: none;
             box-shadow: var(--shadow-elevation-1);
+            transition: all 0.3s ease;
         }
-        .form-body .input-group:last-of-type button:hover {
-            background-color: var(--bg-light);
+        .form-body .input-group.barcode-input-group button:hover {
+            background-color: #0288D1;
             box-shadow: var(--shadow-elevation-2);
             transform: translateY(-2px);
         }
-        .form-body .input-group:last-of-type button span {
+        .form-body .input-group.barcode-input-group button span {
             display: none; /* Hide text, only show icon on desktop */
         }
-        .form-body .input-group:last-of-type .error-message {
+        .form-body .input-group.barcode-input-group .error-message {
             position: absolute;
             bottom: -20px;
             left: 0;
@@ -177,7 +179,8 @@
             text-align: left;
             flex-shrink: 0;
         }
-        .form-footer button {
+        .form-footer button,
+        .form-footer .btn-cancel-link { /* Apply general button style to link */
             padding: 10px 20px;
             border: none;
             border-radius: var(--border-radius-soft);
@@ -188,6 +191,10 @@
             box-shadow: var(--shadow-elevation-1);
             font-family: 'Cairo', sans-serif;
             margin-left: 12px;
+            text-decoration: none; /* For link */
+            display: inline-flex; /* For link */
+            align-items: center; /* For link */
+            justify-content: center; /* For link */
         }
         .form-footer .btn-save {
             background-color: var(--accent-blue);
@@ -197,11 +204,11 @@
             background-color: #0288D1;
             box-shadow: var(--shadow-elevation-2);
         }
-        .form-footer .btn-cancel {
+        .form-footer .btn-cancel-link { /* Using a specific class for the link-button */
             background-color: var(--text-secondary);
             color: var(--surface-white);
         }
-        .form-footer .btn-cancel:hover {
+        .form-footer .btn-cancel-link:hover {
             background-color: #4A6572;
         }
 
@@ -225,12 +232,12 @@
         #notification-container {
             position: fixed;
             bottom: 20px;
-            left: 20px; /* For RTL, notifications from bottom-right */
+            left: 20px;
             z-index: 2000;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            align-items: flex-start; /* Align notifications to the left */
+            align-items: flex-start;
         }
 
         .notification {
@@ -250,7 +257,7 @@
             gap: 8px;
             font-weight: 600;
             font-size: 0.9em;
-            white-space: nowrap; /* Keep text on one line if possible */
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -303,25 +310,25 @@
                 justify-content: flex-start;
                 padding: 10px;
             }
-            .container {
+            .form-container-wrapper {
                 width: 98%;
                 height: 98vh;
                 padding: 15px;
             }
             .form-body {
-                grid-template-columns: 1fr; /* Single column on small screens */
+                grid-template-columns: 1fr;
                 gap: 15px;
             }
-            .form-body .input-group:last-of-type {
-                flex-direction: column; /* Stack barcode input and button */
+            .form-body .input-group.barcode-input-group {
+                flex-direction: column;
                 align-items: stretch;
             }
-            .form-body .input-group:last-of-type button {
+            .form-body .input-group.barcode-input-group button {
                 width: 100%;
                 padding: 10px 15px;
                 font-size: 1em;
             }
-            .form-body .input-group:last-of-type button span {
+            .form-body .input-group.barcode-input-group button span {
                 display: inline; /* Show text again for barcode button on small screens */
             }
             #notification-container {
@@ -338,10 +345,11 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="form-container-wrapper">
         <div class="header">
             <h2 id="pageTitle">إضافة منتج جديد</h2>
-            <a href="inventory.html" class="close-btn">&times;</a> </div>
+            <a href="inventory.html" class="close-btn">&times;</a>
+        </div>
         <form id="productForm" class="form-body">
             <div class="input-group">
                 <label for="productName">اسم المنتج</label>
@@ -392,10 +400,10 @@
                 <input type="number" id="productPricePerUnit" min="0" step="0.01" required autocomplete="off">
                 <span class="error-message" id="productPricePerUnitError"></span>
             </div>
-            <div class="input-group">
+            <div class="input-group barcode-input-group">
                 <label for="productBarcode">كود المنتج / QR (اختياري)</label>
                 <input type="text" id="productBarcode" placeholder="امسح أو أدخل الكود" autocomplete="off">
-                <button type="button" class="btn-secondary" id="requestScanForNewProduct">
+                <button type="button" id="requestScanForNewProduct">
                     <i class="ri-qr-code-line"></i>
                     <span>مسح QR</span>
                 </button>
@@ -404,7 +412,7 @@
         </form>
         <div class="form-footer">
             <button type="button" class="btn-save" id="saveProductBtn">حفظ المنتج</button>
-            <a href="inventory.html" class="btn-cancel">إلغاء</a>
+            <a href="inventory.html" class="btn-cancel-link">إلغاء</a>
         </div>
     </div>
 
@@ -413,8 +421,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, getDoc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-        // No need for analytics here as it's not a primary interaction page
+        import { getFirestore, collection, addDoc, doc, updateDoc, getDoc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
         // ************* Firebase Configuration (MUST MATCH ALL PAGES) *************
         const firebaseConfig = {
@@ -439,7 +446,7 @@
         const scannerSessionDocRef = doc(db, 'scannerSessions', SHARED_SCANNER_SESSION_ID);
         // ****************************************************************************************************
 
-        let editingProductId = null; // To store product ID if editing
+        let editingProductId = null;
         let scannerSessionUnsubscribe = null;
 
         // DOM Elements
@@ -529,7 +536,6 @@
         }
 
         // --- Product Form Logic ---
-        // Save Product (Add/Edit)
         saveProductBtn.addEventListener('click', async () => {
             clearAllErrors();
 
@@ -586,8 +592,7 @@
                     await addDoc(productsCol, productData);
                     showNotification('تم إضافة المنتج بنجاح!', "success");
                 }
-                // Redirect back to inventory after save
-                window.location.href = 'inventory.html';
+                window.location.href = 'inventory.html'; // Redirect back to inventory after save
             } catch (e) {
                 console.error("Error saving product: ", e);
                 showNotification('حدث خطأ أثناء حفظ المنتج. يرجى المحاولة مرة أخرى.', "error");
@@ -612,7 +617,6 @@
                     editingProductId = productId;
                 } else {
                     showNotification("المنتج غير موجود.", "error");
-                    // Redirect back if product not found
                     window.location.href = 'inventory.html';
                 }
             } catch (e) {
@@ -624,14 +628,12 @@
 
         // --- Initialization and Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Check for product ID in URL for editing mode
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
             if (productId) {
                 loadProductForEdit(productId);
             }
 
-            // Start listening to the scanner session
             listenToScannerSession();
         });
 
@@ -669,7 +671,6 @@
                         lastRequestTime: new Date()
                     });
                 }
-
                 console.log(`Scan request sent for purpose: ${purpose}`);
 
             } catch (error) {
@@ -692,7 +693,7 @@
             scannerSessionUnsubscribe = onSnapshot(scannerSessionDocRef, async (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    console.log("Scanner session data:", data);
+                    console.log("Scanner session data (add_product):", data);
 
                     if (data.status === 'phoneReady') {
                         showNotification("ماسح QR بالهاتف متصل وجاهز.", "success");
@@ -701,14 +702,11 @@
                     } else if (data.status === 'scanned' && data.scannedValue) {
                         showNotification(`تم استلام الباركود: ${data.scannedValue}. جاري المعالجة...`, "info");
                         
-                        // If this page requested the scan and it's for 'add_new' purpose
-                        if (data.purpose === 'add_new') {
+                        if (data.purpose === 'add_new') { // Ensure this page handles only its purpose
                             productBarcodeInput.value = data.scannedValue;
-                            // Optionally, focus the barcode input
                             productBarcodeInput.focus();
                         } else {
-                            // If purpose is 'search', it was likely requested from inventory.html, just notify.
-                            showNotification("تم مسح باركود للبحث. يرجى العودة لصفحة المخزون.", "info");
+                            showNotification("تم مسح باركود ليس لإضافة منتج. يرجى العودة للصفحة المناسبة.", "info");
                         }
                         
                         await updateDoc(scannerSessionDocRef, {
@@ -742,7 +740,7 @@
             });
         }
 
-        // Event listeners for QR button in add_product form
+        // Event listener for QR button in add_product form
         requestScanForNewProductBtn.addEventListener('click', () => requestScan('add_new'));
 
         // Basic authentication check
