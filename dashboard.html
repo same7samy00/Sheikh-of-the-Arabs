@@ -1,112 +1,21 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - شيخ العرب</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
-</head>
+<html lang="ar" dir="rtl"><head><title>لوحة التحكم</title><link rel="stylesheet" href="style.css"><link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"></head>
 <body>
-    <aside class="sidebar">
-        <div class="logo">شيخ <span>العرب</span></div>
-        <ul class="nav-list">
-            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="ri-dashboard-line"></i><span>لوحة التحكم</span></a></li>
-            <li class="nav-item"><a href="inventory.html" class="nav-link"><i class="ri-box-3-line"></i><span>المخزون</span></a></li>
-            <li class="nav-item"><a href="pos.html" class="nav-link"><i class="ri-shopping-cart-line"></i><span>نقطة البيع</span></a></li>
-            <li class="nav-item logout"><a href="#" id="logoutButton" class="nav-link logout-btn"><i class="ri-logout-box-line"></i><span>الخروج</span></a></li>
-        </ul>
-    </aside>
+    <aside class="sidebar"><div class="logo">شيخ <span>العرب</span></div><ul class="nav-list"><li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="ri-dashboard-line"></i><span>التحكم</span></a></li><li class="nav-item"><a href="inventory.html" class="nav-link"><i class="ri-box-3-line"></i><span>المخزون</span></a></li><li class="nav-item"><a href="pos.html" class="nav-link"><i class="ri-shopping-cart-line"></i><span>نقطة البيع</span></a></li><li class="nav-item logout"><a href="#" id="logoutButton" class="nav-link"><i class="ri-logout-box-line"></i><span>الخروج</span></a></li></ul></aside>
     <main class="main-content">
         <div class="page-header"><h1 class="page-title">لوحة التحكم</h1></div>
         <div class="kpi-grid">
-            <div class="card kpi-card">
-                <div class="details">
-                    <div class="title">إجمالي أنواع المنتجات</div>
-                    <div class="value" id="totalProducts">...</div>
-                </div>
-            </div>
-            <div class="card kpi-card">
-                <div class="details">
-                    <div class="title">منتجات قليلة المخزون</div>
-                    <div class="value" id="lowStockProducts">...</div>
-                </div>
-            </div>
-            <div class="card kpi-card">
-                <div class="details">
-                    <div class="title">قيمة المخزون (جنيه)</div>
-                    <div class="value" id="totalInventoryValue">...</div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <h3>أحدث المنتجات المضافة</h3>
-            <div class="table-container">
-                <table class="data-table">
-                    <thead><tr><th>الاسم</th><th>الكمية</th><th>السعر</th></tr></thead>
-                    <tbody id="latestProductsList">
-                        <tr><td colspan="3" style="text-align:center; padding: 20px;">جاري التحميل...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <div class="card kpi-card"><div class="details"><div class="title">إجمالي المنتجات</div><div class="value" id="totalProducts">...</div></div></div>
+            <div class="card kpi-card"><div class="details"><div class="title">منتجات قليلة المخزون</div><div class="value" id="lowStockProducts">...</div></div></div>
+            <div class="card kpi-card"><div class="details"><div class="title">قيمة المخزون (جنيه)</div><div class="value" id="totalInventoryValue">...</div></div></div>
         </div>
     </main>
+    <div id="notification-container"></div><script src="shared.js" type="module"></script>
     <script type="module">
         import { db } from './shared.js';
-        import { collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-        const totalProductsEl = document.getElementById('totalProducts');
-        const lowStockProductsEl = document.getElementById('lowStockProducts');
-        const totalInventoryValueEl = document.getElementById('totalInventoryValue');
-        const latestProductsListEl = document.getElementById('latestProductsList');
-
-        async function fetchDashboardData() {
-            try {
-                const productsRef = collection(db, "products");
-                const snapshot = await getDocs(productsRef);
-                
-                let totalProducts = 0;
-                let lowStockCount = 0;
-                let totalValue = 0;
-                
-                snapshot.forEach(doc => {
-                    const product = doc.data();
-                    totalProducts++;
-                    if (product.quantity <= 10 && product.quantity > 0) {
-                        lowStockCount++;
-                    }
-                    totalValue += (product.quantity || 0) * (product.pricePerUnit || 0);
-                });
-
-                totalProductsEl.textContent = totalProducts;
-                lowStockProductsEl.textContent = lowStockCount;
-                totalInventoryValueEl.textContent = totalValue.toFixed(2);
-
-                // Fetch latest 5 products
-                const latestQuery = query(collection(db, "products"), orderBy("createdAt", "desc"), limit(5));
-                const latestSnapshot = await getDocs(latestQuery);
-                
-                latestProductsListEl.innerHTML = '';
-                if (latestSnapshot.empty) {
-                    latestProductsListEl.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 20px;">لا توجد منتجات.</td></tr>';
-                } else {
-                    latestSnapshot.forEach(doc => {
-                        const product = doc.data();
-                        const row = latestProductsListEl.insertRow();
-                        row.innerHTML = `
-                            <td>${product.name}</td>
-                            <td>${product.quantity} ${product.unit}</td>
-                            <td>${product.pricePerUnit.toFixed(2)} جنيه</td>
-                        `;
-                    });
-                }
-            } catch (error) {
-                console.error("Error fetching dashboard data:", error);
-                totalProductsEl.textContent = 'خطأ';
-            }
-        }
-
-        fetchDashboardData();
+        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        const totalProductsEl = document.getElementById('totalProducts'), lowStockProductsEl = document.getElementById('lowStockProducts'), totalInventoryValueEl = document.getElementById('totalInventoryValue');
+        async function fetchData(){ try { const snapshot = await getDocs(collection(db, "products")); let total=0, low=0, value=0; snapshot.forEach(doc => { const p = doc.data(); total++; if (p.quantity <= 10 && p.quantity > 0) low++; value += (p.quantity||0)*(p.pricePerUnit||0); }); totalProductsEl.textContent = total; lowStockProductsEl.textContent = low; totalInventoryValueEl.textContent = value.toFixed(2); } catch (e) { console.error(e); } }
+        fetchData();
     </script>
-</body>
-</html>
+</body></html>
