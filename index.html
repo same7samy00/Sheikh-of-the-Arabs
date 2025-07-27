@@ -4,20 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - شيخ العرب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Color Palette (Matching base-font-size from inventory.html) */
             --bg-light: #F0F4F8;
             --surface-white: #FFFFFF;
             --text-dark: #2C3E50;
             --text-secondary: #607D8B;
             --accent-blue: #03A9F4;
             --error-red: #FF5252;
-            --border-radius: 12px;
-            --shadow-1: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-2: 0 8px 20px rgba(0, 0, 0, 0.12);
-            --shadow-focus: 0 0 0 3px rgba(3, 169, 244, 0.3);
-            --base-font-size: 16px;
+            --success-green: #4CAF50;
+
+            --border-radius-soft: 12px;
+            --shadow-elevation-1: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-elevation-2: 0 8px 20px rgba(0, 0, 0, 0.12);
+            --shadow-input-focus: 0 0 0 3px rgba(3, 169, 244, 0.3);
+
+            --base-font-size: 0.95em; /* Inherit from inventory.html */
         }
 
         body {
@@ -32,122 +36,157 @@
             padding: 20px;
             box-sizing: border-box;
             direction: rtl;
-            font-size: var(--base-font-size);
+            text-align: right;
+            font-size: var(--base-font-size); /* Apply base font size */
         }
 
         .login-container {
             background-color: var(--surface-white);
-            padding: 40px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-1);
+            padding: 30px; /* Adjusted padding for consistency */
+            border-radius: var(--border-radius-soft);
+            box-shadow: var(--shadow-elevation-1);
             width: 100%;
-            max-width: 400px;
+            max-width: 380px; /* Adjusted max-width */
             text-align: center;
             transition: box-shadow 0.3s ease;
         }
 
         .login-container:hover {
-            box-shadow: var(--shadow-2);
+            box-shadow: var(--shadow-elevation-2);
         }
 
         .login-container h1 {
-            font-size: 2.2em;
-            margin-bottom: 30px;
+            color: var(--text-dark);
+            font-size: 2.2em; /* Adjusted font size for consistency */
+            margin-bottom: 30px; /* Adjusted margin */
             font-weight: 700;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* Adjusted margin */
             text-align: right;
+            position: relative;
         }
 
         .input-group label {
             display: block;
             color: var(--text-secondary);
-            margin-bottom: 8px;
-            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 8px; /* Adjusted margin */
+            font-weight: 400;
         }
 
         .input-group input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px 15px; /* Adjusted padding for consistency */
             background-color: var(--bg-light);
             border: 1px solid #E0E6EB;
-            border-radius: var(--border-radius);
-            font-family: 'Cairo', sans-serif;
-            font-size: 1em;
+            border-radius: var(--border-radius-soft);
+            color: var(--text-dark);
+            font-size: 1em; /* Adjusted font size for consistency */
             box-sizing: border-box;
             outline: none;
             transition: all 0.3s ease;
+            box-shadow: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+
+        .input-group input::placeholder {
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-secondary);
+            opacity: 0.8;
         }
 
         .input-group input:focus {
             border-color: var(--accent-blue);
-            box-shadow: var(--shadow-focus);
+            box-shadow: var(--shadow-input-focus);
         }
 
         .error-message {
             color: var(--error-red);
-            font-size: 0.9em;
-            margin-top: 5px;
-            text-align: right;
+            font-size: 0.8em; /* Adjusted font size for consistency */
+            margin-top: 5px; /* Adjusted margin */
+            text-align: center;
             display: block;
-            height: 1em;
+            font-weight: 400;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        .btn {
+        .error-message.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .btn-login {
             width: 100%;
-            padding: 14px;
+            padding: 15px; /* Adjusted padding for consistency */
             background-color: var(--accent-blue);
             color: var(--surface-white);
             border: none;
-            border-radius: var(--border-radius);
-            font-size: 1.1em;
+            border-radius: var(--border-radius-soft);
+            font-size: 1.1em; /* Adjusted font size for consistency */
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: var(--shadow-1);
+            box-shadow: var(--shadow-elevation-1);
             font-family: 'Cairo', sans-serif;
         }
 
-        .btn:hover {
+        .btn-login:hover {
             background-color: #0288D1;
-            box-shadow: var(--shadow-2);
+            box-shadow: var(--shadow-elevation-2);
             transform: translateY(-2px);
         }
 
+        .btn-login:active {
+            transform: translateY(1px);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
         .forgot-password {
-            margin-top: 20px;
-            font-size: 0.9em;
+            margin-top: 20px; /* Adjusted margin */
+            font-size: 0.9em; /* Adjusted font size for consistency */
         }
 
         .forgot-password a {
             color: var(--text-secondary);
             text-decoration: none;
             transition: color 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 400;
         }
 
         .forgot-password a:hover {
             color: var(--accent-blue);
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h1>تسجيل الدخول</h1>
-        <form id="loginForm" novalidate>
+        <form id="loginForm">
             <div class="input-group">
                 <label for="email">البريد الإلكتروني</label>
-                <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required autocomplete="email">
+                <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required>
                 <span class="error-message" id="emailError"></span>
             </div>
             <div class="input-group">
                 <label for="password">كلمة المرور</label>
-                <input type="password" id="password" placeholder="أدخل كلمة المرور" required autocomplete="current-password">
+                <input type="password" id="password" placeholder="أدخل كلمة المرور الخاصة بك" required>
                 <span class="error-message" id="passwordError"></span>
             </div>
-            <button type="submit" class="btn">تسجيل الدخول</button>
-            <div id="globalError" class="error-message" style="margin-top: 15px; text-align: center;"></div>
+            <button type="submit" class="btn-login">تسجيل الدخول</button>
         </form>
         <div class="forgot-password">
             <a href="#">هل نسيت كلمة المرور؟</a>
@@ -156,8 +195,10 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
+        // ************* Your web app's Firebase configuration (MUST MATCH ALL PAGES) *************
         const firebaseConfig = {
             apiKey: "AIzaSyC5ls-rPdJ65x5BoMGwAOpdcPtD585C2ys",
             authDomain: "pharmacy-inventory-bf04a.firebaseapp.com",
@@ -167,69 +208,80 @@
             appId: "1:937788650384:web:6451225d00e648f3a0b915",
             measurementId: "G-ZGC9EQ55SL"
         };
+        // *****************************************************************************************
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const analytics = getAnalytics(app);
 
+        // Get elements
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const emailError = document.getElementById('emailError');
         const passwordError = document.getElementById('passwordError');
-        const globalError = document.getElementById('globalError');
 
-        // Redirect if already logged in
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                window.location.href = 'dashboard.html';
-            }
-        });
+        // Function to display error message
+        function showError(element, message) {
+            element.textContent = message;
+            element.classList.add('show');
+        }
 
-        const showError = (el, msg) => { el.textContent = msg; };
-        const clearErrors = () => {
-            emailError.textContent = '';
-            passwordError.textContent = '';
-            globalError.textContent = '';
-        };
+        // Function to clear error message
+        function clearError(element) {
+            element.textContent = '';
+            element.classList.remove('show');
+        }
 
+        // Handle form submission
         loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            clearErrors();
+            e.preventDefault(); // Prevent default form submission
+
+            clearError(emailError);
+            clearError(passwordError);
 
             const email = emailInput.value.trim();
             const password = passwordInput.value.trim();
-            let valid = true;
 
             if (!email) {
                 showError(emailError, 'الرجاء إدخال البريد الإلكتروني.');
-                valid = false;
+                return;
             }
             if (!password) {
                 showError(passwordError, 'الرجاء إدخال كلمة المرور.');
-                valid = false;
+                return;
             }
-            if (!valid) return;
 
             try {
+                // Set persistence to LOCAL to keep user logged in across sessions
                 await setPersistence(auth, browserLocalPersistence);
-                await signInWithEmailAndPassword(auth, email, password);
+
+                // Sign in with email and password
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log('User signed in:', userCredential.user);
+                // Redirect to dashboard on successful login
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                console.error("Login Error:", error.code);
+                // Handle errors from Firebase Authentication
+                let errorMessage = 'حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.';
                 switch (error.code) {
                     case 'auth/invalid-email':
-                        showError(emailError, 'صيغة البريد الإلكتروني غير صحيحة.');
+                        errorMessage = 'صيغة البريد الإلكتروني غير صحيحة.';
+                        showError(emailError, errorMessage);
                         break;
                     case 'auth/user-not-found':
                     case 'auth/wrong-password':
-                    case 'auth/invalid-credential':
-                        showError(globalError, 'البريد الإلكتروني أو كلمة المرور غير صحيحة.');
+                        errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+                        showError(passwordError, errorMessage); // Display general error for security
                         break;
                     case 'auth/too-many-requests':
-                        showError(globalError, 'تم حظر الحساب مؤقتًا بسبب كثرة المحاولات. حاول مرة أخرى لاحقًا.');
+                        errorMessage = 'لقد تجاوزت عدد المحاولات. يرجى المحاولة لاحقًا.';
+                        showError(passwordError, errorMessage);
                         break;
                     default:
-                        showError(globalError, 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.');
+                        console.error('Firebase Auth Error:', error.code, error.message);
+                        showError(passwordError, errorMessage);
                         break;
                 }
             }
