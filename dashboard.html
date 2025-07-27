@@ -6,12 +6,13 @@
     <title>لوحة التحكم - شيخ العرب</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"> </head>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
     <aside class="sidebar">
         <div class="logo">شيخ <span>العرب</span></div>
         <ul class="nav-list">
-            <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="ri-dashboard-line"></i><span>الصفحة الرئيسية</span></a></li>
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="ri-dashboard-line"></i><span>الصفحة الرئيسية</span></a></li>
             <li class="nav-item"><a href="inventory.html" class="nav-link"><i class="ri-box-3-line"></i><span>إدارة المخزون</span></a></li>
             <li class="nav-item"><a href="pos.html" class="nav-link"><i class="ri-shopping-cart-line"></i><span>نقطة البيع</span></a></li>
             <li class="nav-item"><a href="settings.html" class="nav-link"><i class="ri-settings-3-line"></i><span>الإعدادات</span></a></li>
@@ -20,50 +21,64 @@
     </aside>
 
     <main class="main-content">
-        <div class="page-header">
-            <h1>الصفحة الرئيسية</h1>
-        </div>
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h1>لوحة التحكم</h1>
+            </div>
+            <p class="page-description">مرحباً بك في لوحة تحكم شيخ العرب! هنا يمكنك الحصول على نظرة عامة سريعة واحترافية على أداء متجرك.</p>
 
-        <p class="page-description">مرحباً بك في لوحة تحكم شيخ العرب! هنا يمكنك الحصول على نظرة عامة سريعة على أداء متجرك.</p>
-
-        <div class="dashboard-cards">
-            <div class="card">
-                <div class="card-icon"><i class="ri-stack-line"></i></div>
-                <div class="card-content">
-                    <div class="card-title">إجمالي المنتجات</div>
-                    <div class="card-value" id="totalProducts">...</div>
+            <div class="dashboard-cards">
+                <div class="card green">
+                    <div class="card-icon"><i class="ri-wallet-3-line"></i></div>
+                    <div class="card-content">
+                        <div class="card-title">إجمالي قيمة المخزون</div>
+                        <div class="card-value" id="totalInventoryValue">...</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="ri-stack-line"></i></div>
+                    <div class="card-content">
+                        <div class="card-title">إجمالي المنتجات</div>
+                        <div class="card-value" id="totalProducts">...</div>
+                    </div>
+                </div>
+                <div class="card yellow">
+                    <div class="card-icon"><i class="ri-error-warning-line"></i></div>
+                    <div class="card-content">
+                        <div class="card-title">منتجات قليلة المخزون</div>
+                        <div class="card-value" id="lowStockProducts">...</div>
+                    </div>
+                </div>
+                <div class="card red">
+                    <div class="card-icon"><i class="ri-close-circle-line"></i></div>
+                    <div class="card-content">
+                        <div class="card-title">منتجات نافدة المخزون</div>
+                        <div class="card-value" id="outOfStockProducts">...</div>
+                    </div>
+                </div>
+                 <div class="card purple">
+                    <div class="card-icon"><i class="ri-instance-line"></i></div>
+                    <div class="card-content">
+                        <div class="card-title">إجمالي الفئات</div>
+                        <div class="card-value" id="totalCategories">...</div>
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-icon" style="color: var(--info-yellow);"><i class="ri-error-warning-line"></i></div>
-                <div class="card-content">
-                    <div class="card-title">المنتجات قليلة المخزون</div>
-                    <div class="card-value" id="lowStockProducts">...</div>
+
+            <div class="content-container">
+                <h3>نظرة عامة على المخزون حسب الفئة</h3>
+                <div class="category-stats-list" id="categoryStatsList">
+                    <div class="list-item-placeholder">جاري تحميل البيانات...</div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-icon" style="color: var(--success-green);"><i class="ri-wallet-3-line"></i></div>
-                <div class="card-content">
-                    <div class="card-title">إجمالي قيمة المخزون</div>
-                    <div class="card-value" id="totalInventoryValue">...</div>
+
+            <div class="content-container">
+                <h3>آخر 5 منتجات مضافة</h3>
+                <div class="list-view" id="latestProductsList">
+                     <div class="list-item-placeholder">جاري تحميل البيانات...</div>
                 </div>
             </div>
         </div>
-
-        <div class="content-container">
-            <h3>آخر المنتجات المضافة</h3>
-            <div class="list-view" id="latestProductsList">
-                <div class="list-item-placeholder">جاري تحميل البيانات...</div>
-            </div>
-        </div>
-
-        <div class="content-container">
-            <h3>المنتجات التي تحتاج لإعادة تخزين</h3>
-            <div class="list-view" id="criticalStockList">
-                <div class="list-item-placeholder">جاري تحميل البيانات...</div>
-            </div>
-        </div>
-
     </main>
 
     <div id="notification-container"></div>
@@ -75,27 +90,38 @@
         async function fetchDashboardData() {
             const totalProductsEl = document.getElementById('totalProducts');
             const lowStockProductsEl = document.getElementById('lowStockProducts');
+            const outOfStockProductsEl = document.getElementById('outOfStockProducts');
             const totalInventoryValueEl = document.getElementById('totalInventoryValue');
+            const totalCategoriesEl = document.getElementById('totalCategories');
             const latestProductsList = document.getElementById('latestProductsList');
-            const criticalStockList = document.getElementById('criticalStockList');
+            const categoryStatsList = document.getElementById('categoryStatsList');
 
             try {
-                const productsCol = collection(db, "products");
-                const productSnapshot = await getDocs(productsCol);
-                const allProducts = [];
+                const productSnapshot = await getDocs(collection(db, "products"));
+                const allProducts = productSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
                 let totalInventoryValue = 0;
+                const categoryData = {};
 
-                productSnapshot.forEach((doc) => {
-                    const product = { id: doc.id, ...doc.data() };
-                    allProducts.push(product);
-                    totalInventoryValue += (product.quantity || 0) * (product.pricePerUnit || 0);
+                allProducts.forEach(p => {
+                    const value = (p.quantity || 0) * (p.pricePerUnit || 0);
+                    totalInventoryValue += value;
+                    if (!categoryData[p.category]) {
+                        categoryData[p.category] = { count: 0, value: 0 };
+                    }
+                    categoryData[p.category].count++;
+                    categoryData[p.category].value += value;
                 });
 
-                const lowStockProducts = allProducts.filter(p => p.status === 'قليل المخزون' || p.status === 'نفد المخزون');
+                const lowStockProducts = allProducts.filter(p => p.status === 'قليل المخزون');
+                const outOfStockProducts = allProducts.filter(p => p.status === 'نفد المخزون');
+                const uniqueCategories = Object.keys(categoryData);
 
                 totalProductsEl.textContent = allProducts.length;
                 lowStockProductsEl.textContent = lowStockProducts.length;
-                totalInventoryValueEl.textContent = `${totalInventoryValue.toFixed(2)} جنيه`;
+                outOfStockProductsEl.textContent = outOfStockProducts.length;
+                totalCategoriesEl.textContent = uniqueCategories.length;
+                totalInventoryValueEl.textContent = `${totalInventoryValue.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}`;
 
                 const sortedByDate = allProducts
                     .filter(p => p.createdAt && p.createdAt.toDate)
@@ -103,15 +129,17 @@
                     .slice(0, 5);
 
                 displayProductsInList(latestProductsList, sortedByDate);
-                displayProductsInList(criticalStockList, lowStockProducts.slice(0, 5));
+                displayCategoryStats(categoryStatsList, categoryData, totalInventoryValue);
 
             } catch (error) {
                 console.error("Error fetching dashboard data:", error);
                 totalProductsEl.textContent = 'خطأ';
                 lowStockProductsEl.textContent = 'خطأ';
+                outOfStockProductsEl.textContent = 'خطأ';
                 totalInventoryValueEl.textContent = 'خطأ';
+                totalCategoriesEl.textContent = 'خطأ';
                 latestProductsList.innerHTML = '<div class="list-item-placeholder error">خطأ في تحميل البيانات.</div>';
-                criticalStockList.innerHTML = '<div class="list-item-placeholder error">خطأ في تحميل البيانات.</div>';
+                categoryStatsList.innerHTML = '<div class="list-item-placeholder error">خطأ في تحميل البيانات.</div>';
             }
         }
 
@@ -127,13 +155,38 @@
                 item.innerHTML = `
                     <span class="list-item-name">${product.name}</span>
                     <span class="list-item-details">${product.quantity} ${product.unit}</span>
-                    <span class="list-item-price">${(product.pricePerUnit || 0).toFixed(2)} جنيه</span>
+                    <span class="list-item-price">${(product.pricePerUnit || 0).toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span>
+                `;
+                listElement.appendChild(item);
+            });
+        }
+
+        function displayCategoryStats(listElement, categoryData, totalValue) {
+            listElement.innerHTML = '';
+            if (Object.keys(categoryData).length === 0) {
+                listElement.innerHTML = '<div class="list-item-placeholder">لا توجد فئات لعرضها.</div>';
+                return;
+            }
+
+            const sortedCategories = Object.entries(categoryData).sort(([,a],[,b]) => b.value - a.value);
+
+            sortedCategories.forEach(([name, data]) => {
+                const percentage = totalValue > 0 ? (data.value / totalValue) * 100 : 0;
+                const item = document.createElement('div');
+                item.className = 'category-stat-item';
+                item.innerHTML = `
+                    <div class="category-info">
+                        <span class="category-name">${name}</span>
+                        <span class="category-details">${data.count} منتجات / ${data.value.toLocaleString('ar-EG', { style: 'currency', currency: 'EGP' })}</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${percentage.toFixed(2)}%;"></div>
+                    </div>
                 `;
                 listElement.appendChild(item);
             });
         }
         
-        // Initial fetch when the page loads
         fetchDashboardData();
     </script>
 </body>
